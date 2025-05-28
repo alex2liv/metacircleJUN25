@@ -28,6 +28,10 @@ const specialistSettingsSchema = z.object({
   basicPlanPrice: z.number().min(1, "Preço deve ser maior que zero").max(999, "Preço muito alto"),
   intermediatePlanPrice: z.number().min(1, "Preço deve ser maior que zero").max(999, "Preço muito alto"),
   premiumPlanPrice: z.number().min(1, "Preço deve ser maior que zero").max(999, "Preço muito alto"),
+  sosTicketsPerMonth: z.number().min(0, "Tickets não pode ser negativo").max(10, "Máximo 10 tickets"),
+  sosTicketPrice: z.number().min(1, "Preço deve ser maior que zero").max(999, "Preço muito alto"),
+  ebooksEnabled: z.boolean(),
+  teleconsultaEnabled: z.boolean(),
 });
 
 type PerfectPaySettings = z.infer<typeof perfectPaySettingsSchema>;
@@ -56,6 +60,10 @@ export default function Settings() {
       basicPlanPrice: 10,
       intermediatePlanPrice: 39,
       premiumPlanPrice: 99,
+      sosTicketsPerMonth: 3,
+      sosTicketPrice: 119,
+      ebooksEnabled: true,
+      teleconsultaEnabled: true,
     },
   });
 
