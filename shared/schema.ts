@@ -158,9 +158,24 @@ export const sosTicketUsage = pgTable("sos_ticket_usage", {
   specialistName: text("specialist_name"),
 });
 
-// Disponibilidades da Clarissa
+// Configurações do especialista (personalizável por comunidade)
+export const specialistSettings = pgTable("specialist_settings", {
+  id: serial("id").primaryKey(),
+  communityId: integer("community_id").notNull().references(() => communities.id),
+  specialistName: text("specialist_name").notNull().default("Especialista"),
+  specialistPhone: text("specialist_phone").notNull().default("11999999999"),
+  specialistEmail: text("specialist_email"),
+  speciality: text("speciality").default("Consultoria"),
+  bio: text("bio"),
+  avatar: text("avatar"),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow()
+});
+
+// Disponibilidades do especialista
 export const availability = pgTable("availability", {
   id: serial("id").primaryKey(),
+  communityId: integer("community_id").notNull().references(() => communities.id),
   dayOfWeek: integer("day_of_week").notNull(), // 0-6 (domingo-sábado)
   startTime: text("start_time").notNull(), // "09:00"
   endTime: text("end_time").notNull(), // "17:00"
@@ -172,8 +187,7 @@ export const availability = pgTable("availability", {
 export const appointments = pgTable("appointments", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").notNull().references(() => users.id),
-  specialistName: text("specialist_name").default("Clarissa"),
-  specialistPhone: text("specialist_phone").default("17997337322"),
+  communityId: integer("community_id").notNull().references(() => communities.id),
   appointmentDate: timestamp("appointment_date").notNull(),
   duration: integer("duration").default(60), // em minutos
   type: text("type").notNull(), // "regular", "sos"
@@ -271,6 +285,11 @@ export const insertAvailabilitySchema = createInsertSchema(availability).omit({
   createdAt: true,
 });
 
+export const insertSpecialistSettingsSchema = createInsertSchema(specialistSettings).omit({
+  id: true,
+  createdAt: true,
+});
+
 export const insertAppointmentSchema = createInsertSchema(appointments).omit({
   id: true,
   createdAt: true,
@@ -281,6 +300,8 @@ export type InsertUserSubscription = z.infer<typeof insertUserSubscriptionSchema
 export type SosTicketUsage = typeof sosTicketUsage.$inferSelect;
 export type InsertSosTicketUsage = z.infer<typeof insertSosTicketUsageSchema>;
 
+export type SpecialistSettings = typeof specialistSettings.$inferSelect;
+export type InsertSpecialistSettings = z.infer<typeof insertSpecialistSettingsSchema>;
 export type Availability = typeof availability.$inferSelect;
 export type InsertAvailability = z.infer<typeof insertAvailabilitySchema>;
 export type Appointment = typeof appointments.$inferSelect;
