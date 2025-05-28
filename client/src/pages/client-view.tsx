@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Users, MessageSquare, Calendar, BookOpen, Heart, Eye, Play, Check, DollarSign, ExternalLink, Phone, MessageCircle } from "lucide-react";
+import metaSyncLogo from "@assets/MetaSync Logo Jun2025.png";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -40,11 +41,11 @@ export default function ClientView() {
       });
       
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Erro ao participar do evento');
+        throw new Error('Erro ao participar do evento');
       }
       
-      return response.json();
+      const data = await response.json();
+      return data;
     },
     onSuccess: (data, eventId) => {
       setJoinedEvents(prev => new Set([...prev, eventId]));
@@ -75,7 +76,7 @@ export default function ClientView() {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <img 
-              src="/attached_assets/MetaSync Logo Jun2025.png" 
+              src={metaSyncLogo} 
               alt="MetaSync Logo" 
               className="h-12 w-auto"
             />

@@ -48,6 +48,7 @@ export interface IStorage {
   createEvent(event: InsertEvent): Promise<Event>;
   joinEvent(eventId: number, userId: number): Promise<Event>;
   leaveEvent(eventId: number, userId: number): Promise<Event>;
+  likePost(postId: number): Promise<Post>;
 
   // Member Points
   getMemberPoints(userId: number, communityId: number): Promise<MemberPoints | undefined>;
@@ -394,6 +395,19 @@ export class MemStorage implements IStorage {
     this.events.set(eventId, event);
     
     return event;
+  }
+
+  async likePost(postId: number): Promise<Post> {
+    const post = this.posts.get(postId);
+    if (!post) {
+      throw new Error("Post not found");
+    }
+    
+    // Increment like count
+    post.likesCount = (post.likesCount || 0) + 1;
+    this.posts.set(postId, post);
+    
+    return post;
   }
 
   async getMemberPoints(userId: number, communityId: number): Promise<MemberPoints | undefined> {
