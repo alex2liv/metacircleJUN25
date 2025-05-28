@@ -1,0 +1,267 @@
+import { useAuth } from "@/hooks/use-auth";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Users, MessageSquare, Calendar, BookOpen, Heart, Eye, Play } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+
+export default function ClientView() {
+  const { user } = useAuth();
+
+  const { data: stats } = useQuery({
+    queryKey: ['/api/communities/3/stats'],
+  });
+
+  const { data: recentPosts } = useQuery({
+    queryKey: ['/api/communities/3/posts'],
+  });
+
+  const { data: upcomingEvents } = useQuery({
+    queryKey: ['/api/communities/3/events'],
+  });
+
+  const { data: topMembers } = useQuery({
+    queryKey: ['/api/communities/3/members/top'],
+  });
+
+  return (
+    <div className="space-y-6">
+      {/* Cabeçalho Cliente */}
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-lg">
+        <div className="flex items-center gap-2 mb-2">
+          <Eye className="w-5 h-5" />
+          <Badge variant="secondary" className="bg-white/20 text-white">
+            VISÃO DO CLIENTE
+          </Badge>
+        </div>
+        <h1 className="text-3xl font-bold mb-2">
+          Bem-vindo, {user?.firstName}! 👋
+        </h1>
+        <p className="text-blue-100">
+          Aqui está tudo que está acontecendo na sua comunidade
+        </p>
+      </div>
+
+      {/* Stats simplificadas para cliente */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Membros Ativos</p>
+                <p className="text-2xl font-bold">{stats?.activeMembers || 0}</p>
+              </div>
+              <Users className="w-8 h-8 text-blue-600" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Posts Hoje</p>
+                <p className="text-2xl font-bold">{stats?.postsToday || 0}</p>
+              </div>
+              <MessageSquare className="w-8 h-8 text-green-600" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Próximos Eventos</p>
+                <p className="text-2xl font-bold">{stats?.upcomingEvents || 0}</p>
+              </div>
+              <Calendar className="w-8 h-8 text-purple-600" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Cursos Disponíveis</p>
+                <p className="text-2xl font-bold">{stats?.activeCourses || 0}</p>
+              </div>
+              <BookOpen className="w-8 h-8 text-orange-600" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Posts Recentes - Visão Cliente */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <MessageSquare className="w-5 h-5" />
+              Discussões Recentes
+            </CardTitle>
+            <CardDescription>
+              Participe das conversas da comunidade
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {recentPosts?.slice(0, 3).map((post: any) => (
+              <div key={post.id} className="border-l-4 border-blue-500 pl-4">
+                <h4 className="font-medium text-gray-900 mb-1">
+                  {post.title}
+                </h4>
+                <p className="text-sm text-gray-600 mb-2 line-clamp-2">
+                  {post.content}
+                </p>
+                <div className="flex items-center gap-4 text-xs text-gray-500">
+                  <div className="flex items-center gap-1">
+                    <Heart className="w-3 h-3" />
+                    {post.likesCount} curtidas
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <MessageSquare className="w-3 h-3" />
+                    {post.commentsCount} comentários
+                  </div>
+                </div>
+              </div>
+            ))}
+            <Button variant="outline" className="w-full">
+              Ver Todas as Discussões
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Próximos Eventos - Visão Cliente */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Calendar className="w-5 h-5" />
+              Próximos Eventos
+            </CardTitle>
+            <CardDescription>
+              Não perca nenhum evento importante
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {upcomingEvents?.slice(0, 3).map((event: any) => (
+              <div key={event.id} className="border rounded-lg p-3 bg-gradient-to-r from-purple-50 to-blue-50">
+                <h4 className="font-medium text-gray-900 mb-1">
+                  {event.title}
+                </h4>
+                <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
+                  <div className="flex items-center gap-1">
+                    <Calendar className="w-4 h-4" />
+                    {format(new Date(event.startDate), "dd 'de' MMM", { locale: ptBR })}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Users className="w-4 h-4" />
+                    {event.attendeesCount} participantes
+                  </div>
+                </div>
+                <Button size="sm" className="bg-gradient-to-r from-blue-600 to-purple-600">
+                  Participar
+                </Button>
+              </div>
+            ))}
+            <Button variant="outline" className="w-full">
+              Ver Calendário Completo
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Seção de Cursos - Destaque para Cliente */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <BookOpen className="w-5 h-5" />
+            Seus Cursos
+          </CardTitle>
+          <CardDescription>
+            Continue aprendendo com nossos cursos exclusivos
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[1, 2, 3].map((course) => (
+              <div key={course} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-3 rounded-lg mb-3">
+                  <Play className="w-8 h-8 mx-auto" />
+                </div>
+                <h4 className="font-medium mb-2">Curso React Avançado {course}</h4>
+                <p className="text-sm text-gray-600 mb-3">
+                  Aprenda conceitos avançados de React e Next.js
+                </p>
+                <div className="flex items-center justify-between">
+                  <Badge variant="outline" className="bg-green-50 text-green-700">
+                    Incluído
+                  </Badge>
+                  <Button size="sm">
+                    Continuar
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Ranking da Comunidade */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Users className="w-5 h-5" />
+            Top Membros da Comunidade
+          </CardTitle>
+          <CardDescription>
+            Veja quem está mais ativo na comunidade
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {topMembers?.slice(0, 5).map((member: any, index: number) => (
+              <div key={member.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold ${
+                    index === 0 ? 'bg-yellow-500' : 
+                    index === 1 ? 'bg-gray-400' : 
+                    index === 2 ? 'bg-orange-500' : 'bg-blue-500'
+                  }`}>
+                    {index + 1}
+                  </div>
+                  <div>
+                    <p className="font-medium">{member.user.firstName} {member.user.lastName}</p>
+                    <p className="text-sm text-gray-600">Nível {member.level}</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="font-bold text-blue-600">{member.points} pts</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Aviso sobre notificações WhatsApp */}
+      <Card className="bg-green-50 border-green-200">
+        <CardContent className="p-4">
+          <div className="flex items-center gap-3">
+            <div className="w-2 h-2 bg-green-600 rounded-full animate-pulse"></div>
+            <div>
+              <p className="font-medium text-green-900">
+                Notificações WhatsApp Ativas
+              </p>
+              <p className="text-sm text-green-700">
+                Você receberá lembretes de eventos e notificações de comentários diretamente no seu WhatsApp
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
