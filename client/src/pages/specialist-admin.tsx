@@ -77,6 +77,15 @@ export default function SpecialistAdmin() {
     responseTimeHours: 2
   });
 
+  // Configurações do Modo Beta
+  const [betaConfig, setBetaConfig] = useState({
+    betaModeEnabled: false,
+    betaEndDate: "",
+    betaMessage: "🎉 Acesso Premium Beta - Teste gratuito por tempo limitado!",
+    gracePeriodEnabled: true,
+    gracePeriodDays: 3
+  });
+
   const handleSaveSpecialist = () => {
     // Aqui salvaria no backend
     toast({
@@ -98,6 +107,16 @@ export default function SpecialistAdmin() {
     toast({
       title: "🤖 Automações configuradas!",
       description: "Integrações e notificações ativadas",
+    });
+  };
+
+  const handleSaveBeta = () => {
+    // Aqui salvaria no backend
+    toast({
+      title: betaConfig.betaModeEnabled ? "🧪 Modo Beta ATIVADO!" : "✅ Modo Beta desativado",
+      description: betaConfig.betaModeEnabled 
+        ? "Todos os usuários agora têm acesso Premium gratuito!" 
+        : "Voltou ao modo normal com planos pagos",
     });
   };
 
@@ -278,6 +297,129 @@ export default function SpecialistAdmin() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Modo Beta - Acesso Premium Gratuito */}
+        <Card className="border-orange-200 bg-orange-50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-orange-900">
+              <Crown className="w-5 h-5" />
+              🧪 Modo Beta - Teste Gratuito
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="bg-white p-4 rounded-lg border border-orange-200">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <Label className="text-base font-semibold">Ativar Modo Beta</Label>
+                    <p className="text-sm text-gray-600">
+                      Libera acesso Premium gratuito para todos os usuários durante o período de teste
+                    </p>
+                  </div>
+                  <Switch
+                    checked={betaConfig.betaModeEnabled}
+                    onCheckedChange={(checked) => 
+                      setBetaConfig({...betaConfig, betaModeEnabled: checked})
+                    }
+                  />
+                </div>
+
+                {betaConfig.betaModeEnabled && (
+                  <div className="space-y-4 border-t pt-4">
+                    <div>
+                      <Label htmlFor="betaEndDate">Data de fim do teste</Label>
+                      <Input
+                        id="betaEndDate"
+                        type="datetime-local"
+                        value={betaConfig.betaEndDate}
+                        onChange={(e) => 
+                          setBetaConfig({...betaConfig, betaEndDate: e.target.value})
+                        }
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="betaMessage">Mensagem exibida aos usuários</Label>
+                      <Textarea
+                        id="betaMessage"
+                        value={betaConfig.betaMessage}
+                        onChange={(e) => 
+                          setBetaConfig({...betaConfig, betaMessage: e.target.value})
+                        }
+                        rows={2}
+                      />
+                    </div>
+
+                    <div className="border-t pt-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <div>
+                          <Label className="font-semibold">Período de Graça após Beta</Label>
+                          <p className="text-xs text-gray-600">
+                            Dar tempo para usuários comprarem Premium após fim do teste
+                          </p>
+                        </div>
+                        <Switch
+                          checked={betaConfig.gracePeriodEnabled}
+                          onCheckedChange={(checked) => 
+                            setBetaConfig({...betaConfig, gracePeriodEnabled: checked})
+                          }
+                        />
+                      </div>
+
+                      {betaConfig.gracePeriodEnabled && (
+                        <div>
+                          <Label htmlFor="gracePeriodDays">Dias de aviso antes de bloquear</Label>
+                          <Input
+                            id="gracePeriodDays"
+                            type="number"
+                            value={betaConfig.gracePeriodDays}
+                            onChange={(e) => 
+                              setBetaConfig({...betaConfig, gracePeriodDays: parseInt(e.target.value)})
+                            }
+                            min="1"
+                            max="7"
+                            className="w-20"
+                          />
+                          <p className="text-xs text-gray-500 mt-1">
+                            Usuários verão countdown: "Faltam X dias para assinar"
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {betaConfig.betaModeEnabled && (
+                <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    <span className="font-medium text-green-900">O que acontece no Modo Beta:</span>
+                  </div>
+                  <ul className="text-sm text-green-800 space-y-1">
+                    <li>• Todos os usuários têm acesso Premium gratuito</li>
+                    <li>• Chat direto com {specialistConfig.name} liberado</li>
+                    <li>• SOS {specialistConfig.name} disponível</li>
+                    <li>• Agendamentos sem cobrança</li>
+                    <li>• Perfeito para coletar feedback e corrigir bugs</li>
+                  </ul>
+                </div>
+              )}
+
+              <Button 
+                onClick={handleSaveBeta} 
+                className={`w-full ${
+                  betaConfig.betaModeEnabled 
+                    ? 'bg-orange-600 hover:bg-orange-700' 
+                    : 'bg-green-600 hover:bg-green-700'
+                }`}
+              >
+                <Save className="w-4 h-4 mr-2" />
+                {betaConfig.betaModeEnabled ? "Ativar Modo Beta" : "Salvar Configurações"}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Automações e Integrações */}
         <Card>

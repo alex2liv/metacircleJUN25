@@ -169,6 +169,14 @@ export const specialistSettings = pgTable("specialist_settings", {
   bio: text("bio"),
   avatar: text("avatar"),
   isActive: boolean("is_active").default(true),
+  // Configurações de teste/beta
+  betaModeEnabled: boolean("beta_mode_enabled").default(false),
+  betaEndDate: timestamp("beta_end_date"),
+  betaMessage: text("beta_message").default("🎉 Acesso Premium Beta - Teste gratuito por tempo limitado!"),
+  // Sistema de countdown pós-beta
+  gracePeriodEnabled: boolean("grace_period_enabled").default(false),
+  gracePeriodDays: integer("grace_period_days").default(3),
+  gracePeriodStartDate: timestamp("grace_period_start_date"),
   createdAt: timestamp("created_at").defaultNow()
 });
 
