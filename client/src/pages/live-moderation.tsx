@@ -42,12 +42,50 @@ interface LiveQuestion {
   moderatorNote?: string;
 }
 
+interface HandRaised {
+  id: number;
+  userId: number;
+  userName: string;
+  isPremium: boolean;
+  timestamp: Date;
+  reason?: string;
+}
+
 export default function LiveModeration() {
   const { user } = useAuth();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const [newQuestion, setNewQuestion] = useState("");
   const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'answered'>('all');
+  const [isHandRaised, setIsHandRaised] = useState(false);
+  const [handRaiseReason, setHandRaiseReason] = useState("");
+
+  // Mãos levantadas
+  const [raisedHands, setRaisedHands] = useState<HandRaised[]>([
+    {
+      id: 1,
+      userId: 2,
+      userName: "Maria Silva",
+      isPremium: true,
+      timestamp: new Date(Date.now() - 2 * 60 * 1000),
+      reason: "Quero compartilhar minha experiência com funis"
+    },
+    {
+      id: 2,
+      userId: 3,
+      userName: "João Santos",
+      isPremium: true,
+      timestamp: new Date(Date.now() - 1 * 60 * 1000),
+      reason: "Tenho uma dúvida sobre anúncios"
+    },
+    {
+      id: 3,
+      userId: 4,
+      userName: "Ana Costa",
+      isPremium: false,
+      timestamp: new Date(Date.now() - 30 * 1000)
+    }
+  ]);
 
   // Perguntas da live
   const [questions, setQuestions] = useState<LiveQuestion[]>([
@@ -94,8 +132,41 @@ export default function LiveModeration() {
     viewers: 47,
     totalQuestions: 23,
     answeredQuestions: 8,
-    duration: "32 min"
+    duration: "32 min",
+    raisedHands: 3
   });
+
+  const handleRaiseHand = () => {
+    if (isHandRaised) {
+      // Baixar a mão
+      setIsHandRaised(false);
+      setHandRaiseReason("");
+      setRaisedHands(raisedHands.filter(h => h.userId !== user?.id));
+      
+      toast({
+        title: "🤚 Mão baixada",
+        description: "Você saiu da fila para falar",
+      });
+    } else {
+      // Levantar a mão
+      const newHand: HandRaised = {
+        id: Date.now(),
+        userId: user?.id || 0,
+        userName: `${user?.firstName} ${user?.lastName}`,
+        isPremium: true,
+        timestamp: new Date(),
+        reason: handRaiseReason
+      };
+
+      setRaisedHands([...raisedHands, newHand]);
+      setIsHandRaised(true);
+      
+      toast({
+        title: "🙋‍♀️ Mão levantada!",
+        description: "Você entrou na fila para falar com a Clarissa",
+      });
+    }
+  };
 
   const handleSubmitQuestion = () => {
     if (!newQuestion.trim()) {
@@ -257,7 +328,7 @@ export default function LiveModeration() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
         {/* Estatísticas da Live */}
         <div className="lg:col-span-3">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
             <Card>
               <CardContent className="p-4 text-center">
                 <div className="text-2xl font-bold text-pink-600">{liveStats.viewers}</div>
@@ -285,6 +356,13 @@ export default function LiveModeration() {
                   {questions.filter(q => q.status === 'pending').length}
                 </div>
                 <p className="text-sm text-gray-600">Aguardando</p>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardContent className="p-4 text-center">
+                <div className="text-2xl font-bold text-orange-600">{raisedHands.length}</div>
+                <p className="text-sm text-gray-600">🙋‍♀️ Mãos levantadas</p>
               </CardContent>
             </Card>
           </div>
@@ -315,12 +393,59 @@ export default function LiveModeration() {
             </CardHeader>
 
             <CardContent className="space-y-4">
+              {/* Botão Levantar a Mão */}
+              {isLiveQA && (
+                <div className="bg-gradient-to-r from-orange-50 to-yellow-50 p-4 rounded-lg border border-orange-200 mb-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl">🙋‍♀️</span>
+                      <span className="font-medium text-orange-900">Quer falar com a Clarissa?</span>
+                    </div>
+                    {raisedHands.length > 0 && (
+                      <Badge className="bg-orange-600 text-white">
+                        {raisedHands.length} na fila
+                      </Badge>
+                    )}
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <Input
+                      placeholder="Motivo (opcional): Ex: Quero compartilhar minha experiência..."
+                      value={handRaiseReason}
+                      onChange={(e) => setHandRaiseReason(e.target.value)}
+                      disabled={isHandRaised}
+                    />
+                    
+                    <Button 
+                      onClick={handleRaiseHand}
+                      className={`w-full ${
+                        isHandRaised 
+                          ? 'bg-red-600 hover:bg-red-700' 
+                          : 'bg-gradient-to-r from-orange-600 to-yellow-600 hover:from-orange-700 hover:to-yellow-700'
+                      }`}
+                    >
+                      {isHandRaised ? (
+                        <>
+                          <X className="w-4 h-4 mr-2" />
+                          Baixar a Mão
+                        </>
+                      ) : (
+                        <>
+                          <span className="text-lg mr-2">🙋‍♀️</span>
+                          Levantar a Mão
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              )}
+
               {/* Formulário para nova pergunta */}
               {isLiveQA && (
                 <div className="bg-gradient-to-r from-pink-50 to-purple-50 p-4 rounded-lg border border-pink-200">
                   <div className="flex items-center gap-2 mb-3">
                     <Mic className="w-4 h-4 text-pink-600" />
-                    <span className="font-medium text-pink-900">Faça sua pergunta para a Clarissa</span>
+                    <span className="font-medium text-pink-900">Faça sua pergunta por escrito</span>
                   </div>
                   
                   <div className="flex gap-2">
@@ -500,6 +625,48 @@ export default function LiveModeration() {
                         <strong>{q.author.name}:</strong> {q.content.substring(0, 60)}...
                       </div>
                     ))}
+                  </div>
+                </div>
+
+                <div className="bg-orange-50 p-3 rounded-lg">
+                  <h4 className="font-medium text-orange-900 mb-2">🙋‍♀️ Mãos Levantadas ({raisedHands.length})</h4>
+                  <div className="space-y-2 max-h-48 overflow-y-auto">
+                    {raisedHands.map((hand, index) => (
+                      <div key={hand.id} className="bg-white p-3 rounded border border-orange-200">
+                        <div className="flex items-center justify-between mb-1">
+                          <div className="flex items-center gap-2">
+                            <Badge className="bg-orange-600 text-white text-xs">
+                              #{index + 1}
+                            </Badge>
+                            <span className="font-medium text-sm">{hand.userName}</span>
+                            {hand.isPremium && (
+                              <Crown className="w-3 h-3 text-purple-600" />
+                            )}
+                          </div>
+                          <span className="text-xs text-gray-500">
+                            {format(hand.timestamp, 'HH:mm', { locale: ptBR })}
+                          </span>
+                        </div>
+                        {hand.reason && (
+                          <p className="text-xs text-gray-700 mt-1">
+                            💬 {hand.reason}
+                          </p>
+                        )}
+                        <div className="flex gap-1 mt-2">
+                          <Button size="sm" className="text-xs bg-green-600 hover:bg-green-700">
+                            Chamar para falar
+                          </Button>
+                          <Button size="sm" variant="outline" className="text-xs">
+                            Pular
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                    {raisedHands.length === 0 && (
+                      <p className="text-sm text-gray-500 text-center py-2">
+                        Nenhuma mão levantada
+                      </p>
+                    )}
                   </div>
                 </div>
 

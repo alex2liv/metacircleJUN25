@@ -47,6 +47,8 @@ export default function VideoCall() {
   const [isPresenting, setIsPresenting] = useState(false);
   const [callDuration, setCallDuration] = useState(0);
   const [isConnected, setIsConnected] = useState(false);
+  const [pinnedParticipant, setPinnedParticipant] = useState<number | null>(null);
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth < 768);
 
   // Participantes simulados
   const [participants] = useState<Participant[]>([
