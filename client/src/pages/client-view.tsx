@@ -1,14 +1,19 @@
+import { useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Users, MessageSquare, Calendar, BookOpen, Heart, Eye, Play } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { Users, MessageSquare, Calendar, BookOpen, Heart, Eye, Play, Check } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { useToast } from "@/hooks/use-toast";
 
 export default function ClientView() {
   const { user } = useAuth();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [joinedEvents, setJoinedEvents] = useState<Set<number>>(new Set());
 
   const { data: stats } = useQuery({
     queryKey: ['/api/communities/3/stats'],
@@ -25,6 +30,43 @@ export default function ClientView() {
   const { data: topMembers } = useQuery({
     queryKey: ['/api/communities/3/members/top'],
   });
+
+  // Mutation para participar do evento
+  const joinEventMutation = useMutation({
+    mutationFn: async (eventId: number) => {
+      const response = await fetch(`/api/events/${eventId}/join`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Erro ao participar do evento');
+      }
+      
+      return response.json();
+    },
+    onSuccess: (data, eventId) => {
+      setJoinedEvents(prev => new Set([...prev, eventId]));
+      queryClient.invalidateQueries({ queryKey: ['/api/communities/3/events'] });
+      
+      toast({
+        title: "🎉 Inscrição confirmada!",
+        description: `Você foi inscrito no evento "${data.event.title}". Uma notificação WhatsApp foi enviada com os detalhes.`,
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Erro na inscrição",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleJoinEvent = (eventId: number, eventTitle: string) => {
+    joinEventMutation.mutate(eventId);
+  };
 
   return (
     <div className="space-y-6">

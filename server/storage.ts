@@ -46,6 +46,8 @@ export interface IStorage {
   getEvent(id: number): Promise<Event | undefined>;
   getUpcomingEvents(communityId: number, limit?: number): Promise<Event[]>;
   createEvent(event: InsertEvent): Promise<Event>;
+  joinEvent(eventId: number, userId: number): Promise<Event>;
+  leaveEvent(eventId: number, userId: number): Promise<Event>;
 
   // Member Points
   getMemberPoints(userId: number, communityId: number): Promise<MemberPoints | undefined>;
@@ -365,6 +367,32 @@ export class MemStorage implements IStorage {
       createdAt: new Date()
     };
     this.events.set(id, event);
+    return event;
+  }
+
+  async joinEvent(eventId: number, userId: number): Promise<Event> {
+    const event = this.events.get(eventId);
+    if (!event) {
+      throw new Error("Event not found");
+    }
+    
+    // Increment attendees count
+    event.attendeesCount = (event.attendeesCount || 0) + 1;
+    this.events.set(eventId, event);
+    
+    return event;
+  }
+
+  async leaveEvent(eventId: number, userId: number): Promise<Event> {
+    const event = this.events.get(eventId);
+    if (!event) {
+      throw new Error("Event not found");
+    }
+    
+    // Decrement attendees count (minimum 0)
+    event.attendeesCount = Math.max((event.attendeesCount || 0) - 1, 0);
+    this.events.set(eventId, event);
+    
     return event;
   }
 

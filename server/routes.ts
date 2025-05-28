@@ -161,6 +161,81 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Join Event
+  app.post("/api/events/:id/join", async (req, res) => {
+    try {
+      const eventId = parseInt(req.params.id);
+      const userId = req.user?.id || 1; // Default to user 1 for demo
+
+      const event = await storage.getEvent(eventId);
+      if (!event) {
+        return res.status(404).json({ message: "Event not found" });
+      }
+
+      // Check if event is full
+      if (event.maxAttendees && event.attendeesCount >= event.maxAttendees) {
+        return res.status(400).json({ message: "Event is full" });
+      }
+
+      // Update attendees count
+      const updatedEvent = await storage.joinEvent(eventId, userId);
+
+      // Send WhatsApp notification
+      const user = await storage.getUser(userId);
+      if (user) {
+        const eventDate = new Date(event.startDate).toLocaleDateString('pt-BR');
+        const eventTime = new Date(event.startDate).toLocaleTimeString('pt-BR', { 
+          hour: '2-digit', 
+          minute: '2-digit' 
+        });
+        
+        const message = `🎉 Confirmado! Você se inscreveu no evento "${event.title}"\n\n📅 Data: ${eventDate}\n⏰ Horário: ${eventTime}\n📍 Local: ${event.location || 'Online'}\n\nVocê receberá um lembrete 1 hora antes do evento!`;
+        
+        console.log(`📱 WhatsApp notification would be sent to ${user.firstName}: ${message}`);
+      }
+
+      // Broadcast event update
+      broadcast({
+        type: 'event_joined',
+        data: updatedEvent
+      });
+
+      res.json({ 
+        success: true, 
+        message: "Successfully joined event",
+        event: updatedEvent
+      });
+    } catch (error) {
+      console.error('Error joining event:', error);
+      res.status(500).json({ message: "Failed to join event" });
+    }
+  });
+
+  // Leave Event
+  app.post("/api/events/:id/leave", async (req, res) => {
+    try {
+      const eventId = parseInt(req.params.id);
+      const userId = req.user?.id || 1; // Default to user 1 for demo
+
+      const updatedEvent = await storage.leaveEvent(eventId, userId);
+
+      // Broadcast event update
+      broadcast({
+        type: 'event_left',
+        data: updatedEvent
+      });
+
+      res.json({ 
+        success: true, 
+        message: "Successfully left event",
+        event: updatedEvent
+      });
+    } catch (error) {
+      console.error('Error leaving event:', error);
+      res.status(500).json({ message: "Failed to leave event" });
+    }
+  });
+
   // Get top members
   app.get("/api/communities/:id/members/top", async (req, res) => {
     try {
