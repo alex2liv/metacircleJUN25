@@ -1,0 +1,97 @@
+
+📂 Estrutura de Diretórios
+/metahub-backend
+  /controllers
+  /routes
+  /services
+  /middleware
+  /models
+  index.js
+  .env
+
+/metahub-frontend
+  /src
+    /components
+    /pages
+    /services
+    /store
+  vite.config.js
+  tailwind.config.js
+  index.html
+
+/docker-compose.metahub.yml
+
+⚖️ Tecnologias Utilizadas
+Backend
+* Node.js + Express
+* WebSocket + REST
+* PostgreSQL (ou SQLite para dev)
+* Redis (cache e fila)
+* JWT + API Key
+* OpenAI integrado
+* Docker + Caddy + Cloudflare Tunnel
+Frontend
+* React + Tailwind CSS
+* shadcn/ui + Radix
+* Zustand ou Redux
+* React Router DOM
+* Framer Motion
+
+📅 Funcionalidades Core
+Contas empresariais (multi-tenant)
+* OMNI, clínicas, agências...
+* Cada conta tem:
+    * Painel independente
+    * Logotipo e cores personalizados
+    * Domínio personalizado (marca branca)
+WhatsApp Multi-Sessão
+* Cada conta pode conectar vários números
+* QR gerado e exibido no painel
+* Status da sessão em tempo real
+* Detecção de falha e reconexão
+Inbox com IA
+* Atendimento em tempo real via WebSocket
+* IA integrada para sugestões de resposta
+* Classificação de sentimento
+* Avaliação de qualidade da conversa
+* Detecção de gargalos
+CRM Integrado
+* Histórico de contatos
+* Etiquetas automáticas
+* Integração com fluxos (n8n, BotConversa)
+* Métricas: tempo de resposta, demora, retorno
+* Detecção de novos, recorrentes, e abandonos
+Construtor de Fluxo Visual
+* Drag-and-drop
+* Blocos:
+    * Texto
+    * Condição
+    * Espera
+    * Redirecionar para humano
+    * IA (GPT ou Camila)
+    * Ação externa (n8n, webhook, Google Sheets)
+Segurança
+* Criptografia por JWT
+* Auditoria de acessos
+* Permissões por papel (admin, atendente, supervisor)
+* Webhooks assíncronos com fila
+
+💼 Primeiros Endpoints Backend
+* POST /connect - iniciar sessão WhatsApp
+* POST /send-message - enviar mensagem
+* GET /sessions - listar sessões ativas
+* DELETE /sessions/:id - remover sessão
+* POST /webhook/n8n - disparo de evento
+* POST /webhook/chatwoot - integrador opcional
+
+📈 Meta futura
+* Dashboards em tempo real
+* Central de relatórios gerenciais
+* Voicebot com entrada de áudio e respostas faladas
+* Transcrição e análise de áudio
+* Avaliação automática de atendente por IA
+* Gestor de campanha com segmentação e ranking
+* Loja de blocos IA (customizados por cliente)
+
+🫰 Status: INICIADO
+Responsável: Xande + Gê Começo oficial: 07/05/2025 Missão: Construir o centro nervoso da MetaSync Digital.

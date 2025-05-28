@@ -1,0 +1,123 @@
+# 🌀 MetaCircle Frontend
+
+> Sistema de Comunidade Moderna inspirado no Circle.so, com design limpo, estrutura modular e integração com backend Node + PostgreSQL.
+
+---
+
+## 📦 Tecnologias Utilizadas
+
+- [React 18+](https://reactjs.org/)
+- [Vite](https://vitejs.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [React Router](https://reactrouter.com/)
+- [Lucide Icons](https://lucide.dev/)
+- [PostgreSQL](https://www.postgresql.org/) (via backend)
+- Integração futura com MetaCircle API (port: 3091)
+
+---
+
+## 🚀 Instalação Local
+
+```bash
+# 1. Clonar o repositório
+git clone https://github.com/seuusuario/metacircle-frontend.git
+
+cd metacircle-frontend
+
+# 2. Instalar dependências
+npm install
+
+# 3. Rodar em modo desenvolvimento
+npm run dev
+```
+
+Acesse em: `http://localhost:5173`
+
+---
+
+## 🛠 Build para Produção
+
+```bash
+npm run build
+```
+
+Para servir a pasta `/dist`:
+
+```bash
+npx serve dist
+```
+
+Em produção, usamos [Caddy](https://caddyserver.com/) para fazer o reverse proxy de `https://metacircle-app.metasyncdigital.com.br` para `/dist`
+
+---
+
+## 📁 Estrutura do Projeto
+
+```bash
+metacircle-frontend/
+├── public/
+├── src/
+│   ├── assets/
+│   ├── components/
+│   ├── layouts/
+│   │   └── CircleLayout.jsx
+│   ├── pages/
+│   │   ├── Dashboard.jsx
+│   │   ├── Cursos.jsx
+│   │   ├── Eventos.jsx
+│   │   ├── Membros.jsx
+│   │   ├── Ranking.jsx
+│   │   └── CreateCommunity.jsx
+│   ├── App.jsx
+│   ├── AppRoutes.jsx
+│   ├── main.jsx
+│   └── index.css
+├── index.html
+├── tailwind.config.js
+├── package.json
+├── vite.config.js
+```
+
+---
+
+## ✍️ Checklist (em andamento)
+
+- [x] Sidebar funcional
+- [x] Layout responsivo com CircleLayout.jsx
+- [x] Dashboard inicial com seções visuais
+- [x] Tema claro por padrão (modo dark a definir)
+- [ ] Fluxo de criação de comunidade completo
+- [ ] Integração com API externa via Supabase / OAuth2
+- [ ] Componentes reutilizáveis (botões, cards, menus)
+- [ ] Página visual: Cursos, Eventos, Membros, Ranking
+- [ ] Animações e responsividade total (mobile-ready)
+
+---
+
+## 📚 Documentação do Backend
+
+O frontend se conecta ao backend via:
+
+- API: `https://metacircle-api.metasyncdigital.com.br`
+- Porta: 3091 (docker interno)
+- Stack: Node.js + PostgreSQL
+
+---
+
+## ✨ Inspiração visual
+
+Interface inspirada no Circle.so com base em prints reais fornecidos.
+
+---
+
+## 👥 Desenvolvedores
+
+- Alexandre Nunes (coordenação geral)
+- ChatGPT (desenvolvimento técnico e IA frontend)
+
+---
+
+## 📘 Licença
+
+Este projeto é proprietário e parte da plataforma MetaSync Digital.
+Todos os direitos reservados © 2025
