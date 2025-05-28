@@ -127,11 +127,11 @@ export default function Onboarding() {
       <Card className="w-full max-w-2xl bg-white shadow-xl border-0">
         {/* Logo */}
         <CardHeader className="text-center pb-6">
-          <div className="mx-auto w-20 h-16 flex items-center justify-center mb-4">
+          <div className="mx-auto w-32 h-24 flex items-center justify-center mb-4">
             <img 
               src={metaSyncLogo} 
               alt="MetaSync Digital" 
-              className="h-12 w-auto object-contain"
+              className="h-20 w-auto object-contain"
             />
           </div>
         </CardHeader>

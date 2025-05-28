@@ -48,11 +48,11 @@ export default function Landing() {
       <Card className="w-full max-w-md bg-white shadow-2xl border-0">
         {/* Logo */}
         <CardHeader className="text-center pb-2">
-          <div className="mx-auto w-20 h-16 flex items-center justify-center mb-4">
+          <div className="mx-auto w-32 h-24 flex items-center justify-center mb-4">
             <img 
               src={metaSyncLogo} 
               alt="MetaSync Digital" 
-              className="h-12 w-auto object-contain"
+              className="h-20 w-auto object-contain"
             />
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">

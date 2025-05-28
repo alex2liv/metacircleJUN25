@@ -86,6 +86,30 @@ export default function SpecialistAdmin() {
     gracePeriodDays: 3
   });
 
+  // Configurações de Preços dos Planos
+  const [planPrices, setPlanPrices] = useState({
+    basicPrice: "29.90",
+    intermediatePrice: "59.90",
+    premiumPrice: "119.90"
+  });
+
+  // Configurações de Suporte
+  const [supportConfig, setSupportConfig] = useState({
+    supportWhatsapp: "17997337322",
+    supportEmail: "suporte@metasync.com.br",
+    supportEnabled: true
+  });
+
+  // Configurações do Assistente IA/ChatGPT
+  const [aiConfig, setAiConfig] = useState({
+    openaiApiKey: "",
+    openaiModel: "gpt-4o",
+    assistantEnabled: false,
+    assistantInstructions: "Você é o assistente oficial desta comunidade. Seja sempre prestativo, claro e amigável nas respostas. Ajude com dúvidas sobre funcionalidades, planos e problemas técnicos.",
+    assistantTemperature: "0.7",
+    assistantMaxTokens: "500"
+  });
+
   const handleSaveSpecialist = () => {
     // Aqui salvaria no backend
     toast({
@@ -117,6 +141,24 @@ export default function SpecialistAdmin() {
       description: betaConfig.betaModeEnabled 
         ? "Todos os usuários agora têm acesso Premium gratuito!" 
         : "Voltou ao modo normal com planos pagos",
+    });
+  };
+
+  const handleSavePrices = () => {
+    // Aqui salvaria no backend
+    toast({
+      title: "💰 Preços atualizados!",
+      description: `Básico: R$ ${planPrices.basicPrice} | Intermediário: R$ ${planPrices.intermediatePrice} | Premium: R$ ${planPrices.premiumPrice}`,
+    });
+  };
+
+  const handleSaveSupport = () => {
+    // Aqui salvaria no backend
+    toast({
+      title: "📞 Configurações de suporte salvas!",
+      description: supportConfig.supportEnabled 
+        ? `WhatsApp: ${supportConfig.supportWhatsapp}` 
+        : "Suporte desabilitado",
     });
   };
 

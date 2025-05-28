@@ -177,6 +177,21 @@ export const specialistSettings = pgTable("specialist_settings", {
   gracePeriodEnabled: boolean("grace_period_enabled").default(false),
   gracePeriodDays: integer("grace_period_days").default(3),
   gracePeriodStartDate: timestamp("grace_period_start_date"),
+  // Configurações de preços dos planos
+  basicPlanPrice: text("basic_plan_price").default("29.90"),
+  intermediatePlanPrice: text("intermediate_plan_price").default("59.90"),
+  premiumPlanPrice: text("premium_plan_price").default("119.90"),
+  // Configurações de suporte
+  supportWhatsapp: text("support_whatsapp").default("17997337322"),
+  supportEmail: text("support_email").default("suporte@metasync.com.br"),
+  supportEnabled: boolean("support_enabled").default(true),
+  // Configurações do ChatGPT/Assistente IA
+  openaiApiKey: text("openai_api_key"),
+  openaiModel: text("openai_model").default("gpt-4o"),
+  assistantEnabled: boolean("assistant_enabled").default(false),
+  assistantInstructions: text("assistant_instructions").default("Você é o assistente oficial desta comunidade. Seja sempre prestativo, claro e amigável."),
+  assistantTemperature: text("assistant_temperature").default("0.7"),
+  assistantMaxTokens: text("assistant_max_tokens").default("500"),
   createdAt: timestamp("created_at").defaultNow()
 });
 
