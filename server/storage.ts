@@ -324,6 +324,7 @@ export class MemStorage implements IStorage {
       id,
       likesCount: 0,
       commentsCount: 0,
+      isPinned: false,
       createdAt: new Date()
     };
     this.posts.set(id, post);
@@ -352,7 +353,15 @@ export class MemStorage implements IStorage {
     const event: Event = { 
       ...insertEvent, 
       id,
+      description: insertEvent.description || null,
+      endDate: insertEvent.endDate || null,
+      location: insertEvent.location || null,
+      youtubeUrl: insertEvent.youtubeUrl || null,
+      eventType: insertEvent.eventType || "meeting",
+      isOnline: insertEvent.isOnline ?? false,
+      maxAttendees: insertEvent.maxAttendees || null,
       attendeesCount: 0,
+      whatsappNotificationsSent: false,
       createdAt: new Date()
     };
     this.events.set(id, event);
