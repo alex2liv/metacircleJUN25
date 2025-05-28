@@ -3,7 +3,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Users, MessageSquare, Calendar, BookOpen, Heart, Eye, Play, Check } from "lucide-react";
+import { Users, MessageSquare, Calendar, BookOpen, Heart, Eye, Play, Check, DollarSign, ExternalLink } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -232,33 +232,101 @@ export default function ClientView() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <BookOpen className="w-5 h-5" />
-            Seus Cursos
+            Cursos Disponíveis
           </CardTitle>
           <CardDescription>
-            Continue aprendendo com nossos cursos exclusivos
+            Aprenda com nossos cursos exclusivos e acelere seu crescimento
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[1, 2, 3].map((course) => (
-              <div key={course} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+            {[
+              {
+                id: 1,
+                title: "React Avançado para Desenvolvedores",
+                description: "Domine React, Next.js, TypeScript e as melhores práticas do mercado",
+                price: "R$ 297",
+                level: "Avançado",
+                duration: "8 semanas",
+                perfectPayUrl: "https://pay.perfectpay.com.br/checkout/react-avancado"
+              },
+              {
+                id: 2,
+                title: "JavaScript do Zero ao Profissional",
+                description: "Aprenda JavaScript moderno, ES6+, APIs e desenvolvimento full-stack",
+                price: "R$ 197",
+                level: "Iniciante",
+                duration: "12 semanas",
+                perfectPayUrl: "https://pay.perfectpay.com.br/checkout/javascript-completo"
+              },
+              {
+                id: 3,
+                title: "Node.js e Banco de Dados",
+                description: "Backend profissional com Node.js, Express, MongoDB e PostgreSQL",
+                price: "R$ 247",
+                level: "Intermediário",
+                duration: "6 semanas",
+                perfectPayUrl: "https://pay.perfectpay.com.br/checkout/nodejs-backend"
+              }
+            ].map((course) => (
+              <div key={course.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow bg-gradient-to-br from-white to-blue-50">
                 <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-3 rounded-lg mb-3">
                   <Play className="w-8 h-8 mx-auto" />
                 </div>
-                <h4 className="font-medium mb-2">Curso React Avançado {course}</h4>
+                <h4 className="font-medium mb-2">{course.title}</h4>
                 <p className="text-sm text-gray-600 mb-3">
-                  Aprenda conceitos avançados de React e Next.js
+                  {course.description}
                 </p>
+                
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-500">Nível:</span>
+                    <Badge variant="outline" className={
+                      course.level === "Iniciante" ? "bg-green-50 text-green-700" :
+                      course.level === "Intermediário" ? "bg-yellow-50 text-yellow-700" :
+                      "bg-red-50 text-red-700"
+                    }>
+                      {course.level}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-500">Duração:</span>
+                    <span className="font-medium">{course.duration}</span>
+                  </div>
+                </div>
+
                 <div className="flex items-center justify-between">
-                  <Badge variant="outline" className="bg-green-50 text-green-700">
-                    Incluído
-                  </Badge>
-                  <Button size="sm">
-                    Continuar
+                  <div className="text-lg font-bold text-blue-600">
+                    {course.price}
+                  </div>
+                  <Button 
+                    size="sm" 
+                    className="bg-gradient-to-r from-blue-600 to-purple-600"
+                    onClick={() => {
+                      window.open(course.perfectPayUrl, '_blank');
+                      toast({
+                        title: "Redirecionando para pagamento",
+                        description: "Você será direcionado para o checkout seguro do PerfectPAY",
+                      });
+                    }}
+                  >
+                    <ExternalLink className="w-4 h-4 mr-1" />
+                    Comprar Agora
                   </Button>
                 </div>
               </div>
             ))}
+          </div>
+          
+          <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="flex items-center gap-2 mb-2">
+              <DollarSign className="w-5 h-5 text-blue-600" />
+              <h4 className="font-medium text-blue-900">Pagamento Seguro via PerfectPAY</h4>
+            </div>
+            <p className="text-sm text-blue-700">
+              Processamento seguro, acesso imediato após aprovação do pagamento. 
+              Aceita PIX, cartão de crédito e boleto bancário.
+            </p>
           </div>
         </CardContent>
       </Card>
