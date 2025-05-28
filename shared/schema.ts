@@ -74,6 +74,16 @@ export const memberPoints = pgTable("member_points", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+// Relacionamento usuário-comunidade com roles específicos por comunidade
+export const communityMembers = pgTable("community_members", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  communityId: integer("community_id").notNull().references(() => communities.id),
+  role: text("role").notNull().default("member"), // owner, admin, moderator, member
+  joinedAt: timestamp("joined_at").notNull().defaultNow(),
+  isActive: boolean("is_active").notNull().default(true),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   createdAt: true,
@@ -102,6 +112,11 @@ export const insertEventSchema = createInsertSchema(events).omit({
   attendeesCount: true,
 });
 
+export const insertCommunityMemberSchema = createInsertSchema(communityMembers).omit({
+  id: true,
+  joinedAt: true,
+});
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type Community = typeof communities.$inferSelect;
@@ -113,3 +128,5 @@ export type InsertPost = z.infer<typeof insertPostSchema>;
 export type Event = typeof events.$inferSelect;
 export type InsertEvent = z.infer<typeof insertEventSchema>;
 export type MemberPoints = typeof memberPoints.$inferSelect;
+export type CommunityMember = typeof communityMembers.$inferSelect;
+export type InsertCommunityMember = z.infer<typeof insertCommunityMemberSchema>;
