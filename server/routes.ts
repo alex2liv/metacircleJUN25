@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
+import { generateChatResponse, testOpenAIConnection } from "./openai-service";
 import { insertPostSchema, insertEventSchema } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -300,6 +301,49 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(memberPoints);
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  // AI Assistant Chat Endpoint
+  app.post("/api/assistant/chat", async (req, res) => {
+    try {
+      const { message, communityId } = req.body;
+      
+      if (!message || typeof message !== 'string') {
+        return res.status(400).json({ error: "Message is required" });
+      }
+
+      // Get community context if provided
+      let communityContext = '';
+      if (communityId) {
+        const community = await storage.getCommunity(communityId);
+        if (community) {
+          communityContext = `Comunidade: ${community.name} - ${community.description}`;
+        }
+      }
+
+      const response = await generateChatResponse(message, communityContext);
+      res.json(response);
+    } catch (error) {
+      console.error('Assistant chat error:', error);
+      res.status(500).json({ error: "Failed to generate response" });
+    }
+  });
+
+  // Test OpenAI Connection
+  app.get("/api/assistant/test", async (req, res) => {
+    try {
+      const isConnected = await testOpenAIConnection();
+      res.json({ 
+        connected: isConnected,
+        hasApiKey: !!process.env.OPENAI_API_KEY 
+      });
+    } catch (error) {
+      res.json({ 
+        connected: false, 
+        hasApiKey: !!process.env.OPENAI_API_KEY,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
     }
   });
 
