@@ -455,6 +455,14 @@ export default function ClientView() {
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Check className="w-4 h-4 text-green-500" />
+                  <span>3 tickets SOS por ano (R$ 357)</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-green-500" />
+                  <span>E-books da especialista</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-green-500" />
                   <span>WhatsApp direto Clarissa Vaz</span>
                 </div>
               </div>
