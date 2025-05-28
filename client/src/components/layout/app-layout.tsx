@@ -4,7 +4,8 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ThemeSelector } from "@/components/theme-selector";
-import { Bell, Menu, Plus, Search } from "lucide-react";
+import { CreateMenu } from "@/components/create-menu";
+import { Bell, Menu, Search } from "lucide-react";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -69,11 +70,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
               {/* Theme Selector */}
               <ThemeSelector />
               
-              {/* Create Button */}
-              <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
-                <Plus className="w-4 h-4 mr-2" />
-                Criar
-              </Button>
+              {/* Create Menu */}
+              <CreateMenu />
             </div>
           </div>
         </header>
