@@ -73,8 +73,14 @@ export default function Courses() {
   });
 
   const handleCourseAccess = (course: any) => {
-    // Abrir em nova aba para manter o usuário na comunidade
-    window.open(course.perfectPayUrl, '_blank');
+    if (user?.email) {
+      // Usar a integração com credenciais automáticas
+      const courseSlug = course.perfectPayUrl.split('/curso/')[1];
+      openPerfectPay(user.email, courseSlug);
+    } else {
+      // Fallback para abrir diretamente
+      window.open(course.perfectPayUrl, '_blank');
+    }
   };
 
   return (

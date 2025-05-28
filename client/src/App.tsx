@@ -11,6 +11,7 @@ import Events from "@/pages/events";
 import Members from "@/pages/members";
 import Ranking from "@/pages/ranking";
 import Courses from "@/pages/courses";
+import Settings from "@/pages/settings";
 import Landing from "@/pages/landing";
 import Onboarding from "@/pages/onboarding";
 import NotFound from "@/pages/not-found";

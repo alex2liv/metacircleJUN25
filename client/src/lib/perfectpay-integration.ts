@@ -45,14 +45,15 @@ export class PerfectPayIntegration {
         throw new Error('Popup bloqueado pelo navegador');
       }
 
-      // Informar o usuário sobre as credenciais
+      // Informar o usuário sobre as credenciais específicas do PerfectPay
       const message = `
-        🔐 Acesso à Plataforma PerfectPay
+        🔐 Credenciais para PerfectPay
         
         Email: ${credentials.email}
         Senha: ${credentials.password}
         
-        Use essas credenciais para fazer login na plataforma de cursos.
+        Observação: Sua senha do PerfectPay é diferente da senha do MetaCircle.
+        Para acesso aos cursos, sempre use a senha: 12345
       `;
 
       // Exibir as credenciais em um alert temporário
@@ -89,6 +90,8 @@ export class PerfectPayIntegration {
             
             Email: ${credentials.email}
             Senha: ${credentials.password}
+            
+            📝 Lembre-se: A senha do PerfectPay (12345) é diferente da sua senha do MetaCircle.
           `);
         }
       }, 1000);

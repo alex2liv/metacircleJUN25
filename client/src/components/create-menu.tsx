@@ -12,6 +12,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 import { useUserRole } from "@/hooks/use-user-role";
+import { useAuth } from "@/hooks/use-auth";
+import { usePerfectPayIntegration } from "@/lib/perfectpay-integration";
 import { RoleBasedLayout } from "@/components/role-based-layout";
 import { Plus, FileText, Calendar, Users, MessageSquare, BookOpen } from "lucide-react";
 import { insertPostSchema, insertEventSchema } from "@shared/schema";
