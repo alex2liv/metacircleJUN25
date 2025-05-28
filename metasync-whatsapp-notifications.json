@@ -1,0 +1,556 @@
+{
+  "name": "MetaSync - Notificações WhatsApp Automáticas",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "metasync-webhook",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-receiver",
+      "name": "Webhook - Receber Eventos",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "metasync-notifications"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "event-type-check",
+              "leftValue": "={{ $json.eventType }}",
+              "rightValue": "new_message",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-new-message",
+      "name": "Se Nova Mensagem",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        460,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "event-type-check-2",
+              "leftValue": "={{ $json.eventType }}",
+              "rightValue": "new_appointment",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-new-appointment",
+      "name": "Se Novo Agendamento",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        460,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.whatsapp.com/send",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $credentials.whatsappToken }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "messaging_product",
+              "value": "whatsapp"
+            },
+            {
+              "name": "to",
+              "value": "={{ $json.specialistPhone }}"
+            },
+            {
+              "name": "type",
+              "value": "text"
+            },
+            {
+              "name": "text",
+              "value": {
+                "body": "🔔 {{ $json.specialistName }}, você tem uma nova mensagem!\n\n👤 De: {{ $json.userName }}\n💬 Mensagem: {{ $json.message }}\n\n📱 Acesse a plataforma: {{ $json.platformUrl }}"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "send-message-notification",
+      "name": "Enviar Notificação - Nova Mensagem",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        680,
+        120
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "whatsapp-credentials",
+          "name": "WhatsApp API Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.whatsapp.com/send",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $credentials.whatsappToken }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "messaging_product",
+              "value": "whatsapp"
+            },
+            {
+              "name": "to",
+              "value": "={{ $json.specialistPhone }}"
+            },
+            {
+              "name": "type",
+              "value": "text"
+            },
+            {
+              "name": "text",
+              "value": {
+                "body": "📅 {{ $json.specialistName }}, novo agendamento!\n\n👤 Cliente: {{ $json.userName }}\n🗓️ Data: {{ $json.appointmentDate }}\n⏰ Horário: {{ $json.appointmentTime }}\n🔥 Tipo: {{ $json.appointmentType }}\n\n📱 Gerencie: {{ $json.platformUrl }}/specialist-admin"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "send-appointment-notification",
+      "name": "Enviar Notificação - Novo Agendamento",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        680,
+        320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "whatsapp-credentials",
+          "name": "WhatsApp API Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "event-type-check-3",
+              "leftValue": "={{ $json.eventType }}",
+              "rightValue": "new_premium_user",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-new-premium",
+      "name": "Se Novo Premium",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        460,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.whatsapp.com/send",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $credentials.whatsappToken }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "messaging_product",
+              "value": "whatsapp"
+            },
+            {
+              "name": "to",
+              "value": "={{ $json.specialistPhone }}"
+            },
+            {
+              "name": "type",
+              "value": "text"
+            },
+            {
+              "name": "text",
+              "value": {
+                "body": "🎉 {{ $json.specialistName }}, novo membro Premium!\n\n👤 Nome: {{ $json.userName }}\n📧 Email: {{ $json.userEmail }}\n💎 Plano: Premium\n💰 Valor: R$ {{ $json.planValue }}\n\n🚀 Agora pode acessar chat direto e SOS!\n📱 Plataforma: {{ $json.platformUrl }}"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "send-premium-notification",
+      "name": "Enviar Notificação - Novo Premium",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        680,
+        520
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "whatsapp-credentials",
+          "name": "WhatsApp API Credentials"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"status\": \"success\", \"message\": \"Notificação enviada\", \"timestamp\": new Date().toISOString() } }}"
+      },
+      "id": "response-success",
+      "name": "Resposta de Sucesso",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        900,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Log do evento recebido\nconsole.log('Evento MetaSync recebido:', $input.all());\n\n// Validar dados obrigatórios\nconst eventData = $input.first().json;\n\nif (!eventData.eventType) {\n  throw new Error('eventType é obrigatório');\n}\n\nif (!eventData.specialistName || !eventData.specialistPhone) {\n  throw new Error('Dados do especialista são obrigatórios');\n}\n\n// Formatear dados para o WhatsApp\nconst formattedData = {\n  ...eventData,\n  specialistPhone: eventData.specialistPhone.replace(/\\D/g, ''), // Remove caracteres não numéricos\n  timestamp: new Date().toISOString()\n};\n\nreturn formattedData;"
+      },
+      "id": "data-processor",
+      "name": "Processar Dados",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        340,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "event-type-check-4",
+              "leftValue": "={{ $json.eventType }}",
+              "rightValue": "sos_request",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-sos-request",
+      "name": "Se Pedido SOS",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        460,
+        800
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.whatsapp.com/send",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $credentials.whatsappToken }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "messaging_product",
+              "value": "whatsapp"
+            },
+            {
+              "name": "to",
+              "value": "={{ $json.specialistPhone }}"
+            },
+            {
+              "name": "type",
+              "value": "text"
+            },
+            {
+              "name": "text",
+              "value": {
+                "body": "🚨 URGENTE! {{ $json.specialistName }}\n\n🆘 Pedido SOS de {{ $json.userName }}\n📱 Telefone: {{ $json.userPhone }}\n⚡ Motivo: {{ $json.sosReason }}\n\n⏰ RESPONDER EM ATÉ 15 MINUTOS!\n📱 Acesse AGORA: {{ $json.platformUrl }}/clarissa-chat"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "send-sos-notification",
+      "name": "Enviar Notificação - SOS URGENTE",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        680,
+        720
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "whatsapp-credentials",
+          "name": "WhatsApp API Credentials"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook - Receber Eventos": {
+      "main": [
+        [
+          {
+            "node": "Processar Dados",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Processar Dados": {
+      "main": [
+        [
+          {
+            "node": "Se Nova Mensagem",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Se Novo Agendamento",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Se Novo Premium",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Se Pedido SOS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Se Nova Mensagem": {
+      "main": [
+        [
+          {
+            "node": "Enviar Notificação - Nova Mensagem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Se Novo Agendamento": {
+      "main": [
+        [
+          {
+            "node": "Enviar Notificação - Novo Agendamento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Se Novo Premium": {
+      "main": [
+        [
+          {
+            "node": "Enviar Notificação - Novo Premium",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Se Pedido SOS": {
+      "main": [
+        [
+          {
+            "node": "Enviar Notificação - SOS URGENTE",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Notificação - Nova Mensagem": {
+      "main": [
+        [
+          {
+            "node": "Resposta de Sucesso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Notificação - Novo Agendamento": {
+      "main": [
+        [
+          {
+            "node": "Resposta de Sucesso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Notificação - Novo Premium": {
+      "main": [
+        [
+          {
+            "node": "Resposta de Sucesso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar Notificação - SOS URGENTE": {
+      "main": [
+        [
+          {
+            "node": "Resposta de Sucesso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "metasync",
+      "name": "MetaSync"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2024-01-01T00:00:00.000Z",
+  "versionId": "1"
+}
