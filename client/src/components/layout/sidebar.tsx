@@ -10,7 +10,8 @@ import {
   Trophy, 
   Users, 
   Circle,
-  MoreHorizontal
+  MoreHorizontal,
+  Eye
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
@@ -22,6 +23,7 @@ const navigationItems = [
   { name: "Eventos", href: "/events", icon: Calendar, badge: "2", badgeVariant: "destructive" as const },
   { name: "Ranking", href: "/ranking", icon: Trophy },
   { name: "Membros", href: "/members", icon: Users },
+  { name: "👁️ Visão Cliente", href: "/client-view", icon: Eye, badge: "DEMO", badgeVariant: "outline" as const },
 ];
 
 const directMessages = [
