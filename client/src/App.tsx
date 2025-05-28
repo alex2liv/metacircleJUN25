@@ -27,6 +27,7 @@ import LiveRooms from "@/pages/live-rooms";
 import LiveModeration from "@/pages/live-moderation";
 import Landing from "@/pages/landing";
 import Onboarding from "@/pages/onboarding";
+import AIAssistant from "@/pages/ai-assistant";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -52,6 +53,7 @@ function Router() {
       <Route path="/specialist-admin" component={SpecialistAdmin} />
       <Route path="/live-rooms" component={LiveRooms} />
       <Route path="/live-moderation" component={LiveModeration} />
+      <Route path="/ai-assistant" component={AIAssistant} />
       <Route path="/settings" component={Settings} />
       <Route path="/" component={Landing} />
       <Route component={NotFound} />
