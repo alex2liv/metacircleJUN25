@@ -343,75 +343,143 @@ export default function ClientView() {
         </CardContent>
       </Card>
 
-      {/* Plano Premium */}
-      <Card className="bg-gradient-to-br from-purple-50 to-blue-50 border-purple-200">
+      {/* Seção de Planos */}
+      <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-purple-700">
-            <Crown className="w-5 h-5" />
-            Plano Premium Total
+          <CardTitle className="flex items-center gap-2">
+            <DollarSign className="w-5 h-5" />
+            Escolha seu Plano
           </CardTitle>
           <CardDescription>
-            Acesso completo + contato direto com especialista
+            Encontre o plano ideal para sua jornada na comunidade
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600 mb-2">R$ 99/mês</div>
-              <p className="text-sm text-gray-600">Tudo incluído</p>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-sm">
-                <Check className="w-4 h-4 text-green-500" />
-                <span>Todos os cursos liberados</span>
+            {/* Plano Básico */}
+            <div className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div className="text-center mb-4">
+                <h3 className="font-bold text-lg text-gray-900">Básico</h3>
+                <div className="text-2xl font-bold text-blue-600 mt-2">R$ 10/mês</div>
+                <p className="text-sm text-gray-600">Ideal para começar</p>
               </div>
-              <div className="flex items-center gap-2 text-sm">
-                <Check className="w-4 h-4 text-green-500" />
-                <span>Lives exclusivas</span>
+              
+              <div className="space-y-2 mb-4">
+                <div className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-green-500" />
+                  <span>Acesso à comunidade</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-green-500" />
+                  <span>Eventos gratuitos</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-green-500" />
+                  <span>Ranking da comunidade</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-green-500" />
+                  <span>Botão cursos MetaSync</span>
+                </div>
               </div>
-              <div className="flex items-center gap-2 text-sm">
-                <Check className="w-4 h-4 text-green-500" />
-                <span>Contato direto com Clarissa Vaz</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm">
-                <Check className="w-4 h-4 text-green-500" />
-                <span>Prioridade no ranking</span>
-              </div>
+
+              <Button className="w-full" variant="outline">
+                Escolher Básico
+              </Button>
             </div>
 
-            <div className="space-y-3">
-              <Button 
-                className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
-                onClick={() => {
-                  // Aqui você pode integrar com Stripe ou sistema de pagamento
-                  toast({
-                    title: "Plano Premium",
-                    description: "Em breve você poderá assinar o plano premium!",
-                  });
-                }}
-              >
-                Assinar Plano Premium
-              </Button>
+            {/* Plano Intermediário */}
+            <div className="border-2 border-blue-500 rounded-lg p-4 hover:shadow-md transition-shadow relative">
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                <Badge className="bg-blue-500">Mais Popular</Badge>
+              </div>
               
-              <Button 
-                variant="outline" 
-                className="w-full border-purple-200 text-purple-600 hover:bg-purple-50"
-                onClick={() => {
-                  const specialistSettings = JSON.parse(localStorage.getItem('specialistSettings') || '{}');
-                  const whatsapp = specialistSettings.specialistWhatsApp || '11910018833';
-                  const name = specialistSettings.specialistName || 'Clarissa Vaz';
-                  
-                  window.open(`https://wa.me/55${whatsapp}?text=Olá ${name}! Vim do MetaCircle e tenho interesse no Plano Premium. Pode me ajudar?`, '_blank');
-                  toast({
-                    title: "Redirecionando para WhatsApp",
-                    description: `Você será direcionado para conversar com ${name}`,
-                  });
-                }}
-              >
-                <MessageCircle className="w-4 h-4 mr-2" />
-                Falar com Clarissa Vaz
+              <div className="text-center mb-4">
+                <h3 className="font-bold text-lg text-gray-900">Intermediário</h3>
+                <div className="text-2xl font-bold text-blue-600 mt-2">R$ 39/mês</div>
+                <p className="text-sm text-gray-600">Para quem quer mais</p>
+              </div>
+              
+              <div className="space-y-2 mb-4">
+                <div className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-green-500" />
+                  <span>Tudo do Básico +</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-green-500" />
+                  <span>3 cursos por mês</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-green-500" />
+                  <span>Lives quinzenais</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-green-500" />
+                  <span>Badge "Membro Ativo"</span>
+                </div>
+              </div>
+
+              <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                Escolher Intermediário
               </Button>
+            </div>
+
+            {/* Plano Premium */}
+            <div className="bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-500 rounded-lg p-4 hover:shadow-md transition-shadow">
+              <div className="text-center mb-4">
+                <h3 className="font-bold text-lg text-purple-700 flex items-center justify-center gap-2">
+                  <Crown className="w-5 h-5" />
+                  Premium
+                </h3>
+                <div className="text-2xl font-bold text-purple-600 mt-2">R$ 99/mês</div>
+                <p className="text-sm text-gray-600">Acesso completo</p>
+              </div>
+              
+              <div className="space-y-2 mb-4">
+                <div className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-green-500" />
+                  <span>Tudo do Intermediário +</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-green-500" />
+                  <span>Todos os cursos ilimitados</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-green-500" />
+                  <span>Lives exclusivas semanais</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-green-500" />
+                  <span>WhatsApp direto Clarissa Vaz</span>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Button className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
+                  Escolher Premium
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="w-full border-purple-200 text-purple-600 hover:bg-purple-50"
+                  onClick={() => {
+                    const specialistSettings = JSON.parse(localStorage.getItem('specialistSettings') || '{}');
+                    const whatsapp = specialistSettings.specialistWhatsApp || '11910018833';
+                    const name = specialistSettings.specialistName || 'Clarissa Vaz';
+                    
+                    window.open(`https://wa.me/55${whatsapp}?text=Olá ${name}! Vim do MetaCircle e tenho interesse no Plano Premium. Pode me ajudar?`, '_blank');
+                    toast({
+                      title: "Redirecionando para WhatsApp",
+                      description: `Você será direcionado para conversar com ${name}`,
+                    });
+                  }}
+                >
+                  <MessageCircle className="w-3 h-3 mr-1" />
+                  Falar com Clarissa
+                </Button>
+              </div>
             </div>
           </div>
         </CardContent>

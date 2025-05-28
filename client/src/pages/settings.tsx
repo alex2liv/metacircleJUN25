@@ -25,8 +25,9 @@ const perfectPaySettingsSchema = z.object({
 const specialistSettingsSchema = z.object({
   specialistName: z.string().min(1, "Nome do especialista é obrigatório").max(100, "Nome muito longo"),
   specialistWhatsApp: z.string().min(10, "WhatsApp inválido").max(15, "WhatsApp muito longo"),
+  basicPlanPrice: z.number().min(1, "Preço deve ser maior que zero").max(999, "Preço muito alto"),
+  intermediatePlanPrice: z.number().min(1, "Preço deve ser maior que zero").max(999, "Preço muito alto"),
   premiumPlanPrice: z.number().min(1, "Preço deve ser maior que zero").max(999, "Preço muito alto"),
-  premiumPlanName: z.string().min(1, "Nome do plano é obrigatório").max(50, "Nome muito longo"),
 });
 
 type PerfectPaySettings = z.infer<typeof perfectPaySettingsSchema>;
@@ -52,8 +53,9 @@ export default function Settings() {
     defaultValues: {
       specialistName: "Clarissa Vaz",
       specialistWhatsApp: "11910018833",
+      basicPlanPrice: 10,
+      intermediatePlanPrice: 39,
       premiumPlanPrice: 99,
-      premiumPlanName: "Plano Premium Total",
     },
   });
 
@@ -329,21 +331,37 @@ export default function Settings() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="premiumPlanName">Nome do Plano Premium</Label>
+                    <Label htmlFor="basicPlanPrice">Preço Plano Básico (R$)</Label>
                     <Input
-                      id="premiumPlanName"
-                      placeholder="Ex: Plano Premium Total"
-                      {...specialistForm.register("premiumPlanName")}
+                      id="basicPlanPrice"
+                      type="number"
+                      placeholder="10"
+                      {...specialistForm.register("basicPlanPrice", { valueAsNumber: true })}
                     />
-                    {specialistForm.formState.errors.premiumPlanName && (
+                    {specialistForm.formState.errors.basicPlanPrice && (
                       <p className="text-sm text-red-500">
-                        {specialistForm.formState.errors.premiumPlanName.message}
+                        {specialistForm.formState.errors.basicPlanPrice.message}
                       </p>
                     )}
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="premiumPlanPrice">Preço Mensal (R$)</Label>
+                    <Label htmlFor="intermediatePlanPrice">Preço Plano Intermediário (R$)</Label>
+                    <Input
+                      id="intermediatePlanPrice"
+                      type="number"
+                      placeholder="39"
+                      {...specialistForm.register("intermediatePlanPrice", { valueAsNumber: true })}
+                    />
+                    {specialistForm.formState.errors.intermediatePlanPrice && (
+                      <p className="text-sm text-red-500">
+                        {specialistForm.formState.errors.intermediatePlanPrice.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="premiumPlanPrice">Preço Plano Premium (R$)</Label>
                     <Input
                       id="premiumPlanPrice"
                       type="number"
@@ -359,14 +377,36 @@ export default function Settings() {
                 </div>
 
                 <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                  <h4 className="font-medium text-purple-900 mb-2">O que inclui o Plano Premium:</h4>
-                  <ul className="text-sm text-purple-800 space-y-1">
-                    <li>✨ Acesso a todos os cursos da plataforma</li>
-                    <li>🎥 Lives exclusivas com o especialista</li>
-                    <li>💬 Contato direto via WhatsApp com o especialista</li>
-                    <li>🏆 Prioridade no ranking da comunidade</li>
-                    <li>📚 Materiais complementares exclusivos</li>
-                  </ul>
+                  <h4 className="font-medium text-purple-900 mb-2">Comparativo dos Planos:</h4>
+                  <div className="grid grid-cols-3 gap-4 text-sm">
+                    <div>
+                      <h5 className="font-medium text-blue-600 mb-2">📦 Básico</h5>
+                      <ul className="text-gray-700 space-y-1">
+                        <li>• Acesso à comunidade</li>
+                        <li>• Eventos gratuitos</li>
+                        <li>• Ranking básico</li>
+                        <li>• Botão cursos MetaSync</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h5 className="font-medium text-blue-600 mb-2">🚀 Intermediário</h5>
+                      <ul className="text-gray-700 space-y-1">
+                        <li>• Tudo do Básico +</li>
+                        <li>• 3 cursos por mês</li>
+                        <li>• Lives quinzenais</li>
+                        <li>• Badge especial</li>
+                      </ul>
+                    </div>
+                    <div>
+                      <h5 className="font-medium text-purple-600 mb-2">👑 Premium</h5>
+                      <ul className="text-gray-700 space-y-1">
+                        <li>• Tudo do Intermediário +</li>
+                        <li>• Cursos ilimitados</li>
+                        <li>• Lives exclusivas semanais</li>
+                        <li>• WhatsApp direto especialista</li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="flex justify-end">
