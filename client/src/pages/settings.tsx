@@ -12,7 +12,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useUserRole } from "@/hooks/use-user-role";
 import { useToast } from "@/hooks/use-toast";
 import { validateSecureUrl, hasAdminAccess, validateFormInput } from "@/lib/security";
-import { Settings2, Lock, ExternalLink, Save, Shield } from "lucide-react";
+import { Settings2, Lock, ExternalLink, Save, Shield, Users } from "lucide-react";
 
 const perfectPaySettingsSchema = z.object({
   defaultPassword: z.string().min(1, "Senha é obrigatória").max(50, "Senha muito longa"),
@@ -22,7 +22,15 @@ const perfectPaySettingsSchema = z.object({
   autoLogin: z.boolean(),
 });
 
+const specialistSettingsSchema = z.object({
+  specialistName: z.string().min(1, "Nome do especialista é obrigatório").max(100, "Nome muito longo"),
+  specialistWhatsApp: z.string().min(10, "WhatsApp inválido").max(15, "WhatsApp muito longo"),
+  premiumPlanPrice: z.number().min(1, "Preço deve ser maior que zero").max(999, "Preço muito alto"),
+  premiumPlanName: z.string().min(1, "Nome do plano é obrigatório").max(50, "Nome muito longo"),
+});
+
 type PerfectPaySettings = z.infer<typeof perfectPaySettingsSchema>;
+type SpecialistSettings = z.infer<typeof specialistSettingsSchema>;
 
 export default function Settings() {
   const { user } = useAuth();
@@ -38,6 +46,47 @@ export default function Settings() {
       autoLogin: true,
     },
   });
+
+  const specialistForm = useForm<SpecialistSettings>({
+    resolver: zodResolver(specialistSettingsSchema),
+    defaultValues: {
+      specialistName: "Clarissa Vaz",
+      specialistWhatsApp: "11910018833",
+      premiumPlanPrice: 99,
+      premiumPlanName: "Plano Premium Total",
+    },
+  });
+
+  const onSpecialistSubmit = async (data: SpecialistSettings) => {
+    setIsLoading(true);
+    try {
+      const validation = validateFormInput(data, specialistSettingsSchema);
+      if (!validation.isValid) {
+        toast({
+          title: "Dados inválidos",
+          description: validation.errors.join(', '),
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Salvar configurações do especialista
+      localStorage.setItem('specialistSettings', JSON.stringify(data));
+      
+      toast({
+        title: "Configurações salvas!",
+        description: "As configurações do especialista foram atualizadas com sucesso.",
+      });
+    } catch (error) {
+      toast({
+        title: "Erro ao salvar",
+        description: "Não foi possível salvar as configurações. Tente novamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const onPerfectPaySubmit = async (data: PerfectPaySettings) => {
     setIsLoading(true);
@@ -113,6 +162,7 @@ export default function Settings() {
       <Tabs defaultValue="perfectpay" className="space-y-6">
         <TabsList>
           <TabsTrigger value="perfectpay">PerfectPay</TabsTrigger>
+          <TabsTrigger value="specialist">Especialista</TabsTrigger>
           <TabsTrigger value="community">Comunidade</TabsTrigger>
           <TabsTrigger value="integrations">Integrações</TabsTrigger>
         </TabsList>
@@ -231,6 +281,105 @@ export default function Settings() {
                   </p>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Configurações do Especialista */}
+        <TabsContent value="specialist">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="w-5 h-5" />
+                Configurações do Especialista Premium
+              </CardTitle>
+              <CardDescription>
+                Configure o especialista e plano premium da sua comunidade
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={specialistForm.handleSubmit(onSpecialistSubmit)} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="specialistName">Nome do Especialista</Label>
+                    <Input
+                      id="specialistName"
+                      placeholder="Ex: Clarissa Vaz"
+                      {...specialistForm.register("specialistName")}
+                    />
+                    {specialistForm.formState.errors.specialistName && (
+                      <p className="text-sm text-red-500">
+                        {specialistForm.formState.errors.specialistName.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="specialistWhatsApp">WhatsApp do Especialista</Label>
+                    <Input
+                      id="specialistWhatsApp"
+                      placeholder="Ex: 11910018833"
+                      {...specialistForm.register("specialistWhatsApp")}
+                    />
+                    {specialistForm.formState.errors.specialistWhatsApp && (
+                      <p className="text-sm text-red-500">
+                        {specialistForm.formState.errors.specialistWhatsApp.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="premiumPlanName">Nome do Plano Premium</Label>
+                    <Input
+                      id="premiumPlanName"
+                      placeholder="Ex: Plano Premium Total"
+                      {...specialistForm.register("premiumPlanName")}
+                    />
+                    {specialistForm.formState.errors.premiumPlanName && (
+                      <p className="text-sm text-red-500">
+                        {specialistForm.formState.errors.premiumPlanName.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="premiumPlanPrice">Preço Mensal (R$)</Label>
+                    <Input
+                      id="premiumPlanPrice"
+                      type="number"
+                      placeholder="99"
+                      {...specialistForm.register("premiumPlanPrice", { valueAsNumber: true })}
+                    />
+                    {specialistForm.formState.errors.premiumPlanPrice && (
+                      <p className="text-sm text-red-500">
+                        {specialistForm.formState.errors.premiumPlanPrice.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                  <h4 className="font-medium text-purple-900 mb-2">O que inclui o Plano Premium:</h4>
+                  <ul className="text-sm text-purple-800 space-y-1">
+                    <li>✨ Acesso a todos os cursos da plataforma</li>
+                    <li>🎥 Lives exclusivas com o especialista</li>
+                    <li>💬 Contato direto via WhatsApp com o especialista</li>
+                    <li>🏆 Prioridade no ranking da comunidade</li>
+                    <li>📚 Materiais complementares exclusivos</li>
+                  </ul>
+                </div>
+
+                <div className="flex justify-end">
+                  <Button 
+                    type="submit" 
+                    disabled={isLoading}
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                  >
+                    <Save className="w-4 h-4 mr-2" />
+                    {isLoading ? "Salvando..." : "Salvar Configurações"}
+                  </Button>
+                </div>
+              </form>
             </CardContent>
           </Card>
         </TabsContent>

@@ -343,6 +343,80 @@ export default function ClientView() {
         </CardContent>
       </Card>
 
+      {/* Plano Premium */}
+      <Card className="bg-gradient-to-br from-purple-50 to-blue-50 border-purple-200">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-purple-700">
+            <Crown className="w-5 h-5" />
+            Plano Premium Total
+          </CardTitle>
+          <CardDescription>
+            Acesso completo + contato direto com especialista
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-purple-600 mb-2">R$ 99/mês</div>
+              <p className="text-sm text-gray-600">Tudo incluído</p>
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-sm">
+                <Check className="w-4 h-4 text-green-500" />
+                <span>Todos os cursos liberados</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <Check className="w-4 h-4 text-green-500" />
+                <span>Lives exclusivas</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <Check className="w-4 h-4 text-green-500" />
+                <span>Contato direto com Clarissa Vaz</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <Check className="w-4 h-4 text-green-500" />
+                <span>Prioridade no ranking</span>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <Button 
+                className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                onClick={() => {
+                  // Aqui você pode integrar com Stripe ou sistema de pagamento
+                  toast({
+                    title: "Plano Premium",
+                    description: "Em breve você poderá assinar o plano premium!",
+                  });
+                }}
+              >
+                Assinar Plano Premium
+              </Button>
+              
+              <Button 
+                variant="outline" 
+                className="w-full border-purple-200 text-purple-600 hover:bg-purple-50"
+                onClick={() => {
+                  const specialistSettings = JSON.parse(localStorage.getItem('specialistSettings') || '{}');
+                  const whatsapp = specialistSettings.specialistWhatsApp || '11910018833';
+                  const name = specialistSettings.specialistName || 'Clarissa Vaz';
+                  
+                  window.open(`https://wa.me/55${whatsapp}?text=Olá ${name}! Vim do MetaCircle e tenho interesse no Plano Premium. Pode me ajudar?`, '_blank');
+                  toast({
+                    title: "Redirecionando para WhatsApp",
+                    description: `Você será direcionado para conversar com ${name}`,
+                  });
+                }}
+              >
+                <MessageCircle className="w-4 h-4 mr-2" />
+                Falar com Clarissa Vaz
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Ranking da Comunidade */}
       <Card>
         <CardHeader>
