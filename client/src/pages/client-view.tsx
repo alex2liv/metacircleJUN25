@@ -395,7 +395,7 @@ export default function ClientView() {
                 <Button 
                   className="bg-white text-purple-600 hover:bg-purple-50"
                   onClick={() => {
-                    window.open('https://wa.me/5511999999999?text=Olá! Vim do MetaCircle e gostaria de conversar com a especialista', '_blank');
+                    window.open('https://wa.me/5511910018833?text=Olá! Vim do MetaCircle e gostaria de conversar com a especialista sobre minha comunidade', '_blank');
                     toast({
                       title: "Redirecionando para WhatsApp",
                       description: "Você será direcionado para conversar com nossa especialista",
@@ -403,17 +403,7 @@ export default function ClientView() {
                   }}
                 >
                   <MessageCircle className="w-4 h-4 mr-2" />
-                  WhatsApp
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="border-white text-white hover:bg-white hover:text-purple-600"
-                  onClick={() => {
-                    window.open('tel:+5511999999999', '_self');
-                  }}
-                >
-                  <Phone className="w-4 h-4 mr-2" />
-                  Ligar Agora
+                  Falar com Especialista
                 </Button>
               </div>
             </div>

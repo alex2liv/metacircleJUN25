@@ -70,8 +70,11 @@ export default function Spaces() {
   });
 
   const handleCreatePost = () => {
-    if (newPost.title && newPost.content) {
-      createPostMutation.mutate(newPost);
+    if (newPost.content) {
+      createPostMutation.mutate({
+        title: newPost.title || "Conversa da comunidade",
+        content: newPost.content
+      });
     }
   };
 
@@ -93,13 +96,13 @@ export default function Spaces() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">💬 Conversas da Comunidade</h1>
+        <h1 className="text-2xl font-bold text-gray-900">💬 Espaço Livre da Comunidade</h1>
         
         <Dialog>
           <DialogTrigger asChild>
             <Button className="bg-gradient-to-r from-blue-600 to-purple-600">
               <Plus className="w-4 h-4 mr-2" />
-              Nova Conversa
+              Compartilhar Algo
             </Button>
           </DialogTrigger>
           <DialogContent>
@@ -108,22 +111,22 @@ export default function Spaces() {
             </DialogHeader>
             <div className="space-y-4">
               <Input
-                placeholder="Título da conversa..."
+                placeholder="Assunto (opcional)..."
                 value={newPost.title}
                 onChange={(e) => setNewPost(prev => ({ ...prev, title: e.target.value }))}
               />
               <Textarea
-                placeholder="Compartilhe algo interessante com a comunidade..."
+                placeholder="O que você quer compartilhar hoje? Ideias, fotos, vídeos, perguntas... Este é nosso espaço livre de conversa! 💬✨"
                 value={newPost.content}
                 onChange={(e) => setNewPost(prev => ({ ...prev, content: e.target.value }))}
                 className="h-32"
               />
               <Button 
                 onClick={handleCreatePost}
-                disabled={createPostMutation.isPending || !newPost.title || !newPost.content}
+                disabled={createPostMutation.isPending || !newPost.content}
                 className="w-full"
               >
-                {createPostMutation.isPending ? "Publicando..." : "Publicar Conversa"}
+                {createPostMutation.isPending ? "Publicando..." : "Compartilhar"}
               </Button>
             </div>
           </DialogContent>
