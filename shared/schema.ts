@@ -117,6 +117,23 @@ export const videos = pgTable("videos", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+// Tabela para cursos integrados com PerfectPAY
+export const courses = pgTable("courses", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description"),
+  thumbnail: text("thumbnail"),
+  price: text("price"), // Armazenado como texto para evitar problemas de precisão
+  perfectPayUrl: text("perfect_pay_url"), // Link de compra do PerfectPAY
+  perfectPayProductId: text("perfect_pay_product_id"), // ID do produto no PerfectPAY
+  level: text("level").default("iniciante"), // iniciante, intermediario, avancado
+  duration: text("duration"), // ex: "4 semanas", "12 horas"
+  enrollmentCount: integer("enrollment_count").default(0),
+  isActive: boolean("is_active").default(true),
+  communityId: integer("community_id").notNull().references(() => communities.id),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   createdAt: true,
@@ -163,6 +180,12 @@ export const insertVideoSchema = createInsertSchema(videos).omit({
   likesCount: true,
 });
 
+export const insertCourseSchema = createInsertSchema(courses).omit({
+  id: true,
+  enrollmentCount: true,
+  createdAt: true,
+});
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type Community = typeof communities.$inferSelect;
@@ -180,3 +203,5 @@ export type Comment = typeof comments.$inferSelect;
 export type InsertComment = z.infer<typeof insertCommentSchema>;
 export type Video = typeof videos.$inferSelect;
 export type InsertVideo = z.infer<typeof insertVideoSchema>;
+export type Course = typeof courses.$inferSelect;
+export type InsertCourse = z.infer<typeof insertCourseSchema>;
