@@ -93,7 +93,7 @@ export default function Spaces() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">💬 Conversas da Comunidade</h1>
+        <h1 className="text-2xl font-bold text-gray-900">💬 Conversas da Comunidade</h1>
         
         <Dialog>
           <DialogTrigger asChild>
@@ -178,7 +178,7 @@ export default function Spaces() {
               {/* Conteúdo do Post */}
               <div className="mb-4">
                 <h3 className="text-lg font-semibold mb-2">{post.title}</h3>
-                <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                <p className="text-gray-700 whitespace-pre-wrap">
                   {post.content}
                 </p>
               </div>
