@@ -228,8 +228,8 @@ export default function ClientView() {
                 </div>
               </div>
             ))}
-            <Button variant="outline" className="w-full">
-              Ver Todas as Discussões
+            <Button variant="outline" className="w-full" onClick={() => window.location.href = '/spaces'}>
+              💬 Entrar no Grupo Geral
             </Button>
           </CardContent>
         </Card>
