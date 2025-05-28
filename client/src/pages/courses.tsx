@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { useQuery } from "@tanstack/react-query";
 import { ExternalLink, Search, BookOpen, Users, Clock, Star } from "lucide-react";
 import { useUserRole } from "@/hooks/use-user-role";
+import { useAuth } from "@/hooks/use-auth";
+import { usePerfectPayIntegration } from "@/lib/perfectpay-integration";
 
 // Mock de cursos - na implementação real viria da API PerfectPay
 const mockCourses = [
@@ -60,6 +62,8 @@ export default function Courses() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedLevel, setSelectedLevel] = useState<string>("all");
   const { hasPermission } = useUserRole();
+  const { user } = useAuth();
+  const { openPerfectPay } = usePerfectPayIntegration();
 
   const filteredCourses = mockCourses.filter(course => {
     const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
