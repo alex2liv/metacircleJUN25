@@ -20,7 +20,8 @@ import {
   Crown,
   MessageSquare,
   Bell,
-  CheckCircle
+  CheckCircle,
+  Bot
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -159,6 +160,16 @@ export default function SpecialistAdmin() {
       description: supportConfig.supportEnabled 
         ? `WhatsApp: ${supportConfig.supportWhatsapp}` 
         : "Suporte desabilitado",
+    });
+  };
+
+  const handleSaveAI = () => {
+    // Aqui salvaria no backend
+    toast({
+      title: aiConfig.assistantEnabled ? "🤖 Assistente IA ativado!" : "❌ Assistente IA desativado",
+      description: aiConfig.assistantEnabled 
+        ? `Modelo: ${aiConfig.openaiModel} | Funcionando 24/7!` 
+        : "ChatGPT desligado - usando respostas pré-definidas",
     });
   };
 
@@ -458,6 +469,247 @@ export default function SpecialistAdmin() {
               >
                 <Save className="w-4 h-4 mr-2" />
                 {betaConfig.betaModeEnabled ? "Ativar Modo Beta" : "Salvar Configurações"}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Configuração de Preços dos Planos */}
+        <Card className="border-green-200 bg-green-50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-green-900">
+              <Crown className="w-5 h-5" />
+              💰 Preços dos Planos
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <Label htmlFor="basicPrice">🥉 Plano Básico (R$)</Label>
+                <Input
+                  id="basicPrice"
+                  type="number"
+                  step="0.01"
+                  value={planPrices.basicPrice}
+                  onChange={(e) => setPlanPrices({...planPrices, basicPrice: e.target.value})}
+                  placeholder="29.90"
+                />
+                <p className="text-xs text-gray-600 mt-1">Chat apenas texto</p>
+              </div>
+              
+              <div>
+                <Label htmlFor="intermediatePrice">🥈 Plano Intermediário (R$)</Label>
+                <Input
+                  id="intermediatePrice"
+                  type="number"
+                  step="0.01"
+                  value={planPrices.intermediatePrice}
+                  onChange={(e) => setPlanPrices({...planPrices, intermediatePrice: e.target.value})}
+                  placeholder="59.90"
+                />
+                <p className="text-xs text-gray-600 mt-1">Chat texto + áudio</p>
+              </div>
+              
+              <div>
+                <Label htmlFor="premiumPrice">👑 Plano Premium (R$)</Label>
+                <Input
+                  id="premiumPrice"
+                  type="number"
+                  step="0.01"
+                  value={planPrices.premiumPrice}
+                  onChange={(e) => setPlanPrices({...planPrices, premiumPrice: e.target.value})}
+                  placeholder="119.90"
+                />
+                <p className="text-xs text-gray-600 mt-1">Acesso total + SOS</p>
+              </div>
+            </div>
+            
+            <Button onClick={handleSavePrices} className="w-full mt-4 bg-green-600 hover:bg-green-700">
+              <Save className="w-4 h-4 mr-2" />
+              Salvar Preços dos Planos
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Configurações do Assistente IA/ChatGPT */}
+        <Card className="border-blue-200 bg-blue-50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-blue-900">
+              <Bot className="w-5 h-5" />
+              🤖 Assistente IA (ChatGPT)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-base font-semibold">Ativar ChatGPT</Label>
+                  <p className="text-sm text-gray-600">
+                    Usar IA real do OpenAI para respostas inteligentes
+                  </p>
+                </div>
+                <Switch
+                  checked={aiConfig.assistantEnabled}
+                  onCheckedChange={(checked) => 
+                    setAiConfig({...aiConfig, assistantEnabled: checked})
+                  }
+                />
+              </div>
+
+              {aiConfig.assistantEnabled && (
+                <div className="space-y-4 border-t pt-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="openaiApiKey">Chave API OpenAI *</Label>
+                      <Input
+                        id="openaiApiKey"
+                        type="password"
+                        value={aiConfig.openaiApiKey}
+                        onChange={(e) => setAiConfig({...aiConfig, openaiApiKey: e.target.value})}
+                        placeholder="sk-..."
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Obtenha em: <a href="https://platform.openai.com/api-keys" target="_blank" className="text-blue-600">platform.openai.com</a>
+                      </p>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="openaiModel">Modelo GPT</Label>
+                      <select
+                        id="openaiModel"
+                        value={aiConfig.openaiModel}
+                        onChange={(e) => setAiConfig({...aiConfig, openaiModel: e.target.value})}
+                        className="w-full p-2 border rounded-md"
+                      >
+                        <option value="gpt-4o">GPT-4o (Recomendado)</option>
+                        <option value="gpt-4">GPT-4</option>
+                        <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="assistantInstructions">Instruções para o Assistente</Label>
+                    <Textarea
+                      id="assistantInstructions"
+                      value={aiConfig.assistantInstructions}
+                      onChange={(e) => setAiConfig({...aiConfig, assistantInstructions: e.target.value})}
+                      rows={3}
+                      placeholder="Como o assistente deve se comportar..."
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="assistantTemperature">Criatividade (0-1)</Label>
+                      <Input
+                        id="assistantTemperature"
+                        type="number"
+                        step="0.1"
+                        min="0"
+                        max="1"
+                        value={aiConfig.assistantTemperature}
+                        onChange={(e) => setAiConfig({...aiConfig, assistantTemperature: e.target.value})}
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="assistantMaxTokens">Tokens máximos</Label>
+                      <Input
+                        id="assistantMaxTokens"
+                        type="number"
+                        value={aiConfig.assistantMaxTokens}
+                        onChange={(e) => setAiConfig({...aiConfig, assistantMaxTokens: e.target.value})}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className={`p-3 rounded-lg ${aiConfig.assistantEnabled ? 'bg-green-50 border border-green-200' : 'bg-gray-50 border border-gray-200'}`}>
+                <div className="flex items-center gap-2 mb-2">
+                  <div className={`w-2 h-2 rounded-full ${aiConfig.assistantEnabled ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+                  <span className="font-medium text-sm">
+                    {aiConfig.assistantEnabled ? 'IA Ativada' : 'Modo Básico'}
+                  </span>
+                </div>
+                <p className="text-xs text-gray-600">
+                  {aiConfig.assistantEnabled 
+                    ? 'Respostas inteligentes com ChatGPT em tempo real'
+                    : 'Usando respostas pré-programadas (sem custo adicional)'}
+                </p>
+              </div>
+
+              <Button 
+                onClick={handleSaveAI} 
+                className={`w-full ${aiConfig.assistantEnabled ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-600 hover:bg-gray-700'}`}
+              >
+                <Save className="w-4 h-4 mr-2" />
+                {aiConfig.assistantEnabled ? 'Ativar ChatGPT' : 'Salvar Configurações'}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Configurações de Suporte */}
+        <Card className="border-purple-200 bg-purple-50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-purple-900">
+              <Phone className="w-5 h-5" />
+              📞 Suporte ao Cliente
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label className="text-base font-semibold">Habilitar Suporte</Label>
+                  <p className="text-sm text-gray-600">
+                    Mostrar opções de contato para usuários
+                  </p>
+                </div>
+                <Switch
+                  checked={supportConfig.supportEnabled}
+                  onCheckedChange={(checked) => 
+                    setSupportConfig({...supportConfig, supportEnabled: checked})
+                  }
+                />
+              </div>
+
+              {supportConfig.supportEnabled && (
+                <div className="space-y-4 border-t pt-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="supportWhatsapp">WhatsApp de Suporte</Label>
+                      <Input
+                        id="supportWhatsapp"
+                        type="tel"
+                        value={supportConfig.supportWhatsapp}
+                        onChange={(e) => setSupportConfig({...supportConfig, supportWhatsapp: e.target.value})}
+                        placeholder="17997337322"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="supportEmail">Email de Suporte</Label>
+                      <Input
+                        id="supportEmail"
+                        type="email"
+                        value={supportConfig.supportEmail}
+                        onChange={(e) => setSupportConfig({...supportConfig, supportEmail: e.target.value})}
+                        placeholder="suporte@empresa.com"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <Button 
+                onClick={handleSaveSupport} 
+                className="w-full bg-purple-600 hover:bg-purple-700"
+              >
+                <Save className="w-4 h-4 mr-2" />
+                Salvar Configurações de Suporte
               </Button>
             </div>
           </CardContent>

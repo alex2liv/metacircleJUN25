@@ -55,29 +55,39 @@ export function FloatingHelpButton() {
     if (msg.includes('plano') || msg.includes('preço')) {
       return `💳 **Nossos Planos:**
 
-🥉 **Básico** - R$ 29,90/mês
+🥉 **Básico** - Preço configurável no admin
 • Chat apenas texto
+• Eventos limitados
 
-🥈 **Intermediário** - R$ 59,90/mês  
+🥈 **Intermediário** - Preço configurável no admin  
 • Chat texto + áudio
+• 5 mensagens/dia com especialista
 
-👑 **Premium** - R$ 119,90/mês
-• Acesso total + SOS Clarissa
+👑 **Premium** - Preço configurável no admin
+• Acesso total + 3 SOS/ano
+• Chat ilimitado com especialista
 
-🎁 **14 dias grátis** para novos usuários!
+🎁 **14 dias Premium grátis** para testar!
 
-Quer detalhes de algum plano específico?`;
+Os preços são definidos pelo administrador da comunidade.`;
     }
 
-    if (msg.includes('whatsapp') || msg.includes('notifica')) {
-      return `📱 **Configurar WhatsApp:**
+    if (msg.includes('criar') || msg.includes('post') || msg.includes('evento')) {
+      return `📝 **Criar Conteúdo:**
 
-1. Vá em Configurações → Notificações
-2. Adicione seu número
-3. Ative as opções desejadas
+**Para criar posts:**
+1. Clique no botão "+" no topo da tela
+2. Selecione "Criar Post"
+3. Escolha o espaço da comunidade
+4. Adicione título e conteúdo
 
-✅ Eventos, comentários e agendamentos
-💡 Premium recebe notificações prioritárias!`;
+**Para agendar eventos:**
+1. Clique no botão "+" 
+2. Selecione "Agendar Evento"
+3. Preencha detalhes do evento
+4. Notificações WhatsApp automáticas
+
+Precisa de ajuda com algo específico?`;
     }
 
     if (msg.includes('erro') || msg.includes('problema')) {
@@ -86,21 +96,40 @@ Quer detalhes de algum plano específico?`;
 **Teste primeiro:**
 ✅ Atualizar página (F5)
 ✅ Limpar cache do navegador
+✅ Verificar conexão internet
 
 **Se persistir:**
 📱 WhatsApp: 17997337322
-💬 Chat completo no assistente IA
+💬 Chat completo: clique em "Assistente IA"
+📧 Email: suporte@metasync.com.br
 
-Precisa de mais detalhes?`;
+Me conte qual erro específico está vendo!`;
     }
 
-    return `Entendi! 😊 Para ajuda mais detalhada:
+    if (msg.includes('assistente') || msg.includes('ai') || msg.includes('gpt')) {
+      return `🤖 **Sobre o Assistente IA:**
 
-🤖 **Chat Completo:** Clique em "Assistente IA"
-📱 **WhatsApp:** 17997337322  
-📧 **Email:** suporte@metasync.com.br
+**Para ativar ChatGPT real:**
+1. Vá no Painel Admin
+2. Seção "Assistente IA"
+3. Adicione sua chave OpenAI
+4. Configure instruções personalizadas
 
-Ou me diga especificamente o que precisa!`;
+**Sem chave:** Usa respostas básicas
+**Com chave:** ChatGPT inteligente 24/7
+
+Quer que eu explique como configurar?`;
+    }
+
+    return `Entendi! 😊 Posso ajudar com:
+
+💳 **"planos"** - Ver preços e recursos
+📝 **"criar post"** - Como publicar conteúdo  
+🔧 **"erro"** - Resolver problemas técnicos
+🤖 **"assistente"** - Configurar ChatGPT
+📱 **WhatsApp:** 17997337322
+
+Digite uma palavra-chave ou sua dúvida específica!`;
   };
 
   const quickActions = [
