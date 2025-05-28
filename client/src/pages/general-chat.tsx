@@ -245,9 +245,12 @@ export default function GeneralChat() {
             className="text-white hover:bg-white/20 p-2"
             onClick={() => {
               toast({
-                title: "📞 Iniciando chamada de voz",
-                description: "Conectando com o grupo...",
+                title: "📞 Abrindo agendamento",
+                description: "Redirecionando para agendar videochamada...",
               });
+              setTimeout(() => {
+                setLocation('/schedule-meeting');
+              }, 1000);
             }}
           >
             <Phone className="w-5 h-5" />

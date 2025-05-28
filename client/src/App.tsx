@@ -18,6 +18,9 @@ import BasicPlanView from "@/pages/basic-plan-view";
 import GeneralChat from "@/pages/general-chat";
 import BasicChat from "@/pages/basic-chat";
 import IntermediateChat from "@/pages/intermediate-chat";
+import VideoCall from "@/pages/video-call";
+import ScheduleMeeting from "@/pages/schedule-meeting";
+import LiveRooms from "@/pages/live-rooms";
 import Landing from "@/pages/landing";
 import Onboarding from "@/pages/onboarding";
 import NotFound from "@/pages/not-found";
@@ -38,6 +41,8 @@ function Router() {
       <Route path="/general-chat" component={GeneralChat} />
       <Route path="/basic-chat" component={BasicChat} />
       <Route path="/intermediate-chat" component={IntermediateChat} />
+      <Route path="/video-call" component={VideoCall} />
+      <Route path="/schedule-meeting" component={ScheduleMeeting} />
       <Route path="/settings" component={Settings} />
       <Route path="/" component={Landing} />
       <Route component={NotFound} />
