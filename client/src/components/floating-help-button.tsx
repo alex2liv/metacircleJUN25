@@ -134,9 +134,9 @@ Digite uma palavra-chave ou sua dúvida específica!`;
 
   const quickActions = [
     { label: "Ver Planos", action: () => setNewMessage("Quais são os planos disponíveis?") },
+    { label: "Criar Post", action: () => setNewMessage("Como criar post?") },
     { label: "Problema Técnico", action: () => setNewMessage("Estou com erro no sistema") },
-    { label: "WhatsApp", action: () => setNewMessage("Como configurar WhatsApp?") },
-    { label: "Suporte Humano", action: () => window.open("https://wa.me/5517997337322", "_blank") }
+    { label: "Configurar IA", action: () => setNewMessage("Como ativar assistente ChatGPT?") }
   ];
 
   return (
