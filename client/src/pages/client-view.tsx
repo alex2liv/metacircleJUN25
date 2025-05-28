@@ -9,11 +9,13 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useToast } from "@/hooks/use-toast";
+import { useLocation } from "wouter";
 
 export default function ClientView() {
   const { user } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [, setLocation] = useLocation();
   const [joinedEvents, setJoinedEvents] = useState<Set<number>>(new Set());
 
   const { data: stats } = useQuery({
@@ -164,7 +166,7 @@ export default function ClientView() {
           </CardContent>
         </Card>
 
-        <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => window.location.href = '/events'}>
+        <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setLocation('/events')}>
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -228,7 +230,7 @@ export default function ClientView() {
                 </div>
               </div>
             ))}
-            <Button variant="outline" className="w-full" onClick={() => window.location.href = '/spaces'}>
+            <Button variant="outline" className="w-full" onClick={() => setLocation('/spaces')}>
               💬 Entrar no Grupo Geral
             </Button>
           </CardContent>
@@ -581,7 +583,7 @@ export default function ClientView() {
       </Card>
 
       {/* Ranking da Comunidade */}
-      <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => window.location.href = '/ranking'}>
+      <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setLocation('/ranking')}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="w-5 h-5" />
