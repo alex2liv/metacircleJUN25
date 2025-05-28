@@ -412,11 +412,11 @@ export default function ClientView() {
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Check className="w-4 h-4 text-green-500" />
-                  <span>Lives quinzenais</span>
+                  <span>1 live mensal</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Check className="w-4 h-4 text-green-500" />
-                  <span>Badge "Membro Ativo"</span>
+                  <span>2 podcasts por mês</span>
                 </div>
               </div>
 
@@ -443,11 +443,15 @@ export default function ClientView() {
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Check className="w-4 h-4 text-green-500" />
-                  <span>Todos os cursos ilimitados</span>
+                  <span>Cursos ilimitados</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Check className="w-4 h-4 text-green-500" />
-                  <span>Lives exclusivas semanais</span>
+                  <span>2 lives mensais exclusivas</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Check className="w-4 h-4 text-green-500" />
+                  <span>Podcast semanal</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Check className="w-4 h-4 text-green-500" />

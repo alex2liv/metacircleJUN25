@@ -393,8 +393,8 @@ export default function Settings() {
                       <ul className="text-gray-700 space-y-1">
                         <li>• Tudo do Básico +</li>
                         <li>• 3 cursos por mês</li>
-                        <li>• Lives quinzenais</li>
-                        <li>• Badge especial</li>
+                        <li>• 1 live mensal</li>
+                        <li>• 2 podcasts por mês</li>
                       </ul>
                     </div>
                     <div>
@@ -402,7 +402,8 @@ export default function Settings() {
                       <ul className="text-gray-700 space-y-1">
                         <li>• Tudo do Intermediário +</li>
                         <li>• Cursos ilimitados</li>
-                        <li>• Lives exclusivas semanais</li>
+                        <li>• 2 lives mensais exclusivas</li>
+                        <li>• Podcast semanal</li>
                         <li>• WhatsApp direto especialista</li>
                       </ul>
                     </div>
