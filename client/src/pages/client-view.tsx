@@ -73,7 +73,7 @@ export default function ClientView() {
 
   return (
     <div className="space-y-6">
-      {/* Banner Trial Premium */}
+      {/* Banner Trial Premium - Cartão Obrigatório */}
       <div className="bg-gradient-to-r from-amber-500 to-orange-600 text-white p-4 rounded-lg border-2 border-amber-300">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -81,8 +81,8 @@ export default function ClientView() {
               <Crown className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h3 className="font-bold text-lg">🔥 Trial Premium Ativo!</h3>
-              <p className="text-amber-100 text-sm">Você está testando o plano Premium gratuitamente</p>
+              <h3 className="font-bold text-lg">🔥 Trial Premium Gratuito!</h3>
+              <p className="text-amber-100 text-sm">Cadastre seu cartão e teste 14 dias GRÁTIS</p>
             </div>
           </div>
           <div className="text-right">
@@ -100,16 +100,23 @@ export default function ClientView() {
         </div>
         <div className="mt-3 text-center">
           <p className="text-sm text-amber-100 mb-2">
-            💳 Após o trial, cobrança automática de R$ 99/mês via PerfectPay
+            💳 Cartão cadastrado - cobrança automática apenas após 14 dias
           </p>
           <div className="flex gap-2 justify-center">
             <Button size="sm" className="bg-white text-orange-600 hover:bg-gray-100">
-              Assinar Agora
+              Confirmar Assinatura
             </Button>
             <Button size="sm" variant="outline" className="border-white text-white hover:bg-white/10">
-              Cancelar Trial
+              Gerenciar Cartão
             </Button>
           </div>
+        </div>
+        
+        {/* Estratégia de upgrade */}
+        <div className="mt-3 p-2 bg-white/10 rounded-lg text-center text-xs">
+          <p className="text-amber-100">
+            💡 <strong>Dica:</strong> Assinantes Básico ganham 24h Premium | Intermediário ganham 48h Premium
+          </p>
         </div>
       </div>
 

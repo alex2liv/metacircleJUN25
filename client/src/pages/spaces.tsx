@@ -136,7 +136,14 @@ export default function Spaces() {
       {/* Espaços da Comunidade */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         {spaces?.map((space: any) => (
-          <Card key={space.id} className="hover:shadow-md transition-shadow cursor-pointer">
+          <Card 
+            key={space.id} 
+            className="hover:shadow-md transition-shadow cursor-pointer"
+            onClick={() => {
+              // Aqui você pode navegar para a página específica do espaço
+              console.log(`Abrindo espaço: ${space.name}`);
+            }}
+          >
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
@@ -144,8 +151,12 @@ export default function Spaces() {
                 </div>
                 <div>
                   <h3 className="font-medium">{space.name}</h3>
-                  <p className="text-sm text-gray-600">{space.description || 'Espaço da comunidade'}</p>
+                  <p className="text-sm text-gray-600">{space.description || 'Espaço livre para discussões'}</p>
                 </div>
+              </div>
+              <div className="mt-3 flex items-center gap-2 text-xs text-gray-500">
+                <MessageSquare className="w-3 h-3" />
+                <span>Clique para entrar</span>
               </div>
             </CardContent>
           </Card>
