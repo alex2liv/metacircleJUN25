@@ -71,6 +71,46 @@ export default function ClientView() {
 
   return (
     <div className="space-y-6">
+      {/* Banner Trial Premium */}
+      <div className="bg-gradient-to-r from-amber-500 to-orange-600 text-white p-4 rounded-lg border-2 border-amber-300">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+              <Crown className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h3 className="font-bold text-lg">🔥 Trial Premium Ativo!</h3>
+              <p className="text-amber-100 text-sm">Você está testando o plano Premium gratuitamente</p>
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="bg-white/20 rounded-lg px-3 py-2">
+              <p className="text-sm font-medium">⏰ Restam</p>
+              <p className="text-2xl font-bold">8 dias</p>
+            </div>
+          </div>
+        </div>
+        <div className="mt-3 flex items-center gap-2">
+          <div className="flex-1 bg-white/20 rounded-full h-2">
+            <div className="bg-white h-2 rounded-full" style={{width: '43%'}}></div>
+          </div>
+          <p className="text-sm text-amber-100">6 de 14 dias utilizados</p>
+        </div>
+        <div className="mt-3 text-center">
+          <p className="text-sm text-amber-100 mb-2">
+            💳 Após o trial, cobrança automática de R$ 99/mês via PerfectPay
+          </p>
+          <div className="flex gap-2 justify-center">
+            <Button size="sm" className="bg-white text-orange-600 hover:bg-gray-100">
+              Assinar Agora
+            </Button>
+            <Button size="sm" variant="outline" className="border-white text-white hover:bg-white/10">
+              Cancelar Trial
+            </Button>
+          </div>
+        </div>
+      </div>
+
       {/* Cabeçalho Cliente */}
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-lg">
         <div className="flex items-center justify-between mb-4">
@@ -493,13 +533,40 @@ export default function ClientView() {
                 </Button>
                 
                 {/* Status Premium - apenas para membros Premium */}
-                <div className="mt-3 p-2 bg-purple-100 rounded-lg text-center">
-                  <p className="text-xs text-purple-700 font-medium">
-                    🎫 Tickets SOS 2024: 1/3 utilizados
-                  </p>
-                  <p className="text-xs text-purple-600 mt-1">
-                    Próxima renovação: Janeiro 2025
-                  </p>
+                <div className="mt-3 p-2 bg-purple-100 rounded-lg">
+                  <div className="text-center mb-2">
+                    <p className="text-xs text-purple-700 font-medium">
+                      🎫 Tickets SOS 2024: 1/3 utilizados
+                    </p>
+                    <p className="text-xs text-purple-600">
+                      Próxima renovação: Janeiro 2025
+                    </p>
+                  </div>
+                  
+                  {/* Termômetro de progresso para ganhar ticket bônus */}
+                  <div className="mt-3">
+                    <div className="flex items-center justify-between text-xs text-purple-700 mb-1">
+                      <span>🔥 Ticket Bônus</span>
+                      <span>450/500 pts</span>
+                    </div>
+                    <div className="w-full bg-purple-200 rounded-full h-2">
+                      <div className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full" style={{width: '90%'}}></div>
+                    </div>
+                    <p className="text-xs text-purple-600 mt-1 text-center">
+                      🎯 Mais 50 pontos para ganhar 1 ticket SOS extra!
+                    </p>
+                    
+                    {/* Como ganhar pontos */}
+                    <div className="mt-2 text-xs text-purple-700">
+                      <p className="font-medium mb-1">Como ganhar pontos:</p>
+                      <div className="grid grid-cols-2 gap-1">
+                        <span>💬 Postar: +20pts</span>
+                        <span>❤️ Curtir: +5pts</span>
+                        <span>🎯 Evento: +30pts</span>
+                        <span>📚 Curso: +50pts</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
