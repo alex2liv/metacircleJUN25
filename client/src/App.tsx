@@ -45,6 +45,7 @@ function Router() {
       <Route path="/intermediate-chat" component={IntermediateChat} />
       <Route path="/video-call" component={VideoCall} />
       <Route path="/schedule-meeting" component={ScheduleMeeting} />
+      <Route path="/schedule-clarissa" component={ScheduleClarissa} />
       <Route path="/live-rooms" component={LiveRooms} />
       <Route path="/live-moderation" component={LiveModeration} />
       <Route path="/settings" component={Settings} />
