@@ -16,7 +16,9 @@ import {
   ArrowLeft,
   Phone,
   MoreVertical,
-  Smile
+  Smile,
+  Lock,
+  Crown
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
@@ -39,21 +41,19 @@ interface ChatMessage {
   fileName?: string;
 }
 
-export default function GeneralChat() {
+export default function IntermediateChat() {
   const { user } = useAuth();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const [message, setMessage] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const imageInputRef = useRef<HTMLInputElement>(null);
 
-  // Mensagens simuladas do chat
+  // Mensagens simuladas com áudio permitido
   const [messages] = useState<ChatMessage[]>([
     {
       id: 1,
-      content: "Oi pessoal! Como estão hoje? 😊",
+      content: "Oi pessoal! Agora posso mandar áudio! 🎤",
       authorId: 2,
       author: { firstName: "Maria", lastName: "Silva" },
       type: 'text',
@@ -61,37 +61,19 @@ export default function GeneralChat() {
     },
     {
       id: 2,
-      content: "Tudo bem! Acabei de assistir o último curso da Clarissa",
-      authorId: 3,
-      author: { firstName: "João", lastName: "Santos" },
-      type: 'text',
-      timestamp: new Date(Date.now() - 25 * 60 * 1000)
-    },
-    {
-      id: 3,
-      content: "Áudio sobre o workshop de hoje...",
-      authorId: 2,
-      author: { firstName: "Maria", lastName: "Silva" },
-      type: 'audio',
-      timestamp: new Date(Date.now() - 20 * 60 * 1000),
-      audioUrl: "audio-exemplo.mp3"
-    },
-    {
-      id: 4,
-      content: "Compartilhando material do curso",
+      content: "Áudio sobre o plano intermediário...",
       authorId: 1,
       author: { firstName: "Alexandre", lastName: "Nunes" },
-      type: 'document',
-      timestamp: new Date(Date.now() - 15 * 60 * 1000),
-      documentUrl: "material-curso.pdf",
-      fileName: "Material_Curso_React.pdf"
+      type: 'audio',
+      timestamp: new Date(Date.now() - 25 * 60 * 1000),
+      audioUrl: "audio-exemplo.mp3"
     }
   ]);
 
   const handleSendMessage = () => {
     if (message.trim()) {
       toast({
-        title: "Mensagem enviada!",
+        title: "💬 Mensagem enviada!",
         description: `"${message.substring(0, 30)}..."`,
       });
       setMessage("");
@@ -104,10 +86,9 @@ export default function GeneralChat() {
     
     toast({
       title: "🎤 Gravando áudio",
-      description: "Clique novamente para parar",
+      description: "Recurso liberado no plano Intermediário!",
     });
 
-    // Simular tempo de gravação
     const interval = setInterval(() => {
       setRecordingTime(prev => prev + 1);
     }, 1000);
@@ -127,22 +108,12 @@ export default function GeneralChat() {
     });
   };
 
-  const handleFileUpload = (type: 'document' | 'image') => {
-    if (type === 'document') {
-      fileInputRef.current?.click();
-    } else {
-      imageInputRef.current?.click();
-    }
-  };
-
-  const handleFileSelected = (event: React.ChangeEvent<HTMLInputElement>, type: 'document' | 'image') => {
-    const file = event.target.files?.[0];
-    if (file) {
-      toast({
-        title: type === 'document' ? "📎 Documento enviado!" : "📷 Foto enviada!",
-        description: `${file.name} foi compartilhado no grupo`,
-      });
-    }
+  const showPremiumFeature = (feature: string) => {
+    toast({
+      title: `👑 ${feature} é Premium!`,
+      description: "Upgrade para Premium e tenha acesso completo!",
+      duration: 5000,
+    });
   };
 
   const renderMessage = (msg: ChatMessage) => {
@@ -191,22 +162,6 @@ export default function GeneralChat() {
               </div>
             )}
             
-            {msg.type === 'document' && (
-              <div className="flex items-center gap-2">
-                <FileText className="w-6 h-6" />
-                <div>
-                  <p className="text-sm font-medium">{msg.fileName}</p>
-                  <p className="text-xs opacity-75">PDF • 2.3 MB</p>
-                </div>
-              </div>
-            )}
-            
-            {msg.type === 'image' && (
-              <div className="w-40 h-32 bg-gray-200 rounded-lg flex items-center justify-center">
-                <Camera className="w-8 h-8 text-gray-400" />
-              </div>
-            )}
-            
             <p className="text-xs opacity-75 mt-1">
               {format(msg.timestamp, 'HH:mm', { locale: ptBR })}
             </p>
@@ -219,7 +174,7 @@ export default function GeneralChat() {
   return (
     <div className="flex flex-col h-screen max-h-screen">
       {/* Header do Chat */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 flex items-center gap-3">
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 flex items-center gap-3">
         <Button 
           variant="ghost" 
           size="sm" 
@@ -230,97 +185,94 @@ export default function GeneralChat() {
         </Button>
         
         <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-          <span className="text-lg">💬</span>
+          <span className="text-lg">🎤</span>
         </div>
         
         <div className="flex-1">
-          <h2 className="font-bold">Grupo Geral</h2>
-          <p className="text-sm text-blue-100">156 membros • 12 online</p>
+          <h2 className="font-bold">Grupo Geral (Intermediário)</h2>
+          <p className="text-sm text-blue-100">Com microfone liberado!</p>
         </div>
         
-        <div className="flex gap-2">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="text-white hover:bg-white/20 p-2"
-            onClick={() => {
-              toast({
-                title: "📞 Iniciando chamada de voz",
-                description: "Conectando com o grupo...",
-              });
-            }}
-          >
-            <Phone className="w-5 h-5" />
-          </Button>
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="text-white hover:bg-white/20 p-2"
-            onClick={() => {
-              toast({
-                title: "⚙️ Menu do grupo",
-                description: "Ver membros, configurações e mais opções",
-              });
-            }}
-          >
-            <MoreVertical className="w-5 h-5" />
-          </Button>
-        </div>
+        <Badge className="bg-blue-700 text-white">
+          <Mic className="w-3 h-3 mr-1" />
+          INTERMEDIÁRIO
+        </Badge>
+      </div>
+
+      {/* Banner de Upgrade para Premium */}
+      <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-3 text-center">
+        <p className="text-sm">
+          👑 <strong>Upgrade para Premium</strong> e libere anexos + recursos exclusivos!
+        </p>
+        <Button 
+          size="sm" 
+          className="bg-white text-purple-600 hover:bg-gray-100 mt-2"
+          onClick={() => {
+            toast({
+              title: "👑 Redirecionando para Premium!",
+              description: "Acesso completo + recursos exclusivos",
+              duration: 3000,
+            });
+            setTimeout(() => {
+              window.open('https://clarissavaz.academy.perfectpay.com.br', '_blank');
+            }, 1000);
+          }}
+        >
+          Ir para Premium
+        </Button>
       </div>
 
       {/* Mensagens */}
       <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
         <div className="space-y-2">
           {messages.map(renderMessage)}
+          
+          {/* Mensagem sobre funcionalidades */}
+          <div className="text-center py-4">
+            <div className="bg-blue-100 border border-blue-300 rounded-lg p-3 max-w-md mx-auto">
+              <Mic className="w-5 h-5 text-blue-600 mx-auto mb-2" />
+              <p className="text-sm text-blue-800">
+                <strong>Plano Intermediário:</strong> Microfone liberado! 🎤
+              </p>
+              <p className="text-xs text-blue-700 mt-1">
+                Upgrade para Premium e libere anexos de documentos e fotos
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Barra de digitação */}
+      {/* Barra de digitação com microfone */}
       <div className="bg-white border-t p-4">
         <div className="flex items-center gap-2">
-          {/* Botão de anexos */}
-          <div className="relative">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="text-gray-500 hover:bg-gray-100 p-2"
-              onClick={() => handleFileUpload('document')}
-            >
-              <Paperclip className="w-5 h-5" />
-            </Button>
-            
-            {/* Inputs ocultos para upload */}
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".pdf,.doc,.docx,.txt"
-              className="hidden"
-              onChange={(e) => handleFileSelected(e, 'document')}
-            />
-          </div>
-
-          {/* Botão de fotos */}
+          {/* Botão de anexos bloqueado */}
           <Button 
             variant="ghost" 
             size="sm" 
-            className="text-gray-500 hover:bg-gray-100 p-2"
-            onClick={() => handleFileUpload('image')}
+            className="text-gray-300 cursor-not-allowed p-2 relative"
+            disabled
+            onClick={() => showPremiumFeature('Anexos')}
+          >
+            <Paperclip className="w-5 h-5" />
+            <Crown className="w-3 h-3 absolute -top-1 -right-1 bg-white rounded-full text-purple-600" />
+          </Button>
+
+          {/* Botão de fotos bloqueado */}
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="text-gray-300 cursor-not-allowed p-2 relative"
+            disabled
+            onClick={() => showPremiumFeature('Fotos')}
           >
             <Image className="w-5 h-5" />
+            <Crown className="w-3 h-3 absolute -top-1 -right-1 bg-white rounded-full text-purple-600" />
           </Button>
-          
-          <input
-            ref={imageInputRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={(e) => handleFileSelected(e, 'image')}
-          />
 
           {/* Campo de texto */}
           <div className="flex-1 relative">
             <Input
-              placeholder="Digite sua mensagem..."
+              placeholder="Digite ou grave uma mensagem..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
@@ -335,11 +287,11 @@ export default function GeneralChat() {
             </Button>
           </div>
 
-          {/* Botão de microfone */}
+          {/* Botão de microfone ATIVO */}
           <Button 
             variant="ghost" 
             size="sm" 
-            className={`p-2 ${isRecording ? 'text-red-500 bg-red-50' : 'text-gray-500 hover:bg-gray-100'}`}
+            className={`p-2 ${isRecording ? 'text-red-500 bg-red-50' : 'text-blue-600 hover:bg-blue-50'}`}
             onClick={isRecording ? handleStopRecording : handleStartRecording}
           >
             {isRecording ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
@@ -362,6 +314,13 @@ export default function GeneralChat() {
             Gravando... {recordingTime}s
           </div>
         )}
+        
+        {/* Aviso sobre limitações */}
+        <div className="mt-2 text-center">
+          <p className="text-xs text-gray-500">
+            🎤 Microfone ativo • 👑 Anexos disponíveis no Premium
+          </p>
+        </div>
       </div>
     </div>
   );
