@@ -134,6 +134,30 @@ export const courses = pgTable("courses", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+// Tabela para controlar assinaturas dos usuários
+export const userSubscriptions = pgTable("user_subscriptions", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  planType: text("plan_type").notNull(), // "basic", "intermediate", "premium"
+  startDate: timestamp("start_date").defaultNow(),
+  endDate: timestamp("end_date"),
+  isActive: boolean("is_active").default(true),
+  sosTicketsUsed: integer("sos_tickets_used").default(0),
+  sosTicketsTotal: integer("sos_tickets_total").default(0),
+  lastSosReset: timestamp("last_sos_reset").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Tabela para rastrear uso dos tickets SOS
+export const sosTicketUsage = pgTable("sos_ticket_usage", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  subscriptionId: integer("subscription_id").notNull().references(() => userSubscriptions.id),
+  usedAt: timestamp("used_at").defaultNow(),
+  description: text("description"),
+  specialistName: text("specialist_name"),
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   createdAt: true,
@@ -205,3 +229,18 @@ export type Video = typeof videos.$inferSelect;
 export type InsertVideo = z.infer<typeof insertVideoSchema>;
 export type Course = typeof courses.$inferSelect;
 export type InsertCourse = z.infer<typeof insertCourseSchema>;
+
+export const insertUserSubscriptionSchema = createInsertSchema(userSubscriptions).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertSosTicketUsageSchema = createInsertSchema(sosTicketUsage).omit({
+  id: true,
+  usedAt: true,
+});
+
+export type UserSubscription = typeof userSubscriptions.$inferSelect;
+export type InsertUserSubscription = z.infer<typeof insertUserSubscriptionSchema>;
+export type SosTicketUsage = typeof sosTicketUsage.$inferSelect;
+export type InsertSosTicketUsage = z.infer<typeof insertSosTicketUsageSchema>;

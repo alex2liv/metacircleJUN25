@@ -491,6 +491,16 @@ export default function ClientView() {
                   <MessageCircle className="w-3 h-3 mr-1" />
                   Falar com Clarissa
                 </Button>
+                
+                {/* Status Premium - apenas para membros Premium */}
+                <div className="mt-3 p-2 bg-purple-100 rounded-lg text-center">
+                  <p className="text-xs text-purple-700 font-medium">
+                    🎫 Tickets SOS 2024: 1/3 utilizados
+                  </p>
+                  <p className="text-xs text-purple-600 mt-1">
+                    Próxima renovação: Janeiro 2025
+                  </p>
+                </div>
               </div>
             </div>
           </div>
