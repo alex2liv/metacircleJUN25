@@ -20,6 +20,7 @@ import BasicChat from "@/pages/basic-chat";
 import IntermediateChat from "@/pages/intermediate-chat";
 import VideoCall from "@/pages/video-call";
 import ScheduleMeeting from "@/pages/schedule-meeting";
+import ScheduleClarissa from "@/pages/schedule-clarissa";
 import LiveRooms from "@/pages/live-rooms";
 import LiveModeration from "@/pages/live-moderation";
 import Landing from "@/pages/landing";

@@ -158,6 +158,32 @@ export const sosTicketUsage = pgTable("sos_ticket_usage", {
   specialistName: text("specialist_name"),
 });
 
+// Disponibilidades da Clarissa
+export const availability = pgTable("availability", {
+  id: serial("id").primaryKey(),
+  dayOfWeek: integer("day_of_week").notNull(), // 0-6 (domingo-sábado)
+  startTime: text("start_time").notNull(), // "09:00"
+  endTime: text("end_time").notNull(), // "17:00"
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow()
+});
+
+// Agendamentos
+export const appointments = pgTable("appointments", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id),
+  specialistName: text("specialist_name").default("Clarissa"),
+  specialistPhone: text("specialist_phone").default("11910018833"),
+  appointmentDate: timestamp("appointment_date").notNull(),
+  duration: integer("duration").default(60), // em minutos
+  type: text("type").notNull(), // "regular", "sos"
+  status: text("status").default("scheduled"), // "scheduled", "confirmed", "completed", "cancelled"
+  notes: text("notes"),
+  meetingLink: text("meeting_link"),
+  whatsappSent: boolean("whatsapp_sent").default(false),
+  createdAt: timestamp("created_at").defaultNow()
+});
+
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
   createdAt: true,
@@ -240,7 +266,22 @@ export const insertSosTicketUsageSchema = createInsertSchema(sosTicketUsage).omi
   usedAt: true,
 });
 
+export const insertAvailabilitySchema = createInsertSchema(availability).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertAppointmentSchema = createInsertSchema(appointments).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type UserSubscription = typeof userSubscriptions.$inferSelect;
 export type InsertUserSubscription = z.infer<typeof insertUserSubscriptionSchema>;
 export type SosTicketUsage = typeof sosTicketUsage.$inferSelect;
 export type InsertSosTicketUsage = z.infer<typeof insertSosTicketUsageSchema>;
+
+export type Availability = typeof availability.$inferSelect;
+export type InsertAvailability = z.infer<typeof insertAvailabilitySchema>;
+export type Appointment = typeof appointments.$inferSelect;
+export type InsertAppointment = z.infer<typeof insertAppointmentSchema>;
