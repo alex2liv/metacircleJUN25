@@ -7,8 +7,9 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { ArrowLeft, Circle } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
+import metaSyncLogo from "@assets/MetaSync Logo Jun2025.png";
 
 const registerSchema = z.object({
   fullName: z.string().min(2, "Nome completo é obrigatório"),
@@ -47,8 +48,12 @@ export default function Landing() {
       <Card className="w-full max-w-md bg-white shadow-2xl border-0">
         {/* Logo */}
         <CardHeader className="text-center pb-2">
-          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center mb-4">
-            <Circle className="w-8 h-8 text-white fill-current" />
+          <div className="mx-auto w-20 h-16 flex items-center justify-center mb-4">
+            <img 
+              src={metaSyncLogo} 
+              alt="MetaSync Digital" 
+              className="h-12 w-auto object-contain"
+            />
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
             {isLogin ? "Faça login na sua conta" : "Inicie seu teste gratuito de 14 dias"}

@@ -8,8 +8,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Circle, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
+import metaSyncLogo from "@assets/MetaSync Logo Jun2025.png";
 
 // Schemas para validação de cada etapa
 const step1Schema = z.object({
@@ -126,8 +127,12 @@ export default function Onboarding() {
       <Card className="w-full max-w-2xl bg-white shadow-xl border-0">
         {/* Logo */}
         <CardHeader className="text-center pb-6">
-          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center mb-4">
-            <Circle className="w-8 h-8 text-white fill-current" />
+          <div className="mx-auto w-20 h-16 flex items-center justify-center mb-4">
+            <img 
+              src={metaSyncLogo} 
+              alt="MetaSync Digital" 
+              className="h-12 w-auto object-contain"
+            />
           </div>
         </CardHeader>
 
