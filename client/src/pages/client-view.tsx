@@ -72,9 +72,20 @@ export default function ClientView() {
     <div className="space-y-6">
       {/* Cabeçalho Cliente */}
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-lg">
-        <div className="flex items-center gap-2 mb-2">
-          <Eye className="w-5 h-5" />
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <img 
+              src="/attached_assets/MetaSync Logo Jun2025.png" 
+              alt="MetaSync Logo" 
+              className="h-12 w-auto"
+            />
+            <div>
+              <h2 className="text-xl font-bold">MetaCircle</h2>
+              <p className="text-blue-100 text-sm">Powered by MetaSync</p>
+            </div>
+          </div>
           <Badge variant="secondary" className="bg-white/20 text-white">
+            <Eye className="w-4 h-4 mr-1" />
             VISÃO DO CLIENTE
           </Badge>
         </div>
