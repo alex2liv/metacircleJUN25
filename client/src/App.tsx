@@ -22,6 +22,7 @@ import VideoCall from "@/pages/video-call";
 import ScheduleMeeting from "@/pages/schedule-meeting";
 import ScheduleClarissa from "@/pages/schedule-clarissa";
 import ClarissaChat from "@/pages/clarissa-chat";
+import SpecialistAdmin from "@/pages/specialist-admin";
 import LiveRooms from "@/pages/live-rooms";
 import LiveModeration from "@/pages/live-moderation";
 import Landing from "@/pages/landing";
@@ -48,6 +49,7 @@ function Router() {
       <Route path="/schedule-meeting" component={ScheduleMeeting} />
       <Route path="/schedule-clarissa" component={ScheduleClarissa} />
       <Route path="/clarissa-chat" component={ClarissaChat} />
+      <Route path="/specialist-admin" component={SpecialistAdmin} />
       <Route path="/live-rooms" component={LiveRooms} />
       <Route path="/live-moderation" component={LiveModeration} />
       <Route path="/settings" component={Settings} />
