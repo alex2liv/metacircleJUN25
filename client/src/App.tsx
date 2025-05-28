@@ -21,6 +21,7 @@ import IntermediateChat from "@/pages/intermediate-chat";
 import VideoCall from "@/pages/video-call";
 import ScheduleMeeting from "@/pages/schedule-meeting";
 import LiveRooms from "@/pages/live-rooms";
+import LiveModeration from "@/pages/live-moderation";
 import Landing from "@/pages/landing";
 import Onboarding from "@/pages/onboarding";
 import NotFound from "@/pages/not-found";
@@ -44,6 +45,7 @@ function Router() {
       <Route path="/video-call" component={VideoCall} />
       <Route path="/schedule-meeting" component={ScheduleMeeting} />
       <Route path="/live-rooms" component={LiveRooms} />
+      <Route path="/live-moderation" component={LiveModeration} />
       <Route path="/settings" component={Settings} />
       <Route path="/" component={Landing} />
       <Route component={NotFound} />
