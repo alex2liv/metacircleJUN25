@@ -11,11 +11,14 @@ import { z } from "zod";
 import { useAuth } from "@/hooks/use-auth";
 import { useUserRole } from "@/hooks/use-user-role";
 import { useToast } from "@/hooks/use-toast";
-import { Settings2, Lock, ExternalLink, Save } from "lucide-react";
+import { validateSecureUrl, hasAdminAccess, validateFormInput } from "@/lib/security";
+import { Settings2, Lock, ExternalLink, Save, Shield } from "lucide-react";
 
 const perfectPaySettingsSchema = z.object({
-  defaultPassword: z.string().min(1, "Senha é obrigatória"),
-  baseUrl: z.string().url("URL inválida"),
+  defaultPassword: z.string().min(1, "Senha é obrigatória").max(50, "Senha muito longa"),
+  baseUrl: z.string().url("URL inválida").refine(validateSecureUrl, {
+    message: "URL não é de um domínio PerfectPay autorizado"
+  }),
   autoLogin: z.boolean(),
 });
 
@@ -39,10 +42,31 @@ export default function Settings() {
   const onPerfectPaySubmit = async (data: PerfectPaySettings) => {
     setIsLoading(true);
     try {
-      // Aqui seria feita a chamada para salvar as configurações
-      console.log("Configurações PerfectPay:", data);
+      // Validação de segurança adicional
+      const validation = validateFormInput(data, perfectPaySettingsSchema);
+      if (!validation.isValid) {
+        toast({
+          title: "Dados inválidos",
+          description: validation.errors.join(', '),
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Verificar permissão administrativa
+      if (!hasAdminAccess(user?.role)) {
+        toast({
+          title: "Acesso negado",
+          description: "Você não tem permissão para alterar essas configurações.",
+          variant: "destructive",
+        });
+        return;
+      }
       
-      // Simular salvamento
+      // Aqui seria feita a chamada para salvar as configurações no backend
+      console.log("Configurações PerfectPay (sanitizadas):", validation.sanitizedData);
+      
+      // Simular salvamento seguro
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       toast({
@@ -159,6 +183,20 @@ export default function Settings() {
                     <li>• A senha do PerfectPay é diferente e configurável aqui</li>
                     <li>• As credenciais são mostradas automaticamente quando necessário</li>
                     <li>• Os links abrem em nova aba para manter o usuário na comunidade</li>
+                  </ul>
+                </div>
+
+                {/* Indicador de Segurança */}
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Shield className="w-5 h-5 text-green-600" />
+                    <h4 className="font-medium text-green-900">Configuração Segura</h4>
+                  </div>
+                  <ul className="text-sm text-green-800 space-y-1">
+                    <li>✓ URLs validadas contra domínios autorizados</li>
+                    <li>✓ Dados sanitizados para prevenir XSS</li>
+                    <li>✓ Acesso restrito apenas para administradores</li>
+                    <li>✓ Validação dupla de permissões</li>
                   </ul>
                 </div>
 

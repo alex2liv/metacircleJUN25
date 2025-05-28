@@ -26,6 +26,7 @@ function Router() {
       <Route path="/members" component={Members} />
       <Route path="/ranking" component={Ranking} />
       <Route path="/courses" component={Courses} />
+      <Route path="/settings" component={Settings} />
       <Route path="/" component={Landing} />
       <Route component={NotFound} />
     </Switch>
