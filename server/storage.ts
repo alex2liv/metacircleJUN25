@@ -178,10 +178,13 @@ export class MemStorage implements IStorage {
       endDate: new Date(Date.now() + 24 * 60 * 60 * 1000 + 2 * 60 * 60 * 1000), // Tomorrow + 2 hours
       location: null,
       isOnline: true,
+      youtubeUrl: null,
+      eventType: "workshop",
       spaceId: Array.from(this.spaces.values()).find(s => s.type === "event")!.id,
       organizerId: user1.id,
       attendeesCount: 23,
       maxAttendees: 50,
+      whatsappNotificationsSent: false,
       createdAt: new Date(),
     };
 
