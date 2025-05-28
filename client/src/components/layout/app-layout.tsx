@@ -3,6 +3,7 @@ import Sidebar from "./sidebar";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ThemeSelector } from "@/components/theme-selector";
 import { Bell, Menu, Plus, Search } from "lucide-react";
 
 interface AppLayoutProps {
@@ -64,6 +65,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
                   3
                 </span>
               </Button>
+              
+              {/* Theme Selector */}
+              <ThemeSelector />
               
               {/* Create Button */}
               <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
