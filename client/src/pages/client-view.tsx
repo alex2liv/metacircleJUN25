@@ -203,9 +203,21 @@ export default function ClientView() {
                     {event.attendeesCount} participantes
                   </div>
                 </div>
-                <Button size="sm" className="bg-gradient-to-r from-blue-600 to-purple-600">
-                  Participar
-                </Button>
+                {joinedEvents.has(event.id) ? (
+                  <Button size="sm" variant="outline" disabled className="bg-green-50 text-green-700 border-green-200">
+                    <Check className="w-4 h-4 mr-1" />
+                    Inscrito
+                  </Button>
+                ) : (
+                  <Button 
+                    size="sm" 
+                    className="bg-gradient-to-r from-blue-600 to-purple-600"
+                    onClick={() => handleJoinEvent(event.id, event.title)}
+                    disabled={joinEventMutation.isPending}
+                  >
+                    {joinEventMutation.isPending ? "Inscrevendo..." : "Participar"}
+                  </Button>
+                )}
               </div>
             ))}
             <Button variant="outline" className="w-full">
