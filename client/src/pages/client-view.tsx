@@ -3,7 +3,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Users, MessageSquare, Calendar, BookOpen, Heart, Eye, Play, Check, DollarSign, ExternalLink } from "lucide-react";
+import { Users, MessageSquare, Calendar, BookOpen, Heart, Eye, Play, Check, DollarSign, ExternalLink, Phone, MessageCircle } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -364,6 +364,52 @@ export default function ClientView() {
                 </div>
               </div>
             ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Fale com a Especialista */}
+      <Card className="bg-gradient-to-r from-purple-600 to-blue-600 text-white">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex-1">
+              <h3 className="text-xl font-bold mb-2">
+                Precisa de Ajuda Personalizada?
+              </h3>
+              <p className="text-purple-100 mb-4">
+                Fale diretamente com nossa especialista e acelere seus resultados
+              </p>
+              <div className="flex gap-3">
+                <Button 
+                  className="bg-white text-purple-600 hover:bg-purple-50"
+                  onClick={() => {
+                    window.open('https://wa.me/5511999999999?text=Olá! Vim do MetaCircle e gostaria de conversar com a especialista', '_blank');
+                    toast({
+                      title: "Redirecionando para WhatsApp",
+                      description: "Você será direcionado para conversar com nossa especialista",
+                    });
+                  }}
+                >
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  WhatsApp
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="border-white text-white hover:bg-white hover:text-purple-600"
+                  onClick={() => {
+                    window.open('tel:+5511999999999', '_self');
+                  }}
+                >
+                  <Phone className="w-4 h-4 mr-2" />
+                  Ligar Agora
+                </Button>
+              </div>
+            </div>
+            <div className="hidden md:block">
+              <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center">
+                <MessageCircle className="w-12 h-12 text-white" />
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>

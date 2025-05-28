@@ -161,6 +161,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Like/Unlike post
+  app.post("/api/posts/:id/like", async (req, res) => {
+    try {
+      const postId = parseInt(req.params.id);
+      const post = await storage.getPost(postId);
+      
+      if (!post) {
+        return res.status(404).json({ message: "Post not found" });
+      }
+
+      // Increment like count
+      const updatedPost = await storage.likePost(postId);
+      
+      // Broadcast like update
+      broadcast({
+        type: 'post_liked',
+        data: updatedPost
+      });
+
+      res.json(updatedPost);
+    } catch (error) {
+      console.error('Error liking post:', error);
+      res.status(500).json({ message: "Failed to like post" });
+    }
+  });
+
   // Join Event
   app.post("/api/events/:id/join", async (req, res) => {
     try {
