@@ -230,6 +230,9 @@ export class MemStorage implements IStorage {
     const user: User = { 
       ...insertUser, 
       id,
+      avatar: insertUser.avatar || null,
+      role: insertUser.role || "member",
+      isActive: insertUser.isActive ?? true,
       createdAt: new Date()
     };
     this.users.set(id, user);
@@ -249,6 +252,11 @@ export class MemStorage implements IStorage {
     const community: Community = { 
       ...insertCommunity, 
       id,
+      description: insertCommunity.description || null,
+      logo: insertCommunity.logo || null,
+      domain: insertCommunity.domain || null,
+      theme: insertCommunity.theme || null,
+      isActive: insertCommunity.isActive ?? true,
       createdAt: new Date()
     };
     this.communities.set(id, community);
@@ -276,6 +284,8 @@ export class MemStorage implements IStorage {
     const space: Space = { 
       ...insertSpace, 
       id,
+      description: insertSpace.description || null,
+      isPublic: insertSpace.isPublic ?? true,
       createdAt: new Date()
     };
     this.spaces.set(id, space);
