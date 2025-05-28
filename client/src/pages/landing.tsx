@@ -35,8 +35,8 @@ export default function Landing() {
   const onSubmit = (data: RegisterForm) => {
     console.log("Dados do formulário:", data);
     // Aqui seria feita a integração com a API de registro
-    // Após sucesso, redirecionar para dashboard
-    window.location.href = "/";
+    // Após sucesso, redirecionar para onboarding
+    window.location.href = "/onboarding";
   };
 
   const acceptTerms = watch("acceptTerms");

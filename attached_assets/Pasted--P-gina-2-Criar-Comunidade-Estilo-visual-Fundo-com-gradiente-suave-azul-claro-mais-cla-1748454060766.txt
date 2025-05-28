@@ -1,0 +1,108 @@
+
+🧩 Página 2 – Criar Comunidade
+
+🎨 Estilo visual:
+	•	Fundo com gradiente suave azul-claro, mais claro que a tela anterior.
+	•	Container branco centralizado, arredondado, com sombra leve (estilo modal ou cartão).
+
+📄 Conteúdo:
+
+🔝 Título
+	•	“Agora vamos criar sua comunidade”
+	•	Fonte: grande, negrito, centralizado.
+
+🧾 Subtítulo
+	•	“Não se preocupe — você pode alterar essas informações depois”
+	•	Fonte: cinza claro, menor, centralizado.
+
+🧑‍💻 Campos do Formulário:
+	1.	Nome
+	•	Texto: AlexandreNunes's Comunidade
+	•	Campo de texto comum.
+	2.	URL da comunidade
+	•	Campo dividido: parte preenchível (ex: alexandrenuness-comunidade) + parte fixa: .circle.so
+	•	Estilo moderno com indicação clara do domínio.
+	3.	Idioma padrão
+	•	Dropdown selecionável (exibindo Português como selecionado).
+
+🔘 Botão:
+	•	Texto: “Próximo”
+	•	Cor: gradiente azul/roxo, canto inferior direito do card.
+
+⸻
+
+🧩 Página 3 – Informações do usuário (onboarding)
+
+🎨 Visual:
+	•	Fundo igual à anterior (gradiente azul claro).
+	•	Card central com logo do Circle no topo.
+
+📄 Conteúdo:
+
+🔝 Título
+	•	“Conte um pouco sobre você”
+
+🧾 Subtítulo
+	•	“Nós utilizaremos isso para te oferecer a melhor experiência de onboarding”
+
+📋 Formulário:
+	1.	Qual é sua receita anual?
+	•	Dropdown (ex: Menos de US$ 25 mil)
+	•	Outras opções aparecem como seletor clássico.
+	2.	O que você espera alcançar com o Circle?
+	•	Dropdown com três opções:
+	•	“Construa uma nova comunidade”
+	•	“Migrar para o Circle”
+	•	“Não tenho um objetivo – estou apenas explorando”
+	3.	Como você conheceu a Circle?
+	•	Campo de texto livre.
+
+🔘 Botão:
+	•	Texto: “Próximo”
+	•	Posicionado abaixo, botão padrão azul.
+
+⸻
+
+🧩 Página 4 – Seleção de recursos essenciais
+
+🎨 Visual:
+	•	Fundo igual aos anteriores.
+	•	Card centralizado com a logo no topo.
+
+📄 Conteúdo:
+
+🔝 Título:
+	•	“O que é essencial para sua comunidade?”
+	•	Fonte negrito, centralizado.
+
+🧰 Grade de opções (tipo checklist):
+
+Cada opção é representada como um botão/caixa com borda e texto no centro. Pode-se clicar para selecionar:
+	•	Discussões
+	•	Eventos
+	•	Chat
+	•	Agentes de IA
+	•	Construtor de sites
+	•	Pagamentos recorrentes
+	•	Cursos
+	•	Transmissões ao vivo
+	•	Email marketing
+	•	Gamificação
+	•	Aplicativo personalizado
+	•	Ferramentas para desenvolvedores
+
+(12 opções totais, dispostas em 3 colunas x 4 linhas)
+
+🔘 Botão:
+	•	Texto: “Finalizar”
+	•	Azul/roxo, canto inferior do card.
+
+⸻
+
+🔚 Observações para implementação:
+	•	Todas as páginas usam o mesmo layout base: fundo gradiente claro, cartão central com shadow, bordas arredondadas, logo azul no topo.
+	•	Fonte moderna, espaçamento generoso, UX clean.
+	•	Transições de página suaves e consistentes.
+	•	Botões com destaque e ação clara.
+	•	Ideal para construir um Wizard com etapas lineares (etapa 1 → etapa 4).
+
