@@ -1,0 +1,89 @@
+
+
+🔷 Plano de Fundo
+	•	Cor predominante: gradiente azul escuro para roxo profundo
+	•	Sem elementos decorativos (flat, sem imagens ou ícones no fundo)
+	•	Estilo minimalista e elegante
+	•	Não há barra superior visível (navbar oculta)
+
+⸻
+
+🧱 Estrutura da Página
+
+💠 Container Central (Formulário de Cadastro)
+	•	Caixa central branca com bordas arredondadas.
+	•	Sombra leve (box-shadow) para destacar do fundo escuro.
+	•	Largura aproximadamente 400px a 500px
+	•	Centralizado tanto horizontal quanto verticalmente na tela.
+
+⸻
+
+📝 Conteúdo Dentro do Container
+
+✅ Logo (Topo da caixa)
+	•	Um ícone redondo azul com um “C” branco no centro — representa o logo da plataforma Circle.
+	•	Posicionado no centro superior da caixa.
+
+⸻
+
+💬 Texto Principal (Headline)
+	•	“Inicie seu teste gratuito de 14 dias”
+	•	Fonte: negrito, tamanho grande, alinhado ao centro
+	•	Subtítulo: “Nenhum cartão de crédito necessário”
+	•	Estilo: cinza claro, fonte menor
+
+⸻
+
+🧾 Campos do Formulário
+
+Todos os campos estão empilhados verticalmente com espaçamento adequado (~16px):
+	1.	Nome completo
+	•	Placeholder: Nome completo
+	•	Valor de exemplo na imagem: AlexandreNunes
+	2.	Email
+	•	Placeholder: Email
+	•	Valor de exemplo: alex@metasyncdigital.com.br
+	3.	Senha
+	•	Placeholder: Senha
+	•	Tipo: senha (com ocultação de caracteres)
+
+⸻
+
+☑️ Checkbox
+	•	Texto ao lado: “Eu aceito os termos e a política de privacidade”
+	•	Link nos termos e política
+	•	Requerido para ativar o botão
+
+⸻
+
+🔘 Botão de Ação
+	•	Texto: “Cadastre-se”
+	•	Estilo:
+	•	Largura total da caixa
+	•	Cor: degradê azul para roxo claro
+	•	Fonte branca
+	•	Arredondado
+	•	Efeito de hover leve
+
+⸻
+
+🔙 Link Inferior (Voltar / Login)
+	•	Texto:
+	•	← Voltar (link simples)
+	•	“Já tem uma conta? Fazer login” (com “Fazer login” em azul clicável)
+	•	Estilo discreto, cinza claro com realce apenas nos links
+
+⸻
+
+⚙️ Rodapé
+	•	Texto no centro inferior da tela:
+	•	“Desenvolvido pela Circle”
+	•	Fonte pequena, cor cinza claro
+	•	Fora da caixa branca, aplicado direto no fundo
+
+⸻
+
+📐 Responsividade e Comportamento Esperado
+	•	Em dispositivos móveis: container adapta para largura menor (~90% da tela), mantendo alinhamento central.
+	•	Sem rolagem vertical exceto se a tela for muito pequena.
+	•	Sem distratores visuais: foco total no formulário.

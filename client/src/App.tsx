@@ -10,11 +10,13 @@ import Spaces from "@/pages/spaces";
 import Events from "@/pages/events";
 import Members from "@/pages/members";
 import Ranking from "@/pages/ranking";
+import Landing from "@/pages/landing";
 import NotFound from "@/pages/not-found";
 
 function Router() {
   return (
     <Switch>
+      <Route path="/landing" component={Landing} />
       <Route path="/" component={Dashboard} />
       <Route path="/spaces" component={Spaces} />
       <Route path="/events" component={Events} />
