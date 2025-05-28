@@ -254,13 +254,68 @@ export default function Settings() {
         <TabsContent value="integrations">
           <Card>
             <CardHeader>
-              <CardTitle>Outras Integrações</CardTitle>
+              <CardTitle>Configurações MetaBridge - WhatsApp</CardTitle>
               <CardDescription>
-                Configure integrações com MetaHub, MetaBridge e MetaTalk
+                Configure a integração com o MetaBridge para notificações WhatsApp automáticas
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <p className="text-gray-600">Outras integrações em desenvolvimento...</p>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="metabridgeUrl">URL do MetaBridge</Label>
+                  <Input
+                    id="metabridgeUrl"
+                    placeholder="https://metabridge-api.metasync.com.br"
+                    defaultValue="https://metabridge-api.metasync.com.br"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="instanceName">Nome da Instância</Label>
+                  <Input
+                    id="instanceName"
+                    placeholder="metacircle-instance"
+                    defaultValue="metacircle-instance"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="apiKey">Chave da API</Label>
+                  <Input
+                    id="apiKey"
+                    type="password"
+                    placeholder="Sua chave da API do MetaBridge"
+                  />
+                  <p className="text-xs text-gray-500">
+                    Obtida no painel administrativo do MetaBridge
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="webhookUrl">URL do Webhook (opcional)</Label>
+                  <Input
+                    id="webhookUrl"
+                    placeholder="https://metacircle.metasync.com.br/webhook"
+                  />
+                </div>
+              </div>
+
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                <h4 className="font-medium text-amber-900 mb-2">Funcionalidades Disponíveis:</h4>
+                <ul className="text-sm text-amber-800 space-y-1">
+                  <li>📅 Notificações automáticas de eventos (1 semana, 1 dia, 1 hora antes)</li>
+                  <li>📱 Envio via Evolution API integrada ao MetaBridge</li>
+                  <li>👥 Suporte a grupos e contatos individuais</li>
+                  <li>⚡ Notificações em tempo real quando eventos começam</li>
+                </ul>
+              </div>
+
+              <div className="flex justify-end">
+                <Button className="bg-green-600 hover:bg-green-700">
+                  <Save className="w-4 h-4 mr-2" />
+                  Salvar Configurações MetaBridge
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
