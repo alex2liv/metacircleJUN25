@@ -43,6 +43,7 @@ function Router() {
       <Route path="/intermediate-chat" component={IntermediateChat} />
       <Route path="/video-call" component={VideoCall} />
       <Route path="/schedule-meeting" component={ScheduleMeeting} />
+      <Route path="/live-rooms" component={LiveRooms} />
       <Route path="/settings" component={Settings} />
       <Route path="/" component={Landing} />
       <Route component={NotFound} />
