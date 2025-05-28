@@ -27,26 +27,70 @@ export function FloatingHelpButton() {
     }
   ]);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
 
+    const userMessage = newMessage;
+    setNewMessage('');
+
+    // Adicionar mensagem do usuário
     setChatMessages(prev => [...prev, {
       id: prev.length + 1,
       type: 'user',
-      message: newMessage,
+      message: userMessage,
       time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
     }]);
 
-    setTimeout(() => {
-      setChatMessages(prev => [...prev, {
-        id: prev.length + 1,
-        type: 'bot',
-        message: getBotResponse(newMessage),
-        time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
-      }]);
-    }, 1000);
+    // Mostrar indicador de carregamento
+    setChatMessages(prev => [...prev, {
+      id: prev.length + 1,
+      type: 'bot',
+      message: '🤖 Pensando...',
+      time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+    }]);
 
-    setNewMessage('');
+    try {
+      // Tentar usar ChatGPT real primeiro
+      const response = await fetch('/api/assistant/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: userMessage,
+          communityId: 3
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Substituir mensagem de carregamento com resposta da IA
+        setChatMessages(prev => {
+          const newMessages = [...prev];
+          newMessages[newMessages.length - 1] = {
+            id: newMessages.length,
+            type: 'bot',
+            message: data.message,
+            time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+          };
+          return newMessages;
+        });
+      } else {
+        throw new Error('API não disponível');
+      }
+    } catch (error) {
+      // Fallback para resposta básica se ChatGPT falhar
+      setChatMessages(prev => {
+        const newMessages = [...prev];
+        newMessages[newMessages.length - 1] = {
+          id: newMessages.length,
+          type: 'bot',
+          message: getBotResponse(userMessage),
+          time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+        };
+        return newMessages;
+      });
+    }
   };
 
   const getBotResponse = (message: string) => {
