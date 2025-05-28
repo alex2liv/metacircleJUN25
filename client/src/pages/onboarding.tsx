@@ -110,7 +110,7 @@ export default function Onboarding() {
     // Aqui seria feita a criação da comunidade
     console.log("Dados completos:", { ...formData, step3: data });
     // Redirecionar para dashboard
-    window.location.href = "/";
+    window.location.href = "/dashboard";
   };
 
   const toggleFeature = (feature: string) => {
