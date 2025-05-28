@@ -164,7 +164,7 @@ export default function ClientView() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => window.location.href = '/events'}>
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -176,7 +176,13 @@ export default function ClientView() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => {
+          window.open('https://clarissavaz.academy.perfectpay.com.br', '_blank');
+          toast({
+            title: "Redirecionando para PerfectPay",
+            description: "Você será direcionado para os cursos disponíveis",
+          });
+        }}>
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -575,11 +581,12 @@ export default function ClientView() {
       </Card>
 
       {/* Ranking da Comunidade */}
-      <Card>
+      <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => window.location.href = '/ranking'}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="w-5 h-5" />
             Top Membros da Comunidade
+            <ExternalLink className="w-4 h-4 ml-auto text-blue-600" />
           </CardTitle>
           <CardDescription>
             Veja quem está mais ativo na comunidade
