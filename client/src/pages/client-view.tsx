@@ -78,7 +78,7 @@ export default function ClientView() {
             <img 
               src={metaSyncLogo} 
               alt="MetaSync Logo" 
-              className="h-12 w-auto"
+              className="h-16 w-auto filter brightness-0 invert"
             />
             <div>
               <h2 className="text-xl font-bold">MetaCircle</h2>
