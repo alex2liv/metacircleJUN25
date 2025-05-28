@@ -82,6 +82,9 @@ export default function AppLayout({ children }: AppLayoutProps) {
           {children}
         </main>
       </div>
+
+      {/* Botão Flutuante de Ajuda */}
+      <FloatingHelpButton />
     </div>
   );
 }
