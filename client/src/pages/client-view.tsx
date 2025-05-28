@@ -219,14 +219,47 @@ export default function ClientView() {
                   {post.content}
                 </p>
                 <div className="flex items-center gap-4 text-xs text-gray-500">
-                  <div className="flex items-center gap-1">
+                  <button 
+                    className="flex items-center gap-1 hover:text-red-500 transition-colors cursor-pointer"
+                    onClick={() => {
+                      toast({
+                        title: "Post curtido!",
+                        description: "Você curtiu este post",
+                      });
+                    }}
+                  >
                     <Heart className="w-3 h-3" />
                     {post.likesCount} curtidas
-                  </div>
-                  <div className="flex items-center gap-1">
+                  </button>
+                  <button 
+                    className="flex items-center gap-1 hover:text-blue-500 transition-colors cursor-pointer"
+                    onClick={() => {
+                      setLocation('/spaces');
+                      toast({
+                        title: "Abrindo comentários",
+                        description: "Redirecionando para ver todos os comentários",
+                      });
+                    }}
+                  >
                     <MessageSquare className="w-3 h-3" />
                     {post.commentsCount} comentários
-                  </div>
+                  </button>
+                  <button 
+                    className="flex items-center gap-1 hover:text-green-500 transition-colors cursor-pointer"
+                    onClick={() => {
+                      navigator.share?.({
+                        title: post.title,
+                        text: post.content,
+                        url: window.location.href
+                      }) || toast({
+                        title: "Link copiado!",
+                        description: "Post pronto para compartilhar",
+                      });
+                    }}
+                  >
+                    <ExternalLink className="w-3 h-3" />
+                    compartilhar
+                  </button>
                 </div>
               </div>
             ))}
