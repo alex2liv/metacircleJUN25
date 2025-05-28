@@ -173,7 +173,7 @@ export const appointments = pgTable("appointments", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").notNull().references(() => users.id),
   specialistName: text("specialist_name").default("Clarissa"),
-  specialistPhone: text("specialist_phone").default("11910018833"),
+  specialistPhone: text("specialist_phone").default("17997337322"),
   appointmentDate: timestamp("appointment_date").notNull(),
   duration: integer("duration").default(60), // em minutos
   type: text("type").notNull(), // "regular", "sos"

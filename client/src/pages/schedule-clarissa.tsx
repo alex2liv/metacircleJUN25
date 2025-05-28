@@ -155,7 +155,7 @@ export default function ScheduleClarissa() {
           <div className="flex items-center gap-4 text-sm text-gray-600">
             <div className="flex items-center gap-1">
               <Phone className="w-4 h-4" />
-              <span>11910018833</span>
+              <span>17997337322</span>
             </div>
             <div className="flex items-center gap-1">
               <Clock className="w-4 h-4" />
