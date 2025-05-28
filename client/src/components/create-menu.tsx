@@ -142,7 +142,7 @@ export function CreateMenu() {
       id: "course",
       label: "Curso",
       icon: BookOpen,
-      description: "Criar um novo curso educativo",
+      description: "Acessar plataforma de cursos",
     },
     {
       id: "community",
@@ -167,7 +167,14 @@ export function CreateMenu() {
             return (
               <DropdownMenuItem
                 key={option.id}
-                onClick={() => setCreateType(option.id)}
+                onClick={() => {
+                  if (option.id === "course") {
+                    // Redirecionar para PerfectPay
+                    window.open("https://clarissavaz.academy.perfectpay.com.br/login/", '_blank');
+                  } else {
+                    setCreateType(option.id);
+                  }
+                }}
                 className="flex items-start gap-3 p-3 cursor-pointer"
               >
                 <Icon className="w-4 h-4 mt-1 text-muted-foreground" />

@@ -16,9 +16,9 @@ import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 
 const navigationItems = [
-  { name: "Dashboard", href: "/", icon: Home },
+  { name: "Dashboard", href: "/dashboard", icon: Home },
   { name: "Geral", href: "/spaces", icon: MessageSquare, badge: "12", badgeVariant: "secondary" as const },
-  { name: "Cursos", href: "/spaces", icon: BookOpen, badge: "3", badgeVariant: "default" as const },
+  { name: "Cursos", href: "/courses", icon: BookOpen, badge: "3", badgeVariant: "default" as const },
   { name: "Eventos", href: "/events", icon: Calendar, badge: "2", badgeVariant: "destructive" as const },
   { name: "Ranking", href: "/ranking", icon: Trophy },
   { name: "Membros", href: "/members", icon: Users },
