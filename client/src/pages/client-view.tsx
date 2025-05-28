@@ -270,7 +270,7 @@ export default function ClientView() {
                 </div>
               </div>
             ))}
-            <Button variant="outline" className="w-full" onClick={() => setLocation('/spaces')}>
+            <Button variant="outline" className="w-full" onClick={() => setLocation('/general-chat')}>
               💬 Entrar no Grupo Geral
             </Button>
           </CardContent>

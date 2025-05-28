@@ -15,6 +15,7 @@ import Settings from "@/pages/settings";
 import Calendar from "@/pages/calendar";
 import ClientView from "@/pages/client-view";
 import BasicPlanView from "@/pages/basic-plan-view";
+import GeneralChat from "@/pages/general-chat";
 import Landing from "@/pages/landing";
 import Onboarding from "@/pages/onboarding";
 import NotFound from "@/pages/not-found";
@@ -32,6 +33,7 @@ function Router() {
       <Route path="/calendar" component={Calendar} />
       <Route path="/client-view" component={ClientView} />
       <Route path="/basic-plan" component={BasicPlanView} />
+      <Route path="/general-chat" component={GeneralChat} />
       <Route path="/settings" component={Settings} />
       <Route path="/" component={Landing} />
       <Route component={NotFound} />

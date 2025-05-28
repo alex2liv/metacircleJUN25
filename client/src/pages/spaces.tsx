@@ -140,8 +140,11 @@ export default function Spaces() {
             key={space.id} 
             className="hover:shadow-md transition-shadow cursor-pointer"
             onClick={() => {
-              // Aqui você pode navegar para a página específica do espaço
-              console.log(`Abrindo espaço: ${space.name}`);
+              if (space.name === 'Geral') {
+                window.location.href = '/general-chat';
+              } else {
+                console.log(`Abrindo espaço: ${space.name}`);
+              }
             }}
           >
             <CardContent className="p-4">

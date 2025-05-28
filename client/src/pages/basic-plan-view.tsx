@@ -72,10 +72,36 @@ export default function BasicPlanView() {
             🚀 Upgrade para Intermediário e ganhe 48h de acesso Premium!
           </p>
           <div className="flex gap-2 justify-center">
-            <Button size="sm" className="bg-blue-600 text-white hover:bg-blue-700">
+            <Button 
+              size="sm" 
+              className="bg-blue-600 text-white hover:bg-blue-700"
+              onClick={() => {
+                toast({
+                  title: "🚀 Upgrade para Intermediário!",
+                  description: "Redirecionando para pagamento - 48h Premium grátis",
+                  duration: 3000,
+                });
+                setTimeout(() => {
+                  window.open('https://clarissavaz.academy.perfectpay.com.br', '_blank');
+                }, 1000);
+              }}
+            >
               Upgrade → Intermediário (48h Premium)
             </Button>
-            <Button size="sm" className="bg-purple-600 text-white hover:bg-purple-700">
+            <Button 
+              size="sm" 
+              className="bg-purple-600 text-white hover:bg-purple-700"
+              onClick={() => {
+                toast({
+                  title: "👑 Upgrade para Premium!",
+                  description: "Redirecionando para assinatura Premium",
+                  duration: 3000,
+                });
+                setTimeout(() => {
+                  window.open('https://clarissavaz.academy.perfectpay.com.br', '_blank');
+                }, 1000);
+              }}
+            >
               Ir Direto ao Premium
             </Button>
           </div>
