@@ -25,6 +25,7 @@ import ClarissaChat from "@/pages/clarissa-chat";
 import SpecialistAdmin from "@/pages/specialist-admin";
 import SpecialistLogin from "@/pages/specialist-login";
 import SpecialistDashboard from "@/pages/specialist-dashboard";
+import EmailVerification from "@/pages/email-verification";
 import LiveRooms from "@/pages/live-rooms";
 import LiveModeration from "@/pages/live-moderation";
 import Landing from "@/pages/landing";
@@ -55,6 +56,7 @@ function Router() {
       <Route path="/specialist-admin" component={SpecialistAdmin} />
       <Route path="/specialist-login" component={SpecialistLogin} />
       <Route path="/specialist-dashboard" component={SpecialistDashboard} />
+      <Route path="/email-verification" component={EmailVerification} />
       <Route path="/live-rooms" component={LiveRooms} />
       <Route path="/live-moderation" component={LiveModeration} />
       <Route path="/ai-assistant" component={AIAssistant} />

@@ -96,7 +96,7 @@ export default function EmailVerification() {
           <img 
             src={metaSyncLogo} 
             alt="MetaSync" 
-            className="h-16 mx-auto mb-4"
+            className="h-32 mx-auto mb-4"
           />
           <h1 className="text-2xl font-bold text-white mb-2">
             📧 Verificação de Email

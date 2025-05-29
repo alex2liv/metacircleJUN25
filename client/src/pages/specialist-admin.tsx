@@ -857,9 +857,31 @@ export default function SpecialistAdmin() {
             <div className="space-y-4">
               <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
                 <h3 className="font-medium text-green-900 mb-2">✨ Validação por Email Ativa</h3>
-                <p className="text-sm text-green-800">
+                <p className="text-sm text-green-800 mb-3">
                   Quando ativado, usuários precisam confirmar email com código de 6 dígitos antes de usar a plataforma
                 </p>
+                
+                <details className="text-sm text-green-800">
+                  <summary className="font-medium cursor-pointer hover:underline">📋 Guia Rápido de Configuração SMTP</summary>
+                  <div className="mt-2 space-y-2 pl-4 border-l-2 border-green-300">
+                    <div>
+                      <strong>Gmail:</strong> smtp.gmail.com:587<br/>
+                      <em>Ative 2FA e use senha de app</em>
+                    </div>
+                    <div>
+                      <strong>Outlook:</strong> smtp-mail.outlook.com:587<br/>
+                      <em>Use credenciais normais da conta</em>
+                    </div>
+                    <div>
+                      <strong>Yahoo:</strong> smtp.mail.yahoo.com:587<br/>
+                      <em>Ative "Apps menos seguros"</em>
+                    </div>
+                    <div>
+                      <strong>Zoho:</strong> smtp.zoho.com:587<br/>
+                      <em>Configure senha de app específica</em>
+                    </div>
+                  </div>
+                </details>
               </div>
 
               <div className="grid grid-cols-1 gap-4">
