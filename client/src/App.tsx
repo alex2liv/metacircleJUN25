@@ -27,6 +27,7 @@ import SpecialistLogin from "@/pages/specialist-login";
 import SpecialistDashboard from "@/pages/specialist-dashboard";
 import EmailVerification from "@/pages/email-verification";
 import AnalyticsDashboard from "@/pages/analytics-dashboard";
+import InviteMembers from "@/pages/invite-members";
 import LiveRooms from "@/pages/live-rooms";
 import LiveModeration from "@/pages/live-moderation";
 import Landing from "@/pages/landing";
@@ -59,6 +60,7 @@ function Router() {
       <Route path="/specialist-dashboard" component={SpecialistDashboard} />
       <Route path="/email-verification" component={EmailVerification} />
       <Route path="/analytics-dashboard" component={AnalyticsDashboard} />
+      <Route path="/invite-members" component={InviteMembers} />
       <Route path="/live-rooms" component={LiveRooms} />
       <Route path="/live-moderation" component={LiveModeration} />
       <Route path="/ai-assistant" component={AIAssistant} />

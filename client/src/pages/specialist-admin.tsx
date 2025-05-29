@@ -359,17 +359,35 @@ export default function SpecialistAdmin() {
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-3 rounded-lg">
-              <Settings className="w-8 h-8 text-white" />
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-3 rounded-lg">
+                <Settings className="w-8 h-8 text-white" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">
+                  Configurações do Especialista
+                </h1>
+                <p className="text-gray-600">
+                  Gerencie o perfil, disponibilidades e automações
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                Configurações do Especialista
-              </h1>
-              <p className="text-gray-600">
-                Gerencie o perfil, disponibilidades e automações
-              </p>
+            
+            <div className="flex gap-3">
+              <Button 
+                variant="outline" 
+                className="flex items-center gap-2"
+                onClick={() => window.open('/analytics-dashboard', '_blank')}
+              >
+                📊 Analytics
+              </Button>
+              <Button 
+                className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+                onClick={() => window.open('/invite-members', '_blank')}
+              >
+                📧 Convites Beta (800 pessoas)
+              </Button>
             </div>
           </div>
         </div>
