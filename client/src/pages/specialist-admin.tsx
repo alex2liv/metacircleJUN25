@@ -111,6 +111,16 @@ export default function SpecialistAdmin() {
     assistantMaxTokens: "500"
   });
 
+  // Configurações do Banco de Dados
+  const [databaseConfig, setDatabaseConfig] = useState({
+    provider: "supabase",
+    supabaseUrl: "",
+    supabaseAnonKey: "",
+    supabaseServiceKey: "",
+    connectionString: "",
+    isConfigured: false
+  });
+
   const handleSaveSpecialist = () => {
     // Aqui salvaria no backend
     toast({
@@ -657,6 +667,92 @@ export default function SpecialistAdmin() {
                 <Save className="w-4 h-4 mr-2" />
                 {aiConfig.assistantEnabled ? 'Ativar ChatGPT' : 'Salvar Configurações'}
               </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 💾 Configuração do Banco de Dados */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              💾 Configuração do Banco de Dados
+              <Badge variant={databaseConfig.isConfigured ? "default" : "secondary"}>
+                {databaseConfig.isConfigured ? "Configurado" : "Pendente"}
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <h3 className="font-medium text-blue-900 mb-2">📋 Como configurar seu Supabase:</h3>
+                <ol className="text-sm text-blue-800 space-y-1">
+                  <li>1. Acesse <a href="https://supabase.com" target="_blank" className="underline">supabase.com</a> e crie uma conta</li>
+                  <li>2. Crie um novo projeto</li>
+                  <li>3. Vá em Settings → API</li>
+                  <li>4. Copie a "Project URL" e cole no campo abaixo</li>
+                  <li>5. Copie a "anon/public" key e cole no campo abaixo</li>
+                  <li>6. Opcionalmente, copie a "service_role" key para recursos avançados</li>
+                </ol>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4">
+                <div>
+                  <Label htmlFor="supabaseUrl">🔗 URL do Projeto Supabase *</Label>
+                  <Input
+                    id="supabaseUrl"
+                    type="url"
+                    value={databaseConfig.supabaseUrl}
+                    onChange={(e) => setDatabaseConfig({...databaseConfig, supabaseUrl: e.target.value})}
+                    placeholder="https://seu-projeto.supabase.co"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="supabaseAnonKey">🔑 Chave Anônima (anon/public) *</Label>
+                  <Input
+                    id="supabaseAnonKey"
+                    type="password"
+                    value={databaseConfig.supabaseAnonKey}
+                    onChange={(e) => setDatabaseConfig({...databaseConfig, supabaseAnonKey: e.target.value})}
+                    placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="supabaseServiceKey">🛡️ Chave de Serviço (service_role) - Opcional</Label>
+                  <Input
+                    id="supabaseServiceKey"
+                    type="password"
+                    value={databaseConfig.supabaseServiceKey}
+                    onChange={(e) => setDatabaseConfig({...databaseConfig, supabaseServiceKey: e.target.value})}
+                    placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  />
+                  <p className="text-xs text-gray-600 mt-1">Necessário para funções administrativas avançadas</p>
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <Button onClick={handleTestConnection} variant="outline" className="flex-1">
+                  🔍 Testar Conexão
+                </Button>
+                <Button onClick={handleSaveDatabase} className="flex-1">
+                  💾 Salvar Configurações
+                </Button>
+              </div>
+
+              <div className={`p-3 rounded-lg ${databaseConfig.isConfigured ? 'bg-green-50 border border-green-200' : 'bg-yellow-50 border border-yellow-200'}`}>
+                <div className="flex items-center gap-2 mb-2">
+                  <div className={`w-2 h-2 rounded-full ${databaseConfig.isConfigured ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+                  <span className="font-medium text-sm">
+                    {databaseConfig.isConfigured ? 'Banco Configurado' : 'Configuração Pendente'}
+                  </span>
+                </div>
+                <p className="text-xs text-gray-600">
+                  {databaseConfig.isConfigured 
+                    ? 'Dados sendo salvos no Supabase com segurança'
+                    : 'Configure o banco para persistir dados dos usuários'}
+                </p>
+              </div>
             </div>
           </CardContent>
         </Card>
