@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  metacircle:
+    build: .
+    container_name: metacircle
+    restart: unless-stopped
+    ports:
+      - "3091:3091"
+    environment:
+      - NODE_ENV=production
+      - PORT=3091
+      - DATABASE_URL=${DATABASE_URL}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+    networks:
+      - metasync_network
+    depends_on:
+      - postgres
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3091/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: metacircle_db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=metacircle
+      - POSTGRES_USER=metacircle_user
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backups:/backups
+    networks:
+      - metasync_network
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    container_name: metacircle_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - metasync_network
+    ports:
+      - "6379:6379"
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  metasync_network:
+    external: true

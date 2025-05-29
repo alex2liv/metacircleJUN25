@@ -1,0 +1,128 @@
+Activate the web console with: systemctl enable --now cockpit.socket
+
+Last login: Wed May 28 22:49:01 2025 from 169.254.0.1
+[root@srv744528 ~]# cd opt/metasync/full-stack
+-bash: cd: opt/metasync/full-stack: No such file or directory
+[root@srv744528 ~]# cd opt/metasync
+-bash: cd: opt/metasync: No such file or directory
+[root@srv744528 ~]# cd /opt/metasync/full-stack
+[root@srv744528 full-stack]# nano .env
+[root@srv744528 full-stack]# cp .env.example .env
+nano .env
+cp: cannot stat '.env.example': No such file or directory
+[root@srv744528 full-stack]# nano .env
+[root@srv744528 full-stack]# npm run build
+
+> clarissa-connect@1.0.0 build
+> vite build
+
+sh: line 1: vite: command not found
+[root@srv744528 full-stack]# cat Caddyfile
+# 🌐 Evolution API
+evolution-api.metasyncdigital.com.br {
+    handle_path /webhooks/chatwoot* {
+        reverse_proxy localhost:8181
+    }
+    reverse_proxy evolution_api:8080 {
+        header_up apikey Love2liv8940
+    }
+    encode gzip
+    log {
+        output file /var/log/caddy/evolution_access.log
+    }
+}
+
+# ⚙️ n8n Workflows
+n8n.metasyncdigital.com.br {
+    reverse_proxy metasync_n8n:5678
+    encode gzip
+    log {
+        output file /var/log/caddy/n8n_access.log
+    }
+}
+
+# 🛑 WAHA (LEGADO)
+waha.metasyncdigital.com.br {
+    reverse_proxy metasync_waha:3000
+    encode gzip
+    log {
+        output file /var/log/caddy/waha_access.log
+    }
+}
+
+# 🧠 Camila IA Visual
+camila.metasyncdigital.com.br {
+    reverse_proxy camila-web:3010
+    encode gzip
+    log {
+        output file /var/log/caddy/camila_access.log
+    }
+}
+
+# 🔄 MetaBridge – Backend + Frontend (AJUSTADO)
+metabridge.metasyncdigital.com.br {
+    encode gzip
+
+    @api path_regexp ^/api/.*$
+    handle @api {
+        reverse_proxy metabridge_backend:3099
+    }
+
+    root * /opt/metabridge/frontend
+    try_files {path} /index.html
+    file_server
+
+    log {
+        output file /var/log/caddy/metabridge_access.log
+    }
+}
+
+# 💬 MetaCircle
+metacircle.metasyncdigital.com.br {
+    reverse_proxy metacircle:3090
+    encode gzip
+    log {
+        output file /var/log/caddy/metacircle_access.log
+    }
+}
+
+# 📱 Clarissa App
+clarissapp.metasyncdigital.com.br {
+    reverse_proxy clarissa-app:3000
+    encode gzip
+    log {
+        output file /var/log/caddy/clarissapp_access.log
+    }
+}
+
+# 🇬🇧 English App
+english.metasyncdigital.com.br {
+    root * /opt/metasync/english-flow-ai/dist
+    try_files {path} /index.html
+    file_server
+    encode gzip
+    log {
+        output file /var/log/caddy/english_access.log
+    }
+}
+
+# 🍽️ Fiorani Cardápio
+fiorani.metasyncdigital.com.br {
+    root * /srv/fiorani
+    file_server
+    encode gzip
+    log {
+        output file /var/log/caddy/fiorani_access.log
+    }
+}
+
+# ✅ Frontend do MetaCircle (SPA)
+metacircle-app.metasyncdigital.com.br {
+    root * /opt/metasync/metacircle-frontend/dist
+    try_files {path} /index.html
+    file_server
+    encode gzip
+    log {
+        output file /var/log/caddy/metacircle_app_access.log
+    }
+}
