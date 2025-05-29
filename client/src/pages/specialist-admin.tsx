@@ -136,6 +136,57 @@ export default function SpecialistAdmin() {
     isConfigured: false
   });
 
+  // Configurações de Analytics & Métricas
+  const [analyticsConfig, setAnalyticsConfig] = useState({
+    enabled: true,
+    googleAnalyticsId: "",
+    facebookPixelId: "",
+    hotjarId: "",
+    enableUserTracking: true,
+    enableConversionTracking: true,
+    generateReports: true
+  });
+
+  // Configurações de Segurança
+  const [securityConfig, setSecurityConfig] = useState({
+    rateLimitEnabled: true,
+    maxRequestsPerMinute: 60,
+    enableAuditLogs: true,
+    autoBackupEnabled: true,
+    backupFrequency: "daily", // daily, weekly, monthly
+    twoFactorAuthEnabled: false,
+    sessionTimeoutMinutes: 30
+  });
+
+  // Configurações de Personalização
+  const [customizationConfig, setCustomizationConfig] = useState({
+    allowCustomThemes: true,
+    allowLogoUpload: true,
+    allowCustomCSS: false,
+    brandingEnabled: true,
+    customDomainEnabled: false,
+    customDomain: "",
+    favicon: "",
+    customColors: {
+      primary: "#3b82f6",
+      secondary: "#8b5cf6",
+      accent: "#06b6d4"
+    }
+  });
+
+  // Configurações Mobile App
+  const [mobileConfig, setMobileConfig] = useState({
+    androidAppEnabled: false,
+    iosAppEnabled: false,
+    pushNotificationsEnabled: true,
+    deepLinksEnabled: true,
+    offlineModeEnabled: false,
+    appName: "MetaCircle",
+    appDescription: "Comunidade Digital Moderna",
+    playStoreUrl: "",
+    appStoreUrl: ""
+  });
+
   const handleSaveSpecialist = () => {
     // Aqui salvaria no backend
     toast({
@@ -267,6 +318,34 @@ export default function SpecialistAdmin() {
       description: `${emailConfig.provider.toUpperCase()} configurado com sucesso`,
     });
     setEmailConfig({...emailConfig, isConfigured: true});
+  };
+
+  const handleSaveAnalytics = () => {
+    toast({
+      title: "📊 Analytics configurado!",
+      description: "Métricas e relatórios ativados com sucesso",
+    });
+  };
+
+  const handleSaveSecurity = () => {
+    toast({
+      title: "🔒 Segurança atualizada!",
+      description: "Configurações de proteção aplicadas",
+    });
+  };
+
+  const handleSaveCustomization = () => {
+    toast({
+      title: "🎨 Personalização salva!",
+      description: "Temas e branding configurados",
+    });
+  };
+
+  const handleSaveMobile = () => {
+    toast({
+      title: "📱 Configurações mobile salvas!",
+      description: "Apps Android/iOS preparados para desenvolvimento",
+    });
   };
 
   const updateAvailability = (index: number, field: keyof AvailabilitySlot, value: any) => {
@@ -1022,6 +1101,313 @@ export default function SpecialistAdmin() {
                     : 'Configure email para ativar validação de usuários'}
                 </p>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 📊 Analytics & Métricas */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              📊 Analytics & Métricas
+              <Badge variant={analyticsConfig.enabled ? "default" : "secondary"}>
+                {analyticsConfig.enabled ? "Ativo" : "Desabilitado"}
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
+                <Switch
+                  checked={analyticsConfig.enabled}
+                  onCheckedChange={(checked) => 
+                    setAnalyticsConfig({...analyticsConfig, enabled: checked})
+                  }
+                />
+                <div>
+                  <Label className="font-medium">📈 Habilitar Analytics</Label>
+                  <p className="text-xs text-gray-600">
+                    Coleta dados de uso para relatórios e insights
+                  </p>
+                </div>
+              </div>
+
+              {analyticsConfig.enabled && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="googleAnalytics">🔍 Google Analytics ID</Label>
+                    <Input
+                      id="googleAnalytics"
+                      value={analyticsConfig.googleAnalyticsId}
+                      onChange={(e) => setAnalyticsConfig({...analyticsConfig, googleAnalyticsId: e.target.value})}
+                      placeholder="G-XXXXXXXXXX"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="facebookPixel">📘 Facebook Pixel ID</Label>
+                    <Input
+                      id="facebookPixel"
+                      value={analyticsConfig.facebookPixelId}
+                      onChange={(e) => setAnalyticsConfig({...analyticsConfig, facebookPixelId: e.target.value})}
+                      placeholder="123456789012345"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="hotjar">🔥 Hotjar ID</Label>
+                    <Input
+                      id="hotjar"
+                      value={analyticsConfig.hotjarId}
+                      onChange={(e) => setAnalyticsConfig({...analyticsConfig, hotjarId: e.target.value})}
+                      placeholder="1234567"
+                    />
+                  </div>
+                </div>
+              )}
+
+              <Button onClick={handleSaveAnalytics} className="w-full">
+                💾 Salvar Configurações Analytics
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 🔒 Segurança Avançada */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              🔒 Segurança & Proteção
+              <Badge variant="default">Enterprise</Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg">
+                  <Switch
+                    checked={securityConfig.rateLimitEnabled}
+                    onCheckedChange={(checked) => 
+                      setSecurityConfig({...securityConfig, rateLimitEnabled: checked})
+                    }
+                  />
+                  <div>
+                    <Label className="font-medium">⚡ Rate Limiting</Label>
+                    <p className="text-xs text-gray-600">Proteção contra spam</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3 p-3 bg-yellow-50 rounded-lg">
+                  <Switch
+                    checked={securityConfig.enableAuditLogs}
+                    onCheckedChange={(checked) => 
+                      setSecurityConfig({...securityConfig, enableAuditLogs: checked})
+                    }
+                  />
+                  <div>
+                    <Label className="font-medium">📋 Logs de Auditoria</Label>
+                    <p className="text-xs text-gray-600">Rastrear ações admin</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
+                  <Switch
+                    checked={securityConfig.autoBackupEnabled}
+                    onCheckedChange={(checked) => 
+                      setSecurityConfig({...securityConfig, autoBackupEnabled: checked})
+                    }
+                  />
+                  <div>
+                    <Label className="font-medium">💾 Backup Automático</Label>
+                    <p className="text-xs text-gray-600">Proteção de dados</p>
+                  </div>
+                </div>
+                
+                <div>
+                  <Label htmlFor="sessionTimeout">⏱️ Timeout Sessão (min)</Label>
+                  <Input
+                    id="sessionTimeout"
+                    type="number"
+                    value={securityConfig.sessionTimeoutMinutes}
+                    onChange={(e) => setSecurityConfig({...securityConfig, sessionTimeoutMinutes: parseInt(e.target.value)})}
+                    placeholder="30"
+                  />
+                </div>
+              </div>
+
+              <Button onClick={handleSaveSecurity} className="w-full">
+                🛡️ Salvar Configurações de Segurança
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 🎨 Personalização & Branding */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              🎨 Personalização & Branding
+              <Badge variant="secondary">White Label</Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg">
+                  <Switch
+                    checked={customizationConfig.allowCustomThemes}
+                    onCheckedChange={(checked) => 
+                      setCustomizationConfig({...customizationConfig, allowCustomThemes: checked})
+                    }
+                  />
+                  <div>
+                    <Label className="font-medium">🌈 Temas Personalizados</Label>
+                    <p className="text-xs text-gray-600">Permitir cores customizadas</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
+                  <Switch
+                    checked={customizationConfig.allowLogoUpload}
+                    onCheckedChange={(checked) => 
+                      setCustomizationConfig({...customizationConfig, allowLogoUpload: checked})
+                    }
+                  />
+                  <div>
+                    <Label className="font-medium">🖼️ Upload de Logo</Label>
+                    <p className="text-xs text-gray-600">Logo personalizado do cliente</p>
+                  </div>
+                </div>
+                
+                <div>
+                  <Label htmlFor="customDomain">🌐 Domínio Personalizado</Label>
+                  <Input
+                    id="customDomain"
+                    value={customizationConfig.customDomain}
+                    onChange={(e) => setCustomizationConfig({...customizationConfig, customDomain: e.target.value})}
+                    placeholder="minhacomunidade.com"
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="primaryColor">🎨 Cor Primária</Label>
+                  <Input
+                    id="primaryColor"
+                    type="color"
+                    value={customizationConfig.customColors.primary}
+                    onChange={(e) => setCustomizationConfig({
+                      ...customizationConfig, 
+                      customColors: {...customizationConfig.customColors, primary: e.target.value}
+                    })}
+                  />
+                </div>
+              </div>
+
+              <Button onClick={handleSaveCustomization} className="w-full">
+                🎨 Salvar Personalização
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 📱 Configurações Mobile App */}
+        <Card className="border-green-200 bg-green-50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-green-900">
+              📱 Apps Mobile (Android & iOS)
+              <Badge variant="outline" className="bg-green-100">
+                Em Desenvolvimento
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="p-4 bg-green-100 border border-green-300 rounded-lg">
+                <h3 className="font-medium text-green-900 mb-2">🚀 Próxima Fase do Projeto</h3>
+                <p className="text-sm text-green-800">
+                  Apps nativos para Android e iOS estão sendo desenvolvidos com as mesmas funcionalidades da web
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex items-center gap-3 p-3 bg-white rounded-lg border">
+                  <Switch
+                    checked={mobileConfig.androidAppEnabled}
+                    onCheckedChange={(checked) => 
+                      setMobileConfig({...mobileConfig, androidAppEnabled: checked})
+                    }
+                  />
+                  <div>
+                    <Label className="font-medium">🤖 App Android</Label>
+                    <p className="text-xs text-gray-600">Google Play Store</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3 p-3 bg-white rounded-lg border">
+                  <Switch
+                    checked={mobileConfig.iosAppEnabled}
+                    onCheckedChange={(checked) => 
+                      setMobileConfig({...mobileConfig, iosAppEnabled: checked})
+                    }
+                  />
+                  <div>
+                    <Label className="font-medium">🍎 App iOS</Label>
+                    <p className="text-xs text-gray-600">Apple App Store</p>
+                  </div>
+                </div>
+                
+                <div>
+                  <Label htmlFor="appName">📱 Nome do App</Label>
+                  <Input
+                    id="appName"
+                    value={mobileConfig.appName}
+                    onChange={(e) => setMobileConfig({...mobileConfig, appName: e.target.value})}
+                    placeholder="MetaCircle"
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="appDescription">📝 Descrição do App</Label>
+                  <Input
+                    id="appDescription"
+                    value={mobileConfig.appDescription}
+                    onChange={(e) => setMobileConfig({...mobileConfig, appDescription: e.target.value})}
+                    placeholder="Comunidade Digital Moderna"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex items-center gap-3 p-3 bg-white rounded-lg border">
+                  <Switch
+                    checked={mobileConfig.pushNotificationsEnabled}
+                    onCheckedChange={(checked) => 
+                      setMobileConfig({...mobileConfig, pushNotificationsEnabled: checked})
+                    }
+                  />
+                  <div>
+                    <Label className="font-medium">🔔 Push Notifications</Label>
+                    <p className="text-xs text-gray-600">Notificações em tempo real</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-3 p-3 bg-white rounded-lg border">
+                  <Switch
+                    checked={mobileConfig.deepLinksEnabled}
+                    onCheckedChange={(checked) => 
+                      setMobileConfig({...mobileConfig, deepLinksEnabled: checked})
+                    }
+                  />
+                  <div>
+                    <Label className="font-medium">🔗 Deep Links</Label>
+                    <p className="text-xs text-gray-600">Links diretos para conteúdo</p>
+                  </div>
+                </div>
+              </div>
+
+              <Button onClick={handleSaveMobile} className="w-full bg-green-600 hover:bg-green-700">
+                📱 Salvar Configurações Mobile
+              </Button>
             </div>
           </CardContent>
         </Card>
