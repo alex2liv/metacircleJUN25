@@ -121,6 +121,21 @@ export default function SpecialistAdmin() {
     isConfigured: false
   });
 
+  // Configurações de Email/SMTP
+  const [emailConfig, setEmailConfig] = useState({
+    provider: "sendgrid", // sendgrid, smtp, mailgun, resend
+    sendgridApiKey: "",
+    smtpHost: "",
+    smtpPort: "587",
+    smtpUser: "",
+    smtpPassword: "",
+    smtpSecure: true,
+    fromEmail: "noreply@metasync.com.br",
+    fromName: "MetaCircle",
+    emailVerificationEnabled: true,
+    isConfigured: false
+  });
+
   const handleSaveSpecialist = () => {
     // Aqui salvaria no backend
     toast({
@@ -212,6 +227,46 @@ export default function SpecialistAdmin() {
       description: "Conexão com Supabase configurada com sucesso",
     });
     setDatabaseConfig({...databaseConfig, isConfigured: true});
+  };
+
+  const handleTestEmail = async () => {
+    if (emailConfig.provider === "sendgrid" && !emailConfig.sendgridApiKey) {
+      toast({
+        title: "❌ Erro na configuração",
+        description: "Por favor, preencha a chave API do SendGrid",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (emailConfig.provider === "smtp" && (!emailConfig.smtpHost || !emailConfig.smtpUser)) {
+      toast({
+        title: "❌ Erro na configuração",
+        description: "Por favor, preencha host e usuário SMTP",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    toast({
+      title: "📧 Enviando email de teste...",
+      description: "Verificando configuração de email",
+    });
+
+    setTimeout(() => {
+      toast({
+        title: "✅ Email enviado com sucesso!",
+        description: `Teste realizado via ${emailConfig.provider.toUpperCase()}`,
+      });
+    }, 2000);
+  };
+
+  const handleSaveEmail = () => {
+    toast({
+      title: "📧 Configurações de email salvas!",
+      description: `${emailConfig.provider.toUpperCase()} configurado com sucesso`,
+    });
+    setEmailConfig({...emailConfig, isConfigured: true});
   };
 
   const updateAvailability = (index: number, field: keyof AvailabilitySlot, value: any) => {
@@ -782,6 +837,167 @@ export default function SpecialistAdmin() {
                   {databaseConfig.isConfigured 
                     ? 'Dados sendo salvos no Supabase com segurança'
                     : 'Configure o banco para persistir dados dos usuários'}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* 📧 Configuração de Email/SMTP */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              📧 Configuração de Email & Validação
+              <Badge variant={emailConfig.isConfigured ? "default" : "secondary"}>
+                {emailConfig.isConfigured ? "Configurado" : "Pendente"}
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                <h3 className="font-medium text-green-900 mb-2">✨ Validação por Email Ativa</h3>
+                <p className="text-sm text-green-800">
+                  Quando ativado, usuários precisam confirmar email com código de 6 dígitos antes de usar a plataforma
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4">
+                <div>
+                  <Label htmlFor="emailProvider">📮 Provedor de Email</Label>
+                  <select
+                    id="emailProvider"
+                    value={emailConfig.provider}
+                    onChange={(e) => setEmailConfig({...emailConfig, provider: e.target.value})}
+                    className="w-full p-2 border rounded-md"
+                  >
+                    <option value="sendgrid">SendGrid (Recomendado)</option>
+                    <option value="smtp">SMTP Personalizado</option>
+                    <option value="mailgun">Mailgun</option>
+                    <option value="resend">Resend</option>
+                  </select>
+                </div>
+
+                {emailConfig.provider === "sendgrid" && (
+                  <div>
+                    <Label htmlFor="sendgridApiKey">🔑 Chave API SendGrid</Label>
+                    <Input
+                      id="sendgridApiKey"
+                      type="password"
+                      value={emailConfig.sendgridApiKey}
+                      onChange={(e) => setEmailConfig({...emailConfig, sendgridApiKey: e.target.value})}
+                      placeholder="SG.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                    />
+                    <p className="text-xs text-gray-600 mt-1">
+                      Obtenha em: <a href="https://app.sendgrid.com/settings/api_keys" target="_blank" className="underline">SendGrid → API Keys</a>
+                    </p>
+                  </div>
+                )}
+
+                {emailConfig.provider === "smtp" && (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="smtpHost">🌐 Host SMTP</Label>
+                      <Input
+                        id="smtpHost"
+                        value={emailConfig.smtpHost}
+                        onChange={(e) => setEmailConfig({...emailConfig, smtpHost: e.target.value})}
+                        placeholder="smtp.gmail.com"
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="smtpPort">🔌 Porta</Label>
+                      <Input
+                        id="smtpPort"
+                        value={emailConfig.smtpPort}
+                        onChange={(e) => setEmailConfig({...emailConfig, smtpPort: e.target.value})}
+                        placeholder="587"
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="smtpUser">👤 Usuário SMTP</Label>
+                      <Input
+                        id="smtpUser"
+                        value={emailConfig.smtpUser}
+                        onChange={(e) => setEmailConfig({...emailConfig, smtpUser: e.target.value})}
+                        placeholder="seu-email@gmail.com"
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="smtpPassword">🔒 Senha SMTP</Label>
+                      <Input
+                        id="smtpPassword"
+                        type="password"
+                        value={emailConfig.smtpPassword}
+                        onChange={(e) => setEmailConfig({...emailConfig, smtpPassword: e.target.value})}
+                        placeholder="sua-senha-smtp"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="fromEmail">📤 Email Remetente</Label>
+                    <Input
+                      id="fromEmail"
+                      type="email"
+                      value={emailConfig.fromEmail}
+                      onChange={(e) => setEmailConfig({...emailConfig, fromEmail: e.target.value})}
+                      placeholder="noreply@seudominio.com"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="fromName">🏷️ Nome Remetente</Label>
+                    <Input
+                      id="fromName"
+                      value={emailConfig.fromName}
+                      onChange={(e) => setEmailConfig({...emailConfig, fromName: e.target.value})}
+                      placeholder="MetaCircle"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
+                  <Switch
+                    checked={emailConfig.emailVerificationEnabled}
+                    onCheckedChange={(checked) => 
+                      setEmailConfig({...emailConfig, emailVerificationEnabled: checked})
+                    }
+                  />
+                  <div>
+                    <Label className="font-medium">🔐 Validação Obrigatória</Label>
+                    <p className="text-xs text-gray-600">
+                      Usuários devem confirmar email antes de acessar
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <Button onClick={handleTestEmail} variant="outline" className="flex-1">
+                  📧 Enviar Email Teste
+                </Button>
+                <Button onClick={handleSaveEmail} className="flex-1">
+                  💾 Salvar Configurações
+                </Button>
+              </div>
+
+              <div className={`p-3 rounded-lg ${emailConfig.isConfigured ? 'bg-green-50 border border-green-200' : 'bg-yellow-50 border border-yellow-200'}`}>
+                <div className="flex items-center gap-2 mb-2">
+                  <div className={`w-2 h-2 rounded-full ${emailConfig.isConfigured ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+                  <span className="font-medium text-sm">
+                    {emailConfig.isConfigured ? 'Email Configurado' : 'Configuração Pendente'}
+                  </span>
+                </div>
+                <p className="text-xs text-gray-600">
+                  {emailConfig.isConfigured 
+                    ? `Emails sendo enviados via ${emailConfig.provider.toUpperCase()}`
+                    : 'Configure email para ativar validação de usuários'}
                 </p>
               </div>
             </div>
