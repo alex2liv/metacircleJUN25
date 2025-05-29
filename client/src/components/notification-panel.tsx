@@ -193,7 +193,6 @@ export function NotificationPanel() {
                     onCheckedChange={(checked) => 
                       setSettings({...settings, visual: checked})
                     }
-                    size="sm"
                   />
                   <Label className="text-xs">Visual</Label>
                 </div>
@@ -204,7 +203,6 @@ export function NotificationPanel() {
                     onCheckedChange={(checked) => 
                       setSettings({...settings, sound: checked})
                     }
-                    size="sm"
                   />
                   {settings.sound ? 
                     <Volume2 className="w-4 h-4 text-green-600" /> : 
@@ -291,7 +289,6 @@ export function NotificationPanel() {
                       onCheckedChange={(checked) => 
                         setSettings({...settings, comments: checked})
                       }
-                      size="sm"
                     />
                   </div>
                   
