@@ -491,7 +491,10 @@ export default function SpecialistAdmin() {
                   type="number"
                   step="0.01"
                   value={planPrices.basicPrice}
-                  onChange={(e) => setPlanPrices({...planPrices, basicPrice: e.target.value})}
+                  onChange={(e) => {
+                    const value = parseFloat(e.target.value);
+                    setPlanPrices({...planPrices, basicPrice: isNaN(value) ? "0.00" : value.toFixed(2)});
+                  }}
                   placeholder="29.90"
                 />
                 <p className="text-xs text-gray-600 mt-1">Chat apenas texto</p>
@@ -504,7 +507,10 @@ export default function SpecialistAdmin() {
                   type="number"
                   step="0.01"
                   value={planPrices.intermediatePrice}
-                  onChange={(e) => setPlanPrices({...planPrices, intermediatePrice: e.target.value})}
+                  onChange={(e) => {
+                    const value = parseFloat(e.target.value);
+                    setPlanPrices({...planPrices, intermediatePrice: isNaN(value) ? "0.00" : value.toFixed(2)});
+                  }}
                   placeholder="59.90"
                 />
                 <p className="text-xs text-gray-600 mt-1">Chat texto + áudio</p>
@@ -517,7 +523,10 @@ export default function SpecialistAdmin() {
                   type="number"
                   step="0.01"
                   value={planPrices.premiumPrice}
-                  onChange={(e) => setPlanPrices({...planPrices, premiumPrice: e.target.value})}
+                  onChange={(e) => {
+                    const value = parseFloat(e.target.value);
+                    setPlanPrices({...planPrices, premiumPrice: isNaN(value) ? "0.00" : value.toFixed(2)});
+                  }}
                   placeholder="119.90"
                 />
                 <p className="text-xs text-gray-600 mt-1">Acesso total + SOS</p>
@@ -582,6 +591,7 @@ export default function SpecialistAdmin() {
                         className="w-full p-2 border rounded-md"
                       >
                         <option value="gpt-4o">GPT-4o (Recomendado)</option>
+                        <option value="gpt-4o-mini">GPT-4o Mini (Econômico)</option>
                         <option value="gpt-4">GPT-4</option>
                         <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
                       </select>

@@ -1,12 +1,13 @@
 import { useState } from "react";
 import Sidebar from "./sidebar";
 import { FloatingHelpButton } from "@/components/floating-help-button";
+import { NotificationPanel } from "@/components/notification-panel";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ThemeSelector } from "@/components/theme-selector";
 import { CreateMenu } from "@/components/create-menu";
-import { Bell, Menu, Search } from "lucide-react";
+import { Menu, Search } from "lucide-react";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -61,12 +62,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
               </div>
               
               {/* Notifications */}
-              <Button variant="ghost" size="sm" className="relative">
-                <Bell className="w-6 h-6" />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  3
-                </span>
-              </Button>
+              <NotificationPanel />
               
               {/* Theme Selector */}
               <ThemeSelector />
