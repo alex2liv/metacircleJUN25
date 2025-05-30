@@ -190,7 +190,7 @@ Digite uma palavra-chave ou sua dúvida específica!`;
         {!isOpen && (
           <Button
             onClick={() => setIsOpen(true)}
-            className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse"
+            className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-300"
             size="lg"
           >
             <Bot className="w-6 h-6 text-white" />
