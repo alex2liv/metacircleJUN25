@@ -34,11 +34,11 @@ type Step2Form = z.infer<typeof step2Schema>;
 type Step3Form = z.infer<typeof step3Schema>;
 
 const revenueOptions = [
-  "Menos de R$ 100 mil",
-  "R$ 100 mil - R$ 500 mil",
-  "R$ 500 mil - R$ 1 milhão",
-  "R$ 1 milhão - R$ 5 milhões",
-  "Mais de R$ 5 milhões"
+  "R$ 1.000 - R$ 3.000",
+  "R$ 3.001 - R$ 5.000",
+  "R$ 5.001 - R$ 7.000",
+  "R$ 7.001 - R$ 10.000",
+  "Acima de R$ 10.000"
 ];
 
 const goalOptions = [
@@ -228,10 +228,10 @@ export default function Onboarding() {
 
               <form onSubmit={step2Form.handleSubmit(onStep2Submit)} className="space-y-4">
                 <div>
-                  <Label>Qual é sua receita anual?</Label>
+                  <Label>Qual é sua renda mensal?</Label>
                   <Select onValueChange={(value) => step2Form.setValue("annualRevenue", value)}>
                     <SelectTrigger className="h-12">
-                      <SelectValue placeholder="Selecione sua receita anual" />
+                      <SelectValue placeholder="Selecione sua renda mensal" />
                     </SelectTrigger>
                     <SelectContent>
                       {revenueOptions.map((option) => (
