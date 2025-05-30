@@ -69,7 +69,7 @@ function Router() {
       <Route path="/live-moderation" component={LiveModeration} />
       <Route path="/ai-assistant" component={AIAssistant} />
       <Route path="/settings" component={Settings} />
-      <Route path="/" component={Landing} />
+      <Route path="/" component={ClientView} />
       <Route component={NotFound} />
     </Switch>
   );
