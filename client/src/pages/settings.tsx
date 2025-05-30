@@ -338,6 +338,43 @@ export default function Settings() {
             </CardHeader>
             <CardContent>
               <form onSubmit={specialistForm.handleSubmit(onSpecialistSubmit)} className="space-y-6">
+                {/* Upload de Foto de Perfil */}
+                <div className="flex flex-col items-center space-y-4">
+                  <div className="relative">
+                    <img
+                      src={profileImage}
+                      alt="Foto do perfil"
+                      className="w-24 h-24 rounded-full object-cover border-4 border-gray-200"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="absolute bottom-0 right-0 bg-blue-600 text-white rounded-full p-2 hover:bg-blue-700 transition-colors"
+                    >
+                      <Camera className="w-4 h-4" />
+                    </button>
+                  </div>
+                  <div className="text-center">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="flex items-center gap-2"
+                    >
+                      <Upload className="w-4 h-4" />
+                      Alterar Foto
+                    </Button>
+                    <p className="text-xs text-gray-500 mt-1">JPG, PNG ou GIF (máx. 5MB)</p>
+                  </div>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="specialistName">Nome do Especialista</Label>

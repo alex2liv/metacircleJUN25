@@ -17,6 +17,9 @@ export default function ClientView() {
   const queryClient = useQueryClient();
   const [, setLocation] = useLocation();
   const [joinedEvents, setJoinedEvents] = useState<Set<number>>(new Set());
+  
+  // Indicador de que está na visão do cliente
+  const isClientView = true;
 
   const { data: stats } = useQuery({
     queryKey: ['/api/communities/3/stats'],
@@ -73,6 +76,27 @@ export default function ClientView() {
 
   return (
     <div className="space-y-6">
+      {/* Banner Indicativo - Visão do Cliente */}
+      <div className="bg-gradient-to-r from-blue-900 to-purple-900 text-white p-3 rounded-lg border">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Eye className="w-5 h-5" />
+            <span className="font-medium">Modo: Visão do Cliente</span>
+            <Badge variant="secondary" className="bg-white/20 text-white">
+              Prévia para Administrador
+            </Badge>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setLocation('/dashboard')}
+            className="border-white text-white hover:bg-white/10"
+          >
+            Voltar ao Admin
+          </Button>
+        </div>
+      </div>
+
       {/* Banner Trial Premium - Cartão Obrigatório */}
       <div className="bg-gradient-to-r from-amber-500 to-orange-600 text-white p-4 rounded-lg border-2 border-amber-300">
         <div className="flex items-center justify-between">
