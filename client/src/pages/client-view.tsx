@@ -53,7 +53,7 @@ export default function ClientView() {
       return data;
     },
     onSuccess: (data, eventId) => {
-      setJoinedEvents(prev => new Set([...prev, eventId]));
+      setJoinedEvents(prev => new Set(Array.from(prev).concat(eventId)));
       queryClient.invalidateQueries({ queryKey: ['/api/communities/3/events'] });
       
       toast({
@@ -660,7 +660,7 @@ export default function ClientView() {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {topMembers?.slice(0, 5).map((member: any, index: number) => (
+            {(topMembers as any)?.slice?.(0, 5)?.map((member: any, index: number) => (
               <div key={member.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                 <div className="flex items-center gap-3">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold ${
