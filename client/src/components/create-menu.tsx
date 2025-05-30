@@ -63,12 +63,23 @@ export function CreateMenu() {
       description: "",
       startDate: "",
       endDate: "",
-      location: "",
-      isOnline: false,
+      location: "online",
+      isOnline: true,
       spaceId: 0,
       organizerId: 1, // Mock user ID
     },
   });
+
+  // Função para calcular automaticamente a data/hora de fim
+  const handleStartDateChange = (startDateTime: string) => {
+    if (startDateTime) {
+      const startDate = new Date(startDateTime);
+      // Adicionar 1 hora automaticamente
+      const endDate = new Date(startDate.getTime() + 60 * 60 * 1000);
+      const endDateString = endDate.toISOString().slice(0, 16);
+      eventForm.setValue('endDate', endDateString);
+    }
+  };
 
   const createPostMutation = useMutation({
     mutationFn: api.createPost,
@@ -140,12 +151,7 @@ export function CreateMenu() {
       icon: Calendar,
       description: "Agende um workshop ou encontro",
     },
-    {
-      id: "course",
-      label: "Curso",
-      icon: BookOpen,
-      description: "Acessar plataforma de cursos",
-    },
+
     {
       id: "community",
       label: "Comunidade",
@@ -169,14 +175,7 @@ export function CreateMenu() {
             return (
               <DropdownMenuItem
                 key={option.id}
-                onClick={() => {
-                  if (option.id === "course") {
-                    // Redirecionar para PerfectPay
-                    window.open("https://clarissavaz.academy.perfectpay.com.br/login/", '_blank');
-                  } else {
-                    setCreateType(option.id);
-                  }
-                }}
+                onClick={() => setCreateType(option.id)}
                 className="flex items-start gap-3 p-3 cursor-pointer"
               >
                 <Icon className="w-4 h-4 mt-1 text-muted-foreground" />
@@ -361,7 +360,14 @@ export function CreateMenu() {
                     <FormItem>
                       <FormLabel>Data e Hora de Início</FormLabel>
                       <FormControl>
-                        <Input type="datetime-local" {...field} />
+                        <Input 
+                          type="datetime-local" 
+                          {...field}
+                          onChange={(e) => {
+                            field.onChange(e);
+                            handleStartDateChange(e.target.value);
+                          }}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

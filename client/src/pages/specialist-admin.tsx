@@ -751,9 +751,13 @@ export default function SpecialistAdmin() {
               </div>
             </div>
             
-            <Button onClick={handleSavePrices} className="w-full mt-4 bg-green-600 hover:bg-green-700">
+            <Button 
+              onClick={handleSavePrices} 
+              className="w-full mt-4 bg-green-600 hover:bg-green-700"
+              data-save-prices
+            >
               <Save className="w-4 h-4 mr-2" />
-              Salvar Preços dos Planos
+              💾 Salvar Preços dos Planos
             </Button>
           </CardContent>
         </Card>
