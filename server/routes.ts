@@ -53,6 +53,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Force admin access for development
+  app.post("/api/auth/force-admin", async (req, res) => {
+    try {
+      const user = await storage.getUser(1);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Update user role to admin in memory
+      const updatedUser = { ...user, role: "admin" as const };
+      (storage as any).users.set(user.id, updatedUser);
+      
+      res.json({ message: "Admin access granted", user: updatedUser });
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   // Get community by slug
   app.get("/api/communities/:slug", async (req, res) => {
     try {

@@ -108,6 +108,26 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-8">
+      {/* Admin Access Button */}
+      {user && user.role !== "admin" && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-medium text-blue-900">Acesso Administrativo</h3>
+              <p className="text-sm text-blue-700">Ativar painel completo para gerenciar especialistas</p>
+            </div>
+            <Button 
+              onClick={() => forceAdminMutation.mutate()}
+              disabled={forceAdminMutation.isPending}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              <Shield className="w-4 h-4 mr-2" />
+              {forceAdminMutation.isPending ? "Ativando..." : "Ativar Admin"}
+            </Button>
+          </div>
+        </div>
+      )}
+
       {/* Banner de Período de Graça */}
       {showGracePeriod && (
         <GracePeriodBanner 
