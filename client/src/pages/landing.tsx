@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
-import metaSyncLogo from "@assets/MetaSync Logo Jun2025.png";
+import metaSyncLogo from "@assets/logo metasync fundo transparente.png";
 
 const registerSchema = z.object({
   fullName: z.string().min(2, "Nome completo é obrigatório"),

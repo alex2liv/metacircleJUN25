@@ -11,7 +11,7 @@ import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Shield, User, UserCheck, Mail, ArrowLeft, Key } from "lucide-react";
 import { Link, useLocation } from "wouter";
-import metaSyncLogo from "@assets/MetaSync Logo Jun2025.png";
+import metaSyncLogo from "@assets/logo metasync fundo transparente.png";
 
 // Schemas de validação
 const loginSchema = z.object({
