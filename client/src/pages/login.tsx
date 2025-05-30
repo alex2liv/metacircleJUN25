@@ -11,7 +11,7 @@ import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Shield, User, UserCheck, Mail, ArrowLeft, Key } from "lucide-react";
 import { Link, useLocation } from "wouter";
-import metaSyncLogo from "@assets/logo metasync fundo transparente.png";
+import metaSyncLogo from "@assets/a88aad12-debb-48b7-9a26-acf54585d11e (1).png";
 
 // Schemas de validação
 const loginSchema = z.object({
@@ -212,7 +212,7 @@ export default function Login() {
             <img 
               src={metaSyncLogo} 
               alt="MetaSync Digital" 
-              className="h-32 w-auto object-contain"
+              className="h-20 w-auto object-contain"
             />
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">

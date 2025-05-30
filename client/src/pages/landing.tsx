@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
-import metaSyncLogo from "@assets/logo metasync fundo transparente.png";
+import metaSyncLogo from "@assets/a88aad12-debb-48b7-9a26-acf54585d11e (1).png";
 
 const registerSchema = z.object({
   fullName: z.string().min(2, "Nome completo é obrigatório"),
@@ -52,7 +52,7 @@ export default function Landing() {
             <img 
               src={metaSyncLogo} 
               alt="MetaSync Digital" 
-              className="h-32 w-auto object-contain"
+              className="h-20 w-auto object-contain"
             />
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
