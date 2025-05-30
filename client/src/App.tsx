@@ -31,6 +31,7 @@ import InviteMembers from "@/pages/invite-members";
 import LiveRooms from "@/pages/live-rooms";
 import LiveModeration from "@/pages/live-moderation";
 import Landing from "@/pages/landing";
+import Login from "@/pages/login";
 import Onboarding from "@/pages/onboarding";
 import AIAssistant from "@/pages/ai-assistant";
 import NotFound from "@/pages/not-found";
@@ -38,6 +39,7 @@ import NotFound from "@/pages/not-found";
 function Router() {
   return (
     <Switch>
+      <Route path="/login" component={Login} />
       <Route path="/onboarding" component={Onboarding} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/spaces" component={Spaces} />
