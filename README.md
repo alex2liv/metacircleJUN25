@@ -2,7 +2,13 @@
 
 > **Versão Enterprise** - A mais avançada plataforma de comunidades do Brasil, superando Circle.so, Discord e Slack.
 
-![MetaCircle](./attached_assets/MetaSync%20Logo%20Jun2025.png)
+![MetaCircle](./attached_assets/a88aad12-debb-48b7-9a26-acf54585d11e%20(1).png)
+
+## 🆕 Última Atualização - 30/05/2025
+- Logo MetaSync horizontal mais profissional
+- Faixas salariais mensais no onboarding (R$ 1.000-10.000+)
+- Interface de ajuda otimizada sem efeitos irritantes
+- Sistema de acesso administrativo aprimorado
 
 ## 📋 Índice
 
