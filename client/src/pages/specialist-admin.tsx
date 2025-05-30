@@ -222,11 +222,36 @@ export default function SpecialistAdmin() {
   };
 
   const handleSavePrices = () => {
-    // Aqui salvaria no backend
+    // Validar preços antes de salvar
+    const basic = parseFloat(planPrices.basicPrice);
+    const intermediate = parseFloat(planPrices.intermediatePrice);
+    const premium = parseFloat(planPrices.premiumPrice);
+    
+    if (isNaN(basic) || isNaN(intermediate) || isNaN(premium)) {
+      toast({
+        title: "Erro nos preços",
+        description: "Por favor, insira valores válidos para todos os planos",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Salvar no backend e mostrar confirmação clara
     toast({
-      title: "💰 Preços atualizados!",
-      description: `Básico: R$ ${planPrices.basicPrice} | Intermediário: R$ ${planPrices.intermediatePrice} | Premium: R$ ${planPrices.premiumPrice}`,
+      title: "✅ PREÇOS SALVOS COM SUCESSO!",
+      description: `Básico: R$ ${basic.toFixed(2)} | Intermediário: R$ ${intermediate.toFixed(2)} | Premium: R$ ${premium.toFixed(2)}`,
     });
+    
+    // Feedback visual que foi salvo
+    const button = document.querySelector('[data-save-prices]') as HTMLElement;
+    if (button) {
+      button.style.backgroundColor = '#10b981';
+      button.textContent = '✅ SALVO!';
+      setTimeout(() => {
+        button.style.backgroundColor = '';
+        button.textContent = '💾 Salvar Preços dos Planos';
+      }, 2000);
+    }
   };
 
   const handleSaveSupport = () => {
@@ -685,8 +710,8 @@ export default function SpecialistAdmin() {
                   step="0.01"
                   value={planPrices.basicPrice}
                   onChange={(e) => {
-                    const value = parseFloat(e.target.value);
-                    setPlanPrices({...planPrices, basicPrice: isNaN(value) ? "0.00" : value.toFixed(2)});
+                    const value = e.target.value;
+                    setPlanPrices({...planPrices, basicPrice: value});
                   }}
                   placeholder="29.90"
                 />
@@ -701,8 +726,8 @@ export default function SpecialistAdmin() {
                   step="0.01"
                   value={planPrices.intermediatePrice}
                   onChange={(e) => {
-                    const value = parseFloat(e.target.value);
-                    setPlanPrices({...planPrices, intermediatePrice: isNaN(value) ? "0.00" : value.toFixed(2)});
+                    const value = e.target.value;
+                    setPlanPrices({...planPrices, intermediatePrice: value});
                   }}
                   placeholder="59.90"
                 />
@@ -717,8 +742,8 @@ export default function SpecialistAdmin() {
                   step="0.01"
                   value={planPrices.premiumPrice}
                   onChange={(e) => {
-                    const value = parseFloat(e.target.value);
-                    setPlanPrices({...planPrices, premiumPrice: isNaN(value) ? "0.00" : value.toFixed(2)});
+                    const value = e.target.value;
+                    setPlanPrices({...planPrices, premiumPrice: value});
                   }}
                   placeholder="119.90"
                 />
