@@ -206,13 +206,13 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4">
-      <Card className="w-full max-w-md bg-white shadow-2xl border-0">
+      <Card className="w-full max-w-lg bg-white shadow-2xl border-0">
         <CardHeader className="text-center pb-2">
-          <div className="mx-auto w-32 h-24 flex items-center justify-center mb-4">
+          <div className="mx-auto w-96 h-72 flex items-center justify-center mb-4">
             <img 
               src={metaSyncLogo} 
               alt="MetaSync Digital" 
-              className="h-20 w-auto object-contain"
+              className="h-60 w-auto object-contain"
             />
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
