@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,7 +12,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useUserRole } from "@/hooks/use-user-role";
 import { useToast } from "@/hooks/use-toast";
 import { validateSecureUrl, hasAdminAccess, validateFormInput } from "@/lib/security";
-import { Settings2, Lock, ExternalLink, Save, Shield, Users } from "lucide-react";
+import { Settings2, Lock, ExternalLink, Save, Shield, Users, Upload, Camera } from "lucide-react";
 
 const perfectPaySettingsSchema = z.object({
   defaultPassword: z.string().min(1, "Senha é obrigatória").max(50, "Senha muito longa"),
@@ -42,6 +42,8 @@ export default function Settings() {
   const { isOwner, isAdmin } = useUserRole();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [profileImage, setProfileImage] = useState<string>("/api/placeholder/150/150");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const perfectPayForm = useForm<PerfectPaySettings>({
     resolver: zodResolver(perfectPaySettingsSchema),
@@ -67,6 +69,33 @@ export default function Settings() {
     },
   });
 
+  // Função para upload de foto
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) { // 5MB max
+        toast({
+          title: "Arquivo muito grande",
+          description: "A imagem deve ter no máximo 5MB.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target?.result) {
+          setProfileImage(e.target.result as string);
+          toast({
+            title: "Foto atualizada!",
+            description: "Sua foto de perfil foi alterada com sucesso.",
+          });
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const onSpecialistSubmit = async (data: SpecialistSettings) => {
     setIsLoading(true);
     try {
@@ -84,7 +113,7 @@ export default function Settings() {
       localStorage.setItem('specialistSettings', JSON.stringify(data));
       
       toast({
-        title: "Configurações salvas!",
+        title: "✅ Configurações salvas!",
         description: "As configurações do especialista foram atualizadas com sucesso.",
       });
     } catch (error) {
