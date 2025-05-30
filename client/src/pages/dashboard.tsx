@@ -1,5 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { api } from "@/lib/api";
+import { apiRequest } from "@/lib/queryClient";
 import { useWebSocket } from "@/hooks/use-websocket";
 import { useEffect, useState } from "react";
 import { queryClient } from "@/lib/queryClient";
@@ -9,14 +10,42 @@ import ActivityFeed from "@/components/dashboard/activity-feed";
 import TopMembers from "@/components/dashboard/top-members";
 import UpcomingEvents from "@/components/dashboard/upcoming-events";
 import QuickActions from "@/components/dashboard/quick-actions";
+import { Button } from "@/components/ui/button";
+import { Shield } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Dashboard() {
   const { lastMessage } = useWebSocket();
   const [showGracePeriod, setShowGracePeriod] = useState(false);
   const [graceDaysLeft, setGraceDaysLeft] = useState(3);
+  const { toast } = useToast();
 
   // Mock community ID - in real app would come from URL or context
   const communityId = 3;
+
+  // Get current user data
+  const { data: user, refetch: refetchUser } = useQuery({
+    queryKey: ["/api/auth/me"],
+  });
+
+  // Force admin access mutation
+  const forceAdminMutation = useMutation({
+    mutationFn: () => apiRequest("POST", "/api/auth/force-admin"),
+    onSuccess: () => {
+      refetchUser();
+      toast({
+        title: "Acesso Administrativo Ativado",
+        description: "Agora você tem acesso completo ao painel administrativo.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Erro",
+        description: "Não foi possível ativar o acesso administrativo.",
+        variant: "destructive",
+      });
+    },
+  });
 
   // Simular verificação do período de graça
   // Em produção, isso viria do backend verificando as configurações
