@@ -144,11 +144,123 @@ export default function CommunityMember() {
             </CardContent>
           </Card>
 
+          {/* Courses Available */}
+          <Card className="lg:col-span-3">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BookOpen className="w-5 h-5" />
+                Cursos Disponíveis
+              </CardTitle>
+              <CardDescription>
+                Aprenda com nossos cursos exclusivos e aprimore suas práticas de mercado
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Course 1 */}
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 border border-blue-200">
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="font-semibold text-lg text-blue-900">React Avançado para Desenvolvedores</h3>
+                      <p className="text-sm text-blue-700 mt-2">
+                        Domine React, Redux, TypeScript e as melhores práticas do mercado
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-blue-600">Nível:</span>
+                        <Badge variant="secondary" className="bg-blue-200 text-blue-800">Avançado</Badge>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-blue-600">Duração:</span>
+                        <span className="text-sm text-blue-800 font-medium">8 semanas</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between pt-4">
+                      <span className="text-2xl font-bold text-blue-900">R$ 297</span>
+                      <Button 
+                        className="bg-blue-600 hover:bg-blue-700"
+                        onClick={() => window.open('https://perfectpay.com.br/curso-react-avancado', '_blank')}
+                      >
+                        <Play className="w-4 h-4 mr-2" />
+                        Comprar Agora
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Course 2 */}
+                <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-6 border border-green-200">
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="font-semibold text-lg text-green-900">JavaScript do Zero ao Profissional</h3>
+                      <p className="text-sm text-green-700 mt-2">
+                        Aprenda JavaScript moderno, ES6+ e desenvolvimento full-stack
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-green-600">Nível:</span>
+                        <Badge variant="secondary" className="bg-green-200 text-green-800">Iniciante</Badge>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-green-600">Duração:</span>
+                        <span className="text-sm text-green-800 font-medium">12 semanas</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between pt-4">
+                      <span className="text-2xl font-bold text-green-900">R$ 197</span>
+                      <Button 
+                        className="bg-green-600 hover:bg-green-700"
+                        onClick={() => window.open('https://perfectpay.com.br/curso-javascript-zero', '_blank')}
+                      >
+                        <Play className="w-4 h-4 mr-2" />
+                        Comprar Agora
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Course 3 */}
+                <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-6 border border-purple-200">
+                  <div className="space-y-4">
+                    <div>
+                      <h3 className="font-semibold text-lg text-purple-900">Node.js e Banco de Dados</h3>
+                      <p className="text-sm text-purple-700 mt-2">
+                        Backend profissional com Node.js, Express, MongoDB e PostgreSQL
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-purple-600">Nível:</span>
+                        <Badge variant="secondary" className="bg-purple-200 text-purple-800">Intermediário</Badge>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-purple-600">Duração:</span>
+                        <span className="text-sm text-purple-800 font-medium">6 semanas</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between pt-4">
+                      <span className="text-2xl font-bold text-purple-900">R$ 247</span>
+                      <Button 
+                        className="bg-purple-600 hover:bg-purple-700"
+                        onClick={() => window.open('https://perfectpay.com.br/curso-nodejs-database', '_blank')}
+                      >
+                        <Play className="w-4 h-4 mr-2" />
+                        Comprar Agora
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Recent Content */}
           <Card className="lg:col-span-2">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <BookOpen className="w-5 h-5" />
+                <MessageSquare className="w-5 h-5" />
                 Conteúdos Recentes
               </CardTitle>
             </CardHeader>
