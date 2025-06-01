@@ -217,21 +217,7 @@ export default function AdminUsers() {
     });
   };
 
-  const quickAddClarissa = () => {
-    setNewSpecialist({
-      firstName: "Clarissa",
-      lastName: "Vaz",
-      username: "clarissa.vaz",
-      email: "clarissa@metasyncdigital.com.br",
-      password: "MetaSync2025!",
-      phone: "17997337322",
-      role: "specialist",
-      speciality: "Consultoria em Negócios Digitais",
-      bio: "Especialista em transformação digital e crescimento de negócios online. Consultora certificada em marketing digital e estratégias de vendas.",
-      isActive: true
-    });
-    setIsAddingSpecialist(true);
-  };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
@@ -374,6 +360,7 @@ export default function AdminUsers() {
                     value={newSpecialist.username}
                     onChange={(e) => setNewSpecialist({...newSpecialist, username: e.target.value})}
                     placeholder="username.especialista"
+                    className={validationErrors.includes("specialistUsername") ? "border-red-500 focus:border-red-500" : ""}
                   />
                 </div>
                 <div>
@@ -384,6 +371,7 @@ export default function AdminUsers() {
                     value={newSpecialist.email}
                     onChange={(e) => setNewSpecialist({...newSpecialist, email: e.target.value})}
                     placeholder="email@metasyncdigital.com.br"
+                    className={validationErrors.includes("specialistEmail") ? "border-red-500 focus:border-red-500" : ""}
                   />
                 </div>
                 <div>
@@ -394,6 +382,7 @@ export default function AdminUsers() {
                     value={newSpecialist.password}
                     onChange={(e) => setNewSpecialist({...newSpecialist, password: e.target.value})}
                     placeholder="Senha segura"
+                    className={validationErrors.includes("specialistPassword") ? "border-red-500 focus:border-red-500" : ""}
                   />
                 </div>
                 <div>
@@ -414,6 +403,7 @@ export default function AdminUsers() {
                   value={newSpecialist.speciality}
                   onChange={(e) => setNewSpecialist({...newSpecialist, speciality: e.target.value})}
                   placeholder="Área de atuação do especialista"
+                  className={validationErrors.includes("specialistSpeciality") ? "border-red-500 focus:border-red-500" : ""}
                 />
               </div>
 
@@ -663,18 +653,28 @@ export default function AdminUsers() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge variant={user.isActive ? "default" : "secondary"}>
+                    <Button 
+                      variant={user.isActive ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => toggleUserStatus(user.id!)}
+                      className={user.isActive ? "bg-green-600 hover:bg-green-700" : "text-gray-600"}
+                    >
                       {user.isActive ? "Ativo" : "Inativo"}
-                    </Badge>
-                    <Button variant="outline" size="sm">
-                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      title="Configurações do usuário"
+                    >
+                      <Settings className="h-4 w-4" />
                     </Button>
                     {user.role !== "admin" && (
                       <Button 
                         variant="outline" 
                         size="sm" 
-                        className="text-red-600"
+                        className="text-red-600 hover:text-red-700 hover:border-red-300"
                         onClick={() => handleDeleteUser(user)}
+                        title="Excluir usuário"
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
