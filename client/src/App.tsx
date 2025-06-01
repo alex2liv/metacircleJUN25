@@ -99,10 +99,10 @@ function App() {
       <ThemeProvider>
         <TooltipProvider>
           <Switch>
-            <Route path="/login" component={() => <StandaloneRouter />} />
-            <Route path="/onboarding" component={() => <StandaloneRouter />} />
-            <Route path="/company-management" component={() => <StandaloneRouter />} />
-            <Route path="/specialist-login" component={() => <StandaloneRouter />} />
+            <Route path="/login" component={Login} />
+            <Route path="/onboarding" component={Onboarding} />
+            <Route path="/company-management" component={CompanyManagement} />
+            <Route path="/specialist-login" component={SpecialistLogin} />
             <Route component={() => 
               <AppLayout>
                 <Router />
