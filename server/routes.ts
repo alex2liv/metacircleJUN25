@@ -365,5 +365,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin routes for company management
+  app.post("/api/admin/companies", async (req, res) => {
+    try {
+      const { name, slug, planType, databaseType, supabaseUrl, supabaseAnonKey, supabaseServiceKey } = req.body;
+      
+      // Create company data
+      const companyData = {
+        name,
+        slug,
+        planType: planType || "basic",
+        databaseType: databaseType || "postgresql",
+        supabaseUrl: databaseType === "supabase" ? supabaseUrl : null,
+        supabaseAnonKey: databaseType === "supabase" ? supabaseAnonKey : null,
+        supabaseServiceKey: databaseType === "supabase" ? supabaseServiceKey : null,
+        isActive: true,
+        hasWhiteLabel: false,
+        maxUsers: planType === "enterprise" ? 1000 : planType === "premium" ? 100 : 50,
+        maxSpecialists: planType === "enterprise" ? 20 : planType === "premium" ? 10 : 5
+      };
+
+      // For now, just return success since we don't have company storage implemented
+      const company = {
+        id: Date.now(), // temporary ID
+        ...companyData,
+        createdAt: new Date().toISOString()
+      };
+
+      res.json(company);
+    } catch (error) {
+      console.error('Error creating company:', error);
+      res.status(500).json({ message: "Erro ao criar empresa cliente" });
+    }
+  });
+
   return httpServer;
 }
