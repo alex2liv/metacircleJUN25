@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 
 interface CurrencyInputProps {
@@ -9,23 +10,30 @@ interface CurrencyInputProps {
 }
 
 export function CurrencyInput({ value, onChange, placeholder = "0,00", className, disabled }: CurrencyInputProps) {
+  const [inputValue, setInputValue] = useState(value === 0 ? '' : value.toString());
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
+    const newValue = e.target.value;
     
-    // Remove tudo exceto números
-    const numbersOnly = inputValue.replace(/[^\d]/g, '');
+    // Permite apenas números
+    const numbersOnly = newValue.replace(/[^\d]/g, '');
+    
+    setInputValue(numbersOnly);
     
     if (numbersOnly === '') {
       onChange(0);
-      return;
+    } else {
+      onChange(parseInt(numbersOnly));
     }
-    
-    // Converte para número sem formatação especial
-    const numericValue = Number(numbersOnly);
-    onChange(numericValue);
   };
 
-  const displayValue = value === 0 ? '' : `${value},00`;
+  const handleBlur = () => {
+    if (value > 0) {
+      setInputValue(value.toString());
+    }
+  };
+
+  const displayValue = inputValue === '' ? '' : `${inputValue},00`;
 
   return (
     <div className="relative">
@@ -36,6 +44,7 @@ export function CurrencyInput({ value, onChange, placeholder = "0,00", className
         type="text"
         value={displayValue}
         onChange={handleChange}
+        onBlur={handleBlur}
         placeholder={placeholder}
         className={`pl-10 ${className}`}
         disabled={disabled}
