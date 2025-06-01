@@ -85,8 +85,15 @@ export default function CompanyLogin() {
           description: `Bem-vindo à ${company?.name}!`,
         });
         
-        // Redirect to company dashboard
-        setLocation(`/company/${companySlug}/dashboard`);
+        // Redirect based on user type
+        const userData = result.user;
+        if (userData.type === "admin") {
+          setLocation(`/company-admin/${companySlug}`);
+        } else if (userData.type === "specialist") {
+          setLocation(`/specialist/${companySlug}`);
+        } else {
+          setLocation(`/user-dashboard/${companySlug}`);
+        }
       } else {
         toast({
           title: "Erro no Login",

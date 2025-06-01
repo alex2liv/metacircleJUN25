@@ -106,6 +106,10 @@ function App() {
             <Route path="/login" component={Login} />
             <Route path="/onboarding" component={Onboarding} />
             <Route path="/company-management" component={CompanyManagement} />
+            <Route path="/company/:slug" component={CompanyLogin} />
+            <Route path="/company-admin/:slug" component={CompanyAdminDashboard} />
+            <Route path="/specialist/:slug" component={SpecialistDashboard} />
+            <Route path="/user-dashboard/:slug" component={UserDashboard} />
             <Route path="/specialist-login" component={SpecialistLogin} />
             <Route component={() => 
               <AppLayout>
