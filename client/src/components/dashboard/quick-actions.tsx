@@ -20,6 +20,8 @@ export default function QuickActions() {
   const [customDelay, setCustomDelay] = useState<string>("5");
   const [isLoading, setIsLoading] = useState(false);
   const [whatsappConnected, setWhatsappConnected] = useState(false);
+  const [qrCode, setQrCode] = useState<string>("");
+  const [isGeneratingQR, setIsGeneratingQR] = useState(false);
 
   const calculateEndTime = (startTime: string) => {
     if (!startTime) return "";
@@ -70,6 +72,65 @@ export default function QuickActions() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const generateQRCode = async () => {
+    setIsGeneratingQR(true);
+    
+    try {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // QR Code simulado para demonstração
+      const simulatedQR = "data:image/svg+xml;base64," + btoa(`
+        <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+          <rect width="200" height="200" fill="white"/>
+          <rect x="10" y="10" width="20" height="20" fill="black"/>
+          <rect x="50" y="10" width="20" height="20" fill="black"/>
+          <rect x="90" y="10" width="20" height="20" fill="black"/>
+          <rect x="130" y="10" width="20" height="20" fill="black"/>
+          <rect x="170" y="10" width="20" height="20" fill="black"/>
+          <rect x="10" y="50" width="20" height="20" fill="black"/>
+          <rect x="170" y="50" width="20" height="20" fill="black"/>
+          <rect x="10" y="90" width="20" height="20" fill="black"/>
+          <rect x="50" y="90" width="20" height="20" fill="black"/>
+          <rect x="90" y="90" width="20" height="20" fill="black"/>
+          <rect x="130" y="90" width="20" height="20" fill="black"/>
+          <rect x="170" y="90" width="20" height="20" fill="black"/>
+          <rect x="10" y="130" width="20" height="20" fill="black"/>
+          <rect x="170" y="130" width="20" height="20" fill="black"/>
+          <rect x="10" y="170" width="20" height="20" fill="black"/>
+          <rect x="50" y="170" width="20" height="20" fill="black"/>
+          <rect x="90" y="170" width="20" height="20" fill="black"/>
+          <rect x="130" y="170" width="20" height="20" fill="black"/>
+          <rect x="170" y="170" width="20" height="20" fill="black"/>
+          <text x="100" y="195" text-anchor="middle" font-size="8" fill="gray">QR Code AB7</text>
+        </svg>
+      `);
+      
+      setQrCode(simulatedQR);
+      
+      toast({
+        title: "QR Code Gerado",
+        description: "Escaneie com seu WhatsApp para conectar",
+      });
+      
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Falha ao gerar QR Code",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGeneratingQR(false);
+    }
+  };
+
+  const connectWhatsApp = () => {
+    setWhatsappConnected(true);
+    toast({
+      title: "WhatsApp Conectado!",
+      description: "Sua conta está agora conectada ao sistema",
+    });
   };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -277,17 +338,44 @@ export default function QuickActions() {
                         WhatsApp {whatsappConnected ? 'Conectado' : 'Desconectado'}
                       </span>
                     </div>
-                    {!whatsappConnected && (
+                    {!whatsappConnected && !qrCode && (
                       <Button 
                         variant="outline" 
                         size="sm"
-                        onClick={() => setWhatsappConnected(true)}
+                        onClick={generateQRCode}
+                        disabled={isGeneratingQR}
                       >
                         <QrCode className="w-4 h-4 mr-1" />
-                        Conectar QR
+                        {isGeneratingQR ? "Gerando..." : "Gerar QR Code"}
+                      </Button>
+                    )}
+                    {qrCode && !whatsappConnected && (
+                      <Button 
+                        size="sm"
+                        onClick={connectWhatsApp}
+                      >
+                        Simular Conexão
                       </Button>
                     )}
                   </div>
+
+                  {/* QR Code Display */}
+                  {qrCode && !whatsappConnected && (
+                    <div className="flex flex-col items-center p-4 bg-white dark:bg-gray-900 border rounded-lg">
+                      <h4 className="text-sm font-medium mb-3">Escaneie com WhatsApp</h4>
+                      <img 
+                        src={qrCode} 
+                        alt="QR Code WhatsApp" 
+                        className="w-48 h-48 border border-gray-200 dark:border-gray-600 rounded"
+                      />
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+                        1. Abra o WhatsApp no seu celular<br/>
+                        2. Toque em Menu ou Configurações<br/>
+                        3. Toque em "WhatsApp Web"<br/>
+                        4. Escaneie este código
+                      </p>
+                    </div>
+                  )}
 
                   {/* Upload de Lista ou Entrada Manual */}
                   <div>
