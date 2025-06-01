@@ -76,19 +76,8 @@ export default function AdminUsers() {
     isActive: true
   });
 
-  // Lista de usuários cadastrados (exemplo)
-  const [users, setUsers] = useState<UserData[]>([
-    {
-      id: 1,
-      firstName: "Alexandre",
-      lastName: "Nunes",
-      username: "alexandre.nunes",
-      email: "alexandre@metasyncdigital.com.br",
-      password: "admin123",
-      role: "admin",
-      isActive: true
-    }
-  ]);
+  // Lista de usuários cadastrados (inicia vazia para produção)
+  const [users, setUsers] = useState<UserData[]>([]);
 
   const adminInfo = {
     name: "Alexandre Nunes",
@@ -187,7 +176,7 @@ export default function AdminUsers() {
   };
 
   const quickAddClarissa = () => {
-    setNewUser({
+    setNewSpecialist({
       firstName: "Clarissa",
       lastName: "Vaz",
       username: "clarissa.vaz",
@@ -199,7 +188,7 @@ export default function AdminUsers() {
       bio: "Especialista em transformação digital e crescimento de negócios online. Consultora certificada em marketing digital e estratégias de vendas.",
       isActive: true
     });
-    setIsAddingUser(true);
+    setIsAddingSpecialist(true);
   };
 
   return (
@@ -277,8 +266,7 @@ export default function AdminUsers() {
             </Button>
             <Button
               onClick={() => setIsAddingSpecialist(true)}
-              variant="outline"
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700"
             >
               <Crown className="h-4 w-4" />
               Novo Especialista
@@ -559,8 +547,19 @@ export default function AdminUsers() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {users.map((user) => (
+            {users.length === 0 ? (
+              <div className="text-center py-8">
+                <User className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+                <p className="text-gray-500">Nenhum usuário cadastrado ainda.</p>
+                <p className="text-sm text-gray-400 mt-2">
+                  Use os botões acima para adicionar usuários ao sistema.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {users
+                  .sort((a, b) => `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`))
+                  .map((user) => (
                 <div key={user.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                   <div className="flex items-center gap-3">
                     <Avatar>
@@ -621,7 +620,8 @@ export default function AdminUsers() {
                   </div>
                 </div>
               ))}
-            </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
