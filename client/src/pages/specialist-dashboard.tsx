@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Calendar, Users, MessageSquare, DollarSign, Clock, Video, Phone, CheckCircle2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 
 interface Appointment {
   id: number;
@@ -25,6 +26,8 @@ interface SpecialistStats {
 }
 
 export default function SpecialistDashboard() {
+  const [, setLocation] = useLocation();
+  
   // Simulando dados do especialista logado
   const specialistData = {
     name: "Clarissa Vaz",
@@ -238,7 +241,7 @@ export default function SpecialistDashboard() {
           </CardHeader>
           <CardContent>
             <p className="text-gray-600 mb-4">Configure horários disponíveis e bloqueie datas</p>
-            <Button className="w-full">Abrir Agenda</Button>
+            <Button className="w-full" onClick={() => setLocation("/specialist-agenda")}>Abrir Agenda</Button>
           </CardContent>
         </Card>
 

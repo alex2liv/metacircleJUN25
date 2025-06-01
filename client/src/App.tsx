@@ -25,6 +25,7 @@ import ClarissaChat from "@/pages/clarissa-chat";
 import SpecialistAdmin from "@/pages/specialist-admin";
 import SpecialistLogin from "@/pages/specialist-login";
 import SpecialistDashboard from "@/pages/specialist-dashboard";
+import SpecialistAgenda from "@/pages/specialist-agenda";
 import AdminDashboard from "@/pages/admin-dashboard";
 import AdminUsers from "@/pages/admin-users";
 import MetaSyncAdmin from "@/pages/metasync-admin";
@@ -64,6 +65,7 @@ function Router() {
       <Route path="/specialist-admin" component={SpecialistAdmin} />
       <Route path="/specialist-login" component={SpecialistLogin} />
       <Route path="/specialist-dashboard" component={SpecialistDashboard} />
+      <Route path="/specialist-agenda" component={SpecialistAgenda} />
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/admin/users" component={AdminUsers} />
       <Route path="/metasync-admin" component={MetaSyncAdmin} />
