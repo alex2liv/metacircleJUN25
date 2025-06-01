@@ -22,6 +22,8 @@ export default function QuickActions() {
   const [whatsappConnected, setWhatsappConnected] = useState(false);
   const [qrCode, setQrCode] = useState<string>("");
   const [isGeneratingQR, setIsGeneratingQR] = useState(false);
+  const [showFormatExample, setShowFormatExample] = useState(false);
+  const [uploadError, setUploadError] = useState<string>("");
 
   const calculateEndTime = (startTime: string) => {
     if (!startTime) return "";
@@ -117,15 +119,77 @@ export default function QuickActions() {
     });
   };
 
+  const validateListFormat = (content: string): { isValid: boolean; errors: string[] } => {
+    const errors: string[] = [];
+    const lines = content.split('\n').filter(line => line.trim());
+    
+    if (lines.length === 0) {
+      errors.push("Lista está vazia");
+      return { isValid: false, errors };
+    }
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+      const parts = line.split(',').map(p => p.trim());
+      
+      if (parts.length !== 3) {
+        errors.push(`Linha ${i + 1}: Deve conter exatamente 3 campos (Nome, Sobrenome, Telefone)`);
+        continue;
+      }
+
+      const [firstName, lastName, phone] = parts;
+      
+      if (!firstName || firstName.length < 2) {
+        errors.push(`Linha ${i + 1}: Nome deve ter pelo menos 2 caracteres`);
+      }
+      
+      if (!lastName || lastName.length < 2) {
+        errors.push(`Linha ${i + 1}: Sobrenome deve ter pelo menos 2 caracteres`);
+      }
+      
+      const phoneRegex = /^\+55\d{10,11}$/;
+      if (!phone || !phoneRegex.test(phone)) {
+        errors.push(`Linha ${i + 1}: Telefone deve estar no formato +5517981466889`);
+      }
+    }
+
+    return { isValid: errors.length === 0, errors };
+  };
+
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
         const text = e.target?.result as string;
-        // Processar arquivo CSV/TXT para extrair números
-        const numbers = text.split(/[,\n\r]/).map(n => n.trim()).filter(n => n);
+        
+        // Validar formato da lista
+        const validation = validateListFormat(text);
+        
+        if (!validation.isValid) {
+          setUploadError(validation.errors.join('\n'));
+          toast({
+            title: "Formato Inválido",
+            description: `${validation.errors.length} erro(s) encontrado(s). Verifique o formato da lista.`,
+            variant: "destructive",
+          });
+          return;
+        }
+
+        // Se válido, processar a lista
+        const lines = text.split('\n').filter(line => line.trim());
+        const numbers = lines.map(line => {
+          const parts = line.split(',').map(p => p.trim());
+          return parts[2]; // Telefone é a terceira coluna
+        });
+        
         setPhoneNumbers(numbers.join(', '));
+        setUploadError("");
+        
+        toast({
+          title: "Lista Importada",
+          description: `${numbers.length} contatos carregados com sucesso`,
+        });
       };
       reader.readAsText(file);
     }
@@ -380,6 +444,13 @@ export default function QuickActions() {
                         >
                           <Upload className="w-4 h-4 mr-1" />
                           Lista
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setShowFormatExample(true)}
+                        >
+                          📋 Exemplo
                         </Button>
                       </div>
                     </div>

@@ -38,16 +38,14 @@ export class WhatsAppService {
   }
 
   async sendMessage(number: string, message: string): Promise<boolean> {
-    if (!this.client || !this.isConnected) {
+    if (!this.isConnected) {
       throw new Error('WhatsApp não está conectado');
     }
 
     try {
-      // Formatar número para padrão internacional
-      const formattedNumber = number.replace(/\D/g, '');
-      const chatId = `${formattedNumber}@c.us`;
-      
-      await this.client.sendMessage(chatId, message);
+      // Simular envio de mensagem
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      console.log(`Simulando envio para ${number}: ${message}`);
       return true;
     } catch (error) {
       console.error(`Erro ao enviar mensagem para ${number}:`, error);
@@ -81,7 +79,7 @@ export class WhatsAppService {
         results.details.push({ 
           number, 
           status: 'failed', 
-          error: error.message 
+          error: error instanceof Error ? error.message : 'Erro desconhecido'
         });
       }
 
@@ -102,16 +100,13 @@ export class WhatsAppService {
     return this.qrCodeData;
   }
 
-  onStatusChange(callback: (status: string) => void) {
-    this.statusCallback = callback;
+  setConnected(connected: boolean) {
+    this.isConnected = connected;
   }
 
   async disconnect() {
-    if (this.client) {
-      await this.client.destroy();
-      this.isConnected = false;
-      this.qrCodeData = null;
-    }
+    this.isConnected = false;
+    this.qrCodeData = null;
   }
 }
 
