@@ -273,7 +273,15 @@ export default function AdminUsers() {
               className="flex items-center gap-2"
             >
               <Crown className="h-4 w-4" />
-              Adicionar Clarissa Vaz (Especialista)
+              Adicionar Clarissa Vaz
+            </Button>
+            <Button
+              onClick={() => setIsAddingSpecialist(true)}
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              <Crown className="h-4 w-4" />
+              Novo Especialista
             </Button>
             <Button
               onClick={() => setIsAddingUser(true)}
@@ -284,6 +292,126 @@ export default function AdminUsers() {
             </Button>
           </div>
         </div>
+
+        {/* Formulário de novo especialista */}
+        {isAddingSpecialist && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Crown className="h-5 w-5" />
+                Cadastrar Novo Especialista
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="specialistFirstName">Nome *</Label>
+                  <Input
+                    id="specialistFirstName"
+                    value={newSpecialist.firstName}
+                    onChange={(e) => setNewSpecialist({...newSpecialist, firstName: e.target.value})}
+                    placeholder="Nome"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="specialistLastName">Sobrenome *</Label>
+                  <Input
+                    id="specialistLastName"
+                    value={newSpecialist.lastName}
+                    onChange={(e) => setNewSpecialist({...newSpecialist, lastName: e.target.value})}
+                    placeholder="Sobrenome"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="specialistUsername">Username *</Label>
+                  <Input
+                    id="specialistUsername"
+                    value={newSpecialist.username}
+                    onChange={(e) => setNewSpecialist({...newSpecialist, username: e.target.value})}
+                    placeholder="username.especialista"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="specialistEmail">Email *</Label>
+                  <Input
+                    id="specialistEmail"
+                    type="email"
+                    value={newSpecialist.email}
+                    onChange={(e) => setNewSpecialist({...newSpecialist, email: e.target.value})}
+                    placeholder="email@metasyncdigital.com.br"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="specialistPassword">Senha *</Label>
+                  <Input
+                    id="specialistPassword"
+                    type="password"
+                    value={newSpecialist.password}
+                    onChange={(e) => setNewSpecialist({...newSpecialist, password: e.target.value})}
+                    placeholder="Senha segura"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="specialistPhone">Telefone *</Label>
+                  <Input
+                    id="specialistPhone"
+                    value={newSpecialist.phone}
+                    onChange={(e) => setNewSpecialist({...newSpecialist, phone: e.target.value})}
+                    placeholder="17999999999"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="specialistSpeciality">Especialidade *</Label>
+                <Input
+                  id="specialistSpeciality"
+                  value={newSpecialist.speciality}
+                  onChange={(e) => setNewSpecialist({...newSpecialist, speciality: e.target.value})}
+                  placeholder="Área de atuação do especialista"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="specialistBio">Biografia</Label>
+                <Textarea
+                  id="specialistBio"
+                  value={newSpecialist.bio}
+                  onChange={(e) => setNewSpecialist({...newSpecialist, bio: e.target.value})}
+                  placeholder="Descrição profissional do especialista"
+                  rows={3}
+                />
+              </div>
+
+              <div className="flex space-x-2">
+                <Button onClick={handleSaveSpecialist} className="flex items-center gap-2">
+                  <Save className="h-4 w-4" />
+                  Salvar Especialista
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    setIsAddingSpecialist(false);
+                    setNewSpecialist({
+                      firstName: "",
+                      lastName: "",
+                      username: "",
+                      email: "",
+                      password: "",
+                      phone: "",
+                      role: "specialist",
+                      speciality: "",
+                      bio: "",
+                      isActive: true
+                    });
+                  }}
+                >
+                  Cancelar
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Formulário de novo usuário */}
         {isAddingUser && (
