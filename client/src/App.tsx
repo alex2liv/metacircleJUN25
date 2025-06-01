@@ -27,6 +27,7 @@ import SpecialistLogin from "@/pages/specialist-login";
 import SpecialistDashboard from "@/pages/specialist-dashboard";
 import AdminDashboard from "@/pages/admin-dashboard";
 import AdminUsers from "@/pages/admin-users";
+import MetaSyncAdmin from "@/pages/metasync-admin";
 import EmailVerification from "@/pages/email-verification";
 import AnalyticsDashboard from "@/pages/analytics-dashboard";
 import InviteMembers from "@/pages/invite-members";
@@ -65,6 +66,7 @@ function Router() {
       <Route path="/specialist-dashboard" component={SpecialistDashboard} />
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/admin/users" component={AdminUsers} />
+      <Route path="/metasync-admin" component={MetaSyncAdmin} />
       <Route path="/email-verification" component={EmailVerification} />
       <Route path="/analytics-dashboard" component={AnalyticsDashboard} />
       <Route path="/invite-members" component={InviteMembers} />

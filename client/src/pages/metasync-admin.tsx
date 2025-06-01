@@ -248,6 +248,54 @@ export default function MetaSyncAdmin() {
     return daysUntilExpiry <= 30;
   };
 
+  const activateWhiteLabel = (company: CompanyData) => {
+    setSelectedCompany(company);
+    setShowWhiteLabelModal(true);
+  };
+
+  const processWhiteLabelPayment = () => {
+    if (!selectedCompany) return;
+
+    // Simular processamento de pagamento
+    const updatedCompany = {
+      ...selectedCompany,
+      hasWhiteLabel: true,
+      hideMetaSyncBranding: true,
+      whiteLabelExpiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) // 1 ano
+    };
+
+    setCompanies(companies.map(c => 
+      c.id === selectedCompany.id ? updatedCompany : c
+    ));
+
+    setShowWhiteLabelModal(false);
+    setSelectedCompany(null);
+
+    toast({
+      title: "White Label Ativado",
+      description: `${selectedCompany.name} agora pode usar sua própria marca`,
+    });
+  };
+
+  const deactivateWhiteLabel = (companyId: number) => {
+    setCompanies(companies.map(company => 
+      company.id === companyId 
+        ? { 
+            ...company, 
+            hasWhiteLabel: false, 
+            hideMetaSyncBranding: false,
+            whiteLabelExpiresAt: undefined 
+          }
+        : company
+    ));
+    
+    const company = companies.find(c => c.id === companyId);
+    toast({
+      title: "White Label Desativado",
+      description: `${company?.name} agora exibirá a marca MetaSync`,
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
@@ -393,8 +441,16 @@ export default function MetaSyncAdmin() {
                         {!company.isActive && (
                           <Badge variant="secondary">Inativa</Badge>
                         )}
+                        {company.hasWhiteLabel ? (
+                          <Badge className="bg-green-600 text-white">White Label</Badge>
+                        ) : (
+                          <Badge className="bg-blue-600 text-white">MetaSync Branding</Badge>
+                        )}
                         {company.subscriptionExpiresAt && isExpiringSoon(company.subscriptionExpiresAt) && (
                           <Badge className="bg-orange-600 text-white">Expirando</Badge>
+                        )}
+                        {company.whiteLabelExpiresAt && isExpiringSoon(company.whiteLabelExpiresAt) && (
+                          <Badge className="bg-red-600 text-white">White Label Expirando</Badge>
                         )}
                       </div>
                       <div className="flex items-center gap-4 text-sm text-gray-600">
@@ -440,6 +496,17 @@ export default function MetaSyncAdmin() {
                           <Edit className="h-4 w-4 mr-2" />
                           Editar
                         </DropdownMenuItem>
+                        {company.hasWhiteLabel ? (
+                          <DropdownMenuItem onClick={() => deactivateWhiteLabel(company.id!)}>
+                            <Shield className="h-4 w-4 mr-2" />
+                            Desativar White Label
+                          </DropdownMenuItem>
+                        ) : (
+                          <DropdownMenuItem onClick={() => activateWhiteLabel(company)}>
+                            <Crown className="h-4 w-4 mr-2" />
+                            Ativar White Label
+                          </DropdownMenuItem>
+                        )}
                         <DropdownMenuItem onClick={() => toggleCompanyStatus(company.id!)}>
                           {company.isActive ? (
                             <>
@@ -593,6 +660,97 @@ export default function MetaSyncAdmin() {
               onClick={confirmDelete}
             >
               Excluir Empresa
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de Ativação White Label */}
+      <Dialog open={showWhiteLabelModal} onOpenChange={setShowWhiteLabelModal}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Crown className="h-5 w-5 text-yellow-600" />
+              Ativar White Label
+            </DialogTitle>
+            <DialogDescription>
+              Permita que {selectedCompany?.name} use sua própria marca
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg border">
+              <h3 className="font-medium text-lg mb-2">Plano White Label</h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex items-center gap-2">
+                  <Crown className="h-4 w-4 text-yellow-600" />
+                  <span>Logo personalizada da empresa</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Shield className="h-4 w-4 text-green-600" />
+                  <span>Remoção completa da marca MetaSync</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Eye className="h-4 w-4 text-blue-600" />
+                  <span>Cores e temas personalizados</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Globe className="h-4 w-4 text-purple-600" />
+                  <span>Domínio personalizado opcional</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <Calendar className="h-5 w-5 text-yellow-600" />
+                <span className="font-medium">Informações do Plano</span>
+              </div>
+              <div className="text-sm space-y-1">
+                <p><strong>Valor:</strong> R$ 299,90/mês</p>
+                <p><strong>Duração:</strong> 12 meses</p>
+                <p><strong>Renovação:</strong> Automática</p>
+                <p><strong>Cancelamento:</strong> A qualquer momento</p>
+              </div>
+            </div>
+
+            <div className="bg-red-50 border border-red-200 p-4 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <Shield className="h-5 w-5 text-red-600" />
+                <span className="font-medium text-red-800">Sem White Label</span>
+              </div>
+              <p className="text-sm text-red-700">
+                Empresas sem white-label exibem a marca MetaSync como propaganda em:
+                rodapé, login, emails e notificações. Isso gera visibilidade gratuita 
+                para o MetaSync através dos usuários da empresa.
+              </p>
+            </div>
+
+            <div className="bg-green-50 border border-green-200 p-4 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <Crown className="h-5 w-5 text-green-600" />
+                <span className="font-medium text-green-800">Com White Label</span>
+              </div>
+              <p className="text-sm text-green-700">
+                A empresa usa 100% sua própria marca. Nenhuma referência ao MetaSync
+                será exibida para os usuários finais. Experiência totalmente personalizada.
+              </p>
+            </div>
+          </div>
+
+          <DialogFooter className="gap-2">
+            <Button 
+              variant="outline" 
+              onClick={() => setShowWhiteLabelModal(false)}
+            >
+              Cancelar
+            </Button>
+            <Button 
+              onClick={processWhiteLabelPayment}
+              className="bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700"
+            >
+              <Crown className="h-4 w-4 mr-2" />
+              Processar Pagamento - R$ 299,90
             </Button>
           </DialogFooter>
         </DialogContent>
