@@ -91,6 +91,7 @@ export default function SpecialistAgenda() {
 
   const [isAddingSlot, setIsAddingSlot] = useState(false);
   const [isAddingBlock, setIsAddingBlock] = useState(false);
+  const [timeFormat, setTimeFormat] = useState<"24h" | "12h">("24h");
 
   const days = [
     "Segunda-feira",
@@ -124,6 +125,36 @@ export default function SpecialistAgenda() {
       default:
         return <Badge variant="outline">-</Badge>;
     }
+  };
+
+  // Converter 24h para 12h com AM/PM
+  const convert24to12 = (time24: string) => {
+    if (!time24) return "";
+    const [hours, minutes] = time24.split(':').map(Number);
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const hours12 = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
+    return `${hours12.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${period}`;
+  };
+
+  // Converter 12h (AM/PM) para 24h
+  const convert12to24 = (time12: string) => {
+    if (!time12) return "";
+    const [time, period] = time12.split(' ');
+    const [hours, minutes] = time.split(':').map(Number);
+    let hours24 = hours;
+    
+    if (period === 'PM' && hours !== 12) {
+      hours24 = hours + 12;
+    } else if (period === 'AM' && hours === 12) {
+      hours24 = 0;
+    }
+    
+    return `${hours24.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+  };
+
+  // Formatar tempo de acordo com o formato selecionado
+  const formatTime = (time: string) => {
+    return timeFormat === "12h" ? convert24to12(time) : time;
   };
 
   const handleStartTimeChange = (startTime: string) => {
@@ -255,22 +286,72 @@ export default function SpecialistAgenda() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label>Horário Início</Label>
-                    <Input
-                      type="time"
-                      value={newTimeSlot.startTime}
-                      onChange={(e) => handleStartTimeChange(e.target.value)}
-                    />
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label>Formato de Horário</Label>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        type="button"
+                        variant={timeFormat === "24h" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setTimeFormat("24h")}
+                      >
+                        24h
+                      </Button>
+                      <Button
+                        type="button"
+                        variant={timeFormat === "12h" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setTimeFormat("12h")}
+                      >
+                        12h (AM/PM)
+                      </Button>
+                    </div>
                   </div>
-                  <div>
-                    <Label>Horário Fim</Label>
-                    <Input
-                      type="time"
-                      value={newTimeSlot.endTime}
-                      onChange={(e) => setNewTimeSlot({...newTimeSlot, endTime: e.target.value})}
-                    />
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label>Horário Início</Label>
+                      {timeFormat === "24h" ? (
+                        <Input
+                          type="time"
+                          value={newTimeSlot.startTime}
+                          onChange={(e) => handleStartTimeChange(e.target.value)}
+                        />
+                      ) : (
+                        <div className="space-y-1">
+                          <Input
+                            type="time"
+                            value={newTimeSlot.startTime}
+                            onChange={(e) => handleStartTimeChange(e.target.value)}
+                          />
+                          <p className="text-xs text-gray-500">
+                            Visualização: {formatTime(newTimeSlot.startTime)}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <Label>Horário Fim</Label>
+                      {timeFormat === "24h" ? (
+                        <Input
+                          type="time"
+                          value={newTimeSlot.endTime}
+                          onChange={(e) => setNewTimeSlot({...newTimeSlot, endTime: e.target.value})}
+                        />
+                      ) : (
+                        <div className="space-y-1">
+                          <Input
+                            type="time"
+                            value={newTimeSlot.endTime}
+                            onChange={(e) => setNewTimeSlot({...newTimeSlot, endTime: e.target.value})}
+                          />
+                          <p className="text-xs text-gray-500">
+                            Visualização: {formatTime(newTimeSlot.endTime)}
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
                 <div>
