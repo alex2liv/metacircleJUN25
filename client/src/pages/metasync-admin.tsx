@@ -26,7 +26,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 import metaSyncLogo from "@assets/logo completo metasync.png";
-import metaCircleIcon from "@assets/image_1748796101122.png";
+import metaSyncIcon from "@assets/icone_matasync.png";
 
 interface CompanyData {
   id?: number;
@@ -320,13 +320,10 @@ export default function MetaSyncAdmin() {
                 <div key={company.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                   <div className="flex items-center gap-3">
                     <Avatar>
-                      {company.name === "MetaCircle" ? (
-                        <AvatarImage src={metaCircleIcon} alt="MetaCircle" />
-                      ) : (
-                        <AvatarFallback className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
-                          {company.name.split(' ').map(n => n[0]).join('').substring(0, 2)}
-                        </AvatarFallback>
-                      )}
+                      <AvatarImage src={metaSyncIcon} alt={company.name} />
+                      <AvatarFallback className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+                        {company.name.split(' ').map(n => n[0]).join('').substring(0, 2)}
+                      </AvatarFallback>
                     </Avatar>
                     <div>
                       <div className="flex items-center gap-2">
