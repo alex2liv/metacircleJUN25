@@ -199,52 +199,50 @@ export default function CompanyAdminDashboard() {
                 <CardTitle>Gerenciar Equipe</CardTitle>
                 <CardDescription>Adicione e gerencie especialistas e usuários</CardDescription>
               </div>
-              <Dialog open={isAddUserOpen} onOpenChange={setIsAddUserOpen}>
-                <DialogTrigger asChild>
-                  <Button>
-                    <UserPlus className="w-4 h-4 mr-2" />
-                    Adicionar Membro
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Adicionar Novo Membro</DialogTitle>
-                    <DialogDescription>
-                      Adicione um especialista ou usuário à sua empresa
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="name">Nome Completo</Label>
-                      <Input id="name" placeholder="Digite o nome completo" />
+              <div className="flex gap-2">
+                <Dialog open={isAddUserOpen} onOpenChange={setIsAddUserOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline">
+                      <UserPlus className="w-4 h-4 mr-2" />
+                      Adicionar Especialista
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Adicionar Novo Especialista</DialogTitle>
+                      <DialogDescription>
+                        Adicione um especialista à sua empresa
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="name">Nome Completo</Label>
+                        <Input id="name" placeholder="Digite o nome completo" />
+                      </div>
+                      <div>
+                        <Label htmlFor="email">E-mail</Label>
+                        <Input id="email" type="email" placeholder="Digite o e-mail" />
+                      </div>
+                      <div>
+                        <Label htmlFor="specialty">Especialidade</Label>
+                        <Input id="specialty" placeholder="Ex: Psicólogo, Nutricionista, etc." />
+                      </div>
+                      <div className="flex justify-end space-x-2">
+                        <Button variant="outline" onClick={() => setIsAddUserOpen(false)}>
+                          Cancelar
+                        </Button>
+                        <Button onClick={handleAddUser}>
+                          Adicionar Especialista
+                        </Button>
+                      </div>
                     </div>
-                    <div>
-                      <Label htmlFor="email">E-mail</Label>
-                      <Input id="email" type="email" placeholder="Digite o e-mail" />
-                    </div>
-                    <div>
-                      <Label htmlFor="role">Tipo de Usuário</Label>
-                      <Select>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione o tipo" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="specialist">Especialista</SelectItem>
-                          <SelectItem value="user">Usuário</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="flex justify-end space-x-2">
-                      <Button variant="outline" onClick={() => setIsAddUserOpen(false)}>
-                        Cancelar
-                      </Button>
-                      <Button onClick={handleAddUser}>
-                        Adicionar
-                      </Button>
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
+                  </DialogContent>
+                </Dialog>
+                <Button>
+                  <UserPlus className="w-4 h-4 mr-2" />
+                  Adicionar Usuário
+                </Button>
+              </div>
             </div>
           </CardHeader>
           <CardContent>
