@@ -52,6 +52,12 @@ export const companies = pgTable("companies", {
   customCSS: text("custom_css"), // CSS personalizado
   footerText: text("footer_text"), // texto do rodapé personalizado
   hideMetaSyncBranding: boolean("hide_metasync_branding").notNull().default(false),
+  // Configurações de Banco de Dados
+  databaseType: text("database_type").notNull().default("postgresql"), // postgresql, supabase
+  supabaseUrl: text("supabase_url"), // URL do Supabase do cliente
+  supabaseAnonKey: text("supabase_anon_key"), // Chave pública do Supabase
+  supabaseServiceKey: text("supabase_service_key"), // Chave de serviço do Supabase (criptografada)
+  customDatabaseUrl: text("custom_database_url"), // URL do PostgreSQL customizado
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -280,6 +286,11 @@ export const insertUserSchema = createInsertSchema(users).omit({
   createdAt: true,
 });
 
+export const insertCompanySchema = createInsertSchema(companies).omit({
+  id: true,
+  createdAt: true,
+});
+
 export const insertCommunitySchema = createInsertSchema(communities).omit({
   id: true,
   createdAt: true,
@@ -383,3 +394,6 @@ export type Availability = typeof availability.$inferSelect;
 export type InsertAvailability = z.infer<typeof insertAvailabilitySchema>;
 export type Appointment = typeof appointments.$inferSelect;
 export type InsertAppointment = z.infer<typeof insertAppointmentSchema>;
+
+export type Company = typeof companies.$inferSelect;
+export type InsertCompany = z.infer<typeof insertCompanySchema>;

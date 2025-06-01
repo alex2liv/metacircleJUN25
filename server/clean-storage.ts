@@ -1,4 +1,4 @@
-import type { User, Community, Space, Post, Event, MemberPoints, InsertUser, InsertCommunity, InsertSpace, InsertPost, InsertEvent } from "@shared/schema";
+import type { User, Company, Community, Space, Post, Event, MemberPoints, InsertUser, InsertCommunity, InsertSpace, InsertPost, InsertEvent } from "@shared/schema";
 import type { IStorage } from "./storage";
 
 export class CleanStorage implements IStorage {

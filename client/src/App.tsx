@@ -29,6 +29,7 @@ import SpecialistAgenda from "@/pages/specialist-agenda";
 import AdminDashboard from "@/pages/admin-dashboard";
 import AdminUsers from "@/pages/admin-users";
 import MetaSyncAdmin from "@/pages/metasync-admin";
+import CompanyManagement from "@/pages/company-management";
 import EmailVerification from "@/pages/email-verification";
 import AnalyticsDashboard from "@/pages/analytics-dashboard";
 import InviteMembers from "@/pages/invite-members";
