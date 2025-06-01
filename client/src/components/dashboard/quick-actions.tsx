@@ -410,20 +410,26 @@ export default function QuickActions() {
                   {/* QR Code Display */}
                   {qrCode && !whatsappConnected && (
                     <div className="flex flex-col items-center p-4 bg-white dark:bg-gray-900 border rounded-lg">
-                      <h4 className="text-sm font-medium mb-3">QR Code de Demonstração</h4>
+                      <h4 className="text-sm font-medium mb-3">Escaneie com WhatsApp</h4>
                       <img 
                         src={qrCode} 
                         alt="QR Code WhatsApp" 
                         className="w-48 h-48 border border-gray-200 dark:border-gray-600 rounded"
                       />
-                      <div className="mt-3 p-2 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded text-center">
-                        <p className="text-xs text-yellow-800 dark:text-yellow-200 font-medium">
-                          Este é um QR Code de demonstração
+                      <div className="mt-3 p-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded text-center">
+                        <p className="text-xs text-green-800 dark:text-green-200 font-medium">
+                          QR Code oficial do WhatsApp Web
                         </p>
-                        <p className="text-xs text-yellow-700 dark:text-yellow-300 mt-1">
-                          Para conexão real, configure WhatsApp Business API
+                        <p className="text-xs text-green-700 dark:text-green-300 mt-1">
+                          Escaneie com seu WhatsApp para conectar
                         </p>
                       </div>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+                        1. Abra o WhatsApp no seu celular<br/>
+                        2. Toque em Menu ou Configurações<br/>
+                        3. Toque em "WhatsApp Web"<br/>
+                        4. Escaneie este código
+                      </p>
                     </div>
                   )}
 
