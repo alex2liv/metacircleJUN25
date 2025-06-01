@@ -33,6 +33,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 import metaSyncIcon from "@assets/icone_matasync.png";
+import metaSyncLogo from "@assets/logo completo metasync.png";
 
 interface CompanyData {
   id?: number;
@@ -302,9 +303,9 @@ export default function MetaSyncAdmin() {
       <div className="bg-white border-b shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between p-4">
           <div className="flex items-center gap-4">
-            <img src={metaSyncIcon} alt="MetaSync" className="h-10 w-10" />
+            <img src={metaSyncLogo} alt="MetaSync Digital" className="h-12" />
             <div>
-              <h1 className="text-xl font-bold text-gray-900">MetaSync Admin</h1>
+              <h1 className="text-xl font-bold text-gray-900">Painel Administrativo</h1>
               <p className="text-sm text-gray-600">
                 Gestão de Empresas e Clientes
               </p>
@@ -714,16 +715,25 @@ export default function MetaSyncAdmin() {
               </div>
             </div>
 
-            <div className="bg-red-50 border border-red-200 p-4 rounded-lg">
-              <div className="flex items-center gap-2 mb-2">
-                <Shield className="h-5 w-5 text-red-600" />
-                <span className="font-medium text-red-800">Sem White Label</span>
+            <div className="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 p-4 rounded-lg">
+              <div className="flex items-center gap-3 mb-3">
+                <img src={metaSyncLogo} alt="MetaSync Digital" className="h-8" />
+                <span className="font-medium text-blue-800">Propaganda MetaSync (Gratuita)</span>
               </div>
-              <p className="text-sm text-red-700">
-                Empresas sem white-label exibem a marca MetaSync como propaganda em:
-                rodapé, login, emails e notificações. Isso gera visibilidade gratuita 
-                para o MetaSync através dos usuários da empresa.
-              </p>
+              <div className="text-sm text-blue-700 space-y-2">
+                <p><strong>Empresas sem white-label exibem nossa marca em:</strong></p>
+                <ul className="list-disc list-inside space-y-1 ml-2">
+                  <li>Rodapé de todas as páginas</li>
+                  <li>Tela de login e cadastro</li>
+                  <li>Emails automáticos do sistema</li>
+                  <li>Notificações WhatsApp</li>
+                  <li>Splash screen do app</li>
+                </ul>
+                <p className="mt-2 font-medium">
+                  ✅ Isso gera <strong>milhares de visualizações mensais</strong> da marca MetaSync
+                  através dos usuários da empresa cliente.
+                </p>
+              </div>
             </div>
 
             <div className="bg-green-50 border border-green-200 p-4 rounded-lg">
