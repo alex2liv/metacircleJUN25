@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 
 interface CurrencyInputProps {
@@ -10,32 +9,11 @@ interface CurrencyInputProps {
 }
 
 export function CurrencyInput({ value, onChange, placeholder = "0,00", className, disabled }: CurrencyInputProps) {
-  const [displayValue, setDisplayValue] = useState("");
-
-  useEffect(() => {
-    if (value === 0) {
-      setDisplayValue("");
-    } else {
-      setDisplayValue(formatCurrency(value));
-    }
-  }, [value]);
-
   const formatCurrency = (num: number): string => {
     return num.toLocaleString('pt-BR', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     });
-  };
-
-  const parseCurrency = (str: string): number => {
-    // Remove tudo exceto números
-    const numbersOnly = str.replace(/[^\d]/g, '');
-    
-    // Se está vazio, retorna 0
-    if (!numbersOnly) return 0;
-    
-    // Converte para número
-    return parseInt(numbersOnly);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,20 +23,13 @@ export function CurrencyInput({ value, onChange, placeholder = "0,00", className
     const numbersOnly = inputValue.replace(/[^\d]/g, '');
     
     if (numbersOnly === '') {
-      setDisplayValue('');
       onChange(0);
       return;
     }
     
-    // Trata como número inteiro (47 = 47.00)
+    // Converte diretamente para número
     const numericValue = parseInt(numbersOnly);
-    setDisplayValue(numbersOnly);
     onChange(numericValue);
-  };
-
-  const handleBlur = () => {
-    // Formata o valor final quando perde o foco
-    setDisplayValue(formatCurrency(value));
   };
 
   return (
@@ -68,9 +39,8 @@ export function CurrencyInput({ value, onChange, placeholder = "0,00", className
       </span>
       <Input
         type="text"
-        value={displayValue}
+        value={value === 0 ? '' : formatCurrency(value)}
         onChange={handleChange}
-        onBlur={handleBlur}
         placeholder={placeholder}
         className={`pl-10 ${className}`}
         disabled={disabled}
