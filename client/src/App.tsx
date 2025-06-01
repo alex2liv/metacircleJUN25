@@ -26,6 +26,7 @@ import SpecialistAdmin from "@/pages/specialist-admin";
 import SpecialistLogin from "@/pages/specialist-login";
 import SpecialistDashboard from "@/pages/specialist-dashboard";
 import AdminDashboard from "@/pages/admin-dashboard";
+import AdminUsers from "@/pages/admin-users";
 import EmailVerification from "@/pages/email-verification";
 import AnalyticsDashboard from "@/pages/analytics-dashboard";
 import InviteMembers from "@/pages/invite-members";
@@ -63,6 +64,7 @@ function Router() {
       <Route path="/specialist-login" component={SpecialistLogin} />
       <Route path="/specialist-dashboard" component={SpecialistDashboard} />
       <Route path="/admin" component={AdminDashboard} />
+      <Route path="/admin/users" component={AdminUsers} />
       <Route path="/email-verification" component={EmailVerification} />
       <Route path="/analytics-dashboard" component={AnalyticsDashboard} />
       <Route path="/invite-members" component={InviteMembers} />

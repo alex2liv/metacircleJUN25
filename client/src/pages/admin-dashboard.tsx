@@ -88,7 +88,7 @@ export default function AdminDashboard() {
     { icon: MessageSquare, label: "Comunidades", path: "/admin/communities", description: "Administrar comunidades ativas" },
     { icon: Calendar, label: "Eventos", path: "/admin/events", description: "Supervisionar eventos e agendamentos" },
     { icon: BarChart3, label: "Analytics", path: "/analytics-dashboard", description: "Métricas e relatórios" },
-    { icon: Settings, label: "Configurações", path: "/admin/settings", description: "Configurações do sistema" }
+    { icon: Settings, label: "Configurações", path: "/specialist-admin", description: "Configurações do sistema" }
   ];
 
   return (
