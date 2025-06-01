@@ -611,7 +611,15 @@ export default function QuickActions() {
                 </div>
                 
                 <div className="mt-6 flex justify-end">
-                  <Button onClick={() => setShowFormatExample(false)}>
+                  <Button 
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      console.log('Botão Entendi clicado');
+                      setShowFormatExample(false);
+                    }}
+                  >
                     Entendi
                   </Button>
                 </div>
