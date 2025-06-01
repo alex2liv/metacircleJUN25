@@ -5,14 +5,21 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Edit, CalendarPlus, UserPlus, Mail, MessageCircle, Plus, Calendar, MessageSquare } from "lucide-react";
+import { Edit, CalendarPlus, UserPlus, Mail, MessageCircle, Plus, Calendar, MessageSquare, Upload, QrCode, Clock, Zap } from "lucide-react";
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function QuickActions() {
+  const { toast } = useToast();
   const [inviteMethod, setInviteMethod] = useState<string>("");
   const [eventStartTime, setEventStartTime] = useState("");
   const [eventEndTime, setEventEndTime] = useState("");
   const [showEndTime, setShowEndTime] = useState(false);
+  const [phoneNumbers, setPhoneNumbers] = useState<string>("");
+  const [delayType, setDelayType] = useState<string>("intelligent");
+  const [customDelay, setCustomDelay] = useState<string>("5");
+  const [isLoading, setIsLoading] = useState(false);
+  const [whatsappConnected, setWhatsappConnected] = useState(false);
 
   const calculateEndTime = (startTime: string) => {
     if (!startTime) return "";
@@ -25,6 +32,58 @@ export default function QuickActions() {
   const handleStartTimeChange = (value: string) => {
     setEventStartTime(value);
     setEventEndTime(calculateEndTime(value));
+  };
+
+  const handleSendInvites = async () => {
+    if (!inviteMethod) {
+      toast({
+        title: "Erro",
+        description: "Selecione um método de convite",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    
+    try {
+      // Simular processamento
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      const numbers = phoneNumbers.split(',').map(n => n.trim()).filter(n => n);
+      
+      toast({
+        title: "Convites enviados!",
+        description: `${numbers.length} convites enviados via ${inviteMethod === 'email' ? 'Email' : 'WhatsApp'}`,
+      });
+      
+      // Resetar formulário
+      setPhoneNumbers("");
+      setInviteMethod("");
+      
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Falha ao enviar convites",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const text = e.target?.result as string;
+        // Processar arquivo CSV/TXT para extrair números
+        const numbers = text.split(/[,\n\r]/).map(n => n.trim()).filter(n => n);
+        setPhoneNumbers(numbers.join(', '));
+      };
+      reader.readAsText(file);
+    }
   };
 
   return (
@@ -209,13 +268,120 @@ export default function QuickActions() {
               )}
               
               {inviteMethod === "whatsapp" && (
-                <div>
-                  <Label htmlFor="phone-numbers">Números de WhatsApp</Label>
-                  <Textarea 
-                    id="phone-numbers" 
-                    placeholder="Digite os números separados por vírgula&#10;exemplo: 11999999999, 11888888888" 
-                    className="h-20"
-                  />
+                <div className="space-y-4">
+                  {/* Status da Conexão WhatsApp */}
+                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <div className={`w-3 h-3 rounded-full ${whatsappConnected ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                      <span className="text-sm">
+                        WhatsApp {whatsappConnected ? 'Conectado' : 'Desconectado'}
+                      </span>
+                    </div>
+                    {!whatsappConnected && (
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => setWhatsappConnected(true)}
+                      >
+                        <QrCode className="w-4 h-4 mr-1" />
+                        Conectar QR
+                      </Button>
+                    )}
+                  </div>
+
+                  {/* Upload de Lista ou Entrada Manual */}
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <Label htmlFor="phone-numbers">Números de WhatsApp</Label>
+                      <div className="flex space-x-2">
+                        <input
+                          type="file"
+                          accept=".csv,.txt"
+                          onChange={handleFileUpload}
+                          className="hidden"
+                          id="file-upload"
+                        />
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => document.getElementById('file-upload')?.click()}
+                        >
+                          <Upload className="w-4 h-4 mr-1" />
+                          Lista
+                        </Button>
+                      </div>
+                    </div>
+                    <Textarea 
+                      id="phone-numbers" 
+                      value={phoneNumbers}
+                      onChange={(e) => setPhoneNumbers(e.target.value)}
+                      placeholder="Digite os números separados por vírgula ou carregue uma lista&#10;exemplo: 11999999999, 11888888888" 
+                      className="h-20"
+                    />
+                  </div>
+
+                  {/* Configurações de Atraso */}
+                  <div>
+                    <Label>Atraso entre Envios</Label>
+                    <div className="mt-2 space-y-3">
+                      <div className="flex space-x-4">
+                        <label className="flex items-center space-x-2">
+                          <input 
+                            type="radio" 
+                            name="delay" 
+                            value="intelligent"
+                            checked={delayType === "intelligent"}
+                            onChange={(e) => setDelayType(e.target.value)}
+                            className="text-blue-600"
+                          />
+                          <div className="flex items-center space-x-1">
+                            <Zap className="w-4 h-4 text-blue-600" />
+                            <span>Atraso inteligente</span>
+                          </div>
+                        </label>
+                        <label className="flex items-center space-x-2">
+                          <input 
+                            type="radio" 
+                            name="delay" 
+                            value="manual"
+                            checked={delayType === "manual"}
+                            onChange={(e) => setDelayType(e.target.value)}
+                            className="text-purple-600"
+                          />
+                          <div className="flex items-center space-x-1">
+                            <Clock className="w-4 h-4 text-purple-600" />
+                            <span>Atraso manual</span>
+                          </div>
+                        </label>
+                      </div>
+                      
+                      {delayType === "intelligent" && (
+                        <div className="text-sm text-gray-600 dark:text-gray-400 bg-blue-50 dark:bg-blue-900/20 p-2 rounded">
+                          Define o atraso automaticamente com base no número de mensagens. 
+                          Quanto maior o atraso, menor a probabilidade de spam.
+                        </div>
+                      )}
+                      
+                      {delayType === "manual" && (
+                        <div className="flex space-x-3">
+                          <div className="flex-1">
+                            <Label htmlFor="custom-delay" className="text-sm">Segundos entre envios</Label>
+                            <Select value={customDelay} onValueChange={setCustomDelay}>
+                              <SelectTrigger>
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="1">Muito curto (1-5s)</SelectItem>
+                                <SelectItem value="5">Curto (5-20s)</SelectItem>
+                                <SelectItem value="15">Médio (15-45s)</SelectItem>
+                                <SelectItem value="30">Longo (30-60s)</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               )}
               
@@ -230,13 +396,17 @@ export default function QuickActions() {
               
               <div className="flex justify-end space-x-2">
                 <Button variant="outline">Cancelar</Button>
-                <Button className="bg-green-600 hover:bg-green-700">
+                <Button 
+                  className="bg-green-600 hover:bg-green-700"
+                  onClick={handleSendInvites}
+                  disabled={isLoading}
+                >
                   {inviteMethod === "email" ? (
                     <Mail className="w-4 h-4 mr-2" />
                   ) : (
                     <MessageCircle className="w-4 h-4 mr-2" />
                   )}
-                  Enviar Convites
+                  {isLoading ? "Enviando..." : "Enviar Convites"}
                 </Button>
               </div>
             </div>

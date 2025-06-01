@@ -44,6 +44,7 @@ import AIAssistant from "@/pages/ai-assistant";
 import NotFound from "@/pages/not-found";
 import CompanyAdminDashboard from "@/pages/company-admin-dashboard";
 import UserDashboard from "@/pages/user-dashboard";
+import WhatsAppSettings from "@/pages/whatsapp-settings";
 
 function Router() {
   return (
