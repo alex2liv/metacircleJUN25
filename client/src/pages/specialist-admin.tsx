@@ -30,7 +30,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
-import metaSyncLogo from "@assets/MetaSync Logo Jun2025.png";
+import metaSyncIcon from "@assets/icone_matasync.png";
 
 interface SpecialistConfig {
   name: string;
@@ -451,9 +451,9 @@ export default function SpecialistAdmin() {
           {/* Logo MetaSync */}
           <div className="flex items-center gap-3">
             <img 
-              src={metaSyncLogo} 
+              src={metaSyncIcon} 
               alt="MetaSync" 
-              className="h-24"
+              className="h-16 w-16"
             />
             <div className="border-l border-gray-300 pl-3">
               <h1 className="text-xl font-bold text-gray-900">
