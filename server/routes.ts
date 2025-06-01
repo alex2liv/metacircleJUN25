@@ -5,6 +5,7 @@ import { storage } from "./storage";
 import { generateChatResponse, testOpenAIConnection } from "./openai-service";
 import { insertPostSchema, insertEventSchema } from "@shared/schema";
 import { whatsAppService } from "./whatsapp-service";
+import { whatsAppProfessionalService } from "./whatsapp-professional";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
@@ -550,10 +551,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // WhatsApp Real Connection Routes
+  // Determinar qual serviço WhatsApp usar baseado no ambiente
+  const isProd = process.env.NODE_ENV === 'production';
+  const whatsappService = isProd ? whatsAppProfessionalService : whatsAppService;
+
+  // WhatsApp Connection Routes
   app.post("/api/whatsapp/generate-qr", async (req, res) => {
     try {
-      const qrCode = await whatsAppService.generateQRCode();
+      const qrCode = await whatsappService.generateQRCode();
       res.json({ 
         success: true, 
         qrCode: qrCode 
@@ -569,13 +574,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/whatsapp/status", async (req, res) => {
     try {
-      const isConnected = whatsAppService.getConnectionStatus();
-      const currentQR = whatsAppService.getCurrentQRCode();
+      const isConnected = whatsappService.getConnectionStatus();
+      const currentQR = whatsappService.getCurrentQRCode();
+      
+      let stats = null;
+      if (isProd && 'getMessageStats' in whatsappService) {
+        stats = (whatsappService as any).getMessageStats();
+      }
       
       res.json({ 
         connected: isConnected,
         hasQrCode: !!currentQR,
-        qrCode: currentQR
+        qrCode: currentQR,
+        stats,
+        environment: isProd ? 'production' : 'development'
       });
     } catch (error) {
       console.error('Error getting WhatsApp status:', error);

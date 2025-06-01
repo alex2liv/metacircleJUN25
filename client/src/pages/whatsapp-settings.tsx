@@ -20,8 +20,9 @@ export default function WhatsAppSettings() {
   const [autoReply, setAutoReply] = useState(false);
   const [delaySettings, setDelaySettings] = useState({
     type: "intelligent",
-    customDelay: "5",
-    maxPerHour: "100"
+    customDelay: "60",
+    maxPerHour: "30",
+    maxPerDay: "100"
   });
 
   // Verificar status da conexão periodicamente
@@ -249,6 +250,37 @@ export default function WhatsAppSettings() {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          {/* Avisos importantes sobre limites do WhatsApp */}
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <div className="flex items-start space-x-3">
+              <div className="w-2 h-2 bg-red-500 rounded-full mt-2 flex-shrink-0"></div>
+              <div>
+                <h4 className="font-semibold text-red-800 dark:text-red-200 mb-2">
+                  ⚠️ LIMITES IMPORTANTES - EVITE BLOQUEIOS
+                </h4>
+                <div className="text-sm text-red-700 dark:text-red-300 space-y-1">
+                  <p><strong>Números NOVOS (menos de 30 dias):</strong></p>
+                  <ul className="list-disc list-inside ml-4 space-y-1">
+                    <li><strong>Máximo 50-100 mensagens por dia</strong></li>
+                    <li><strong>Máximo 20-30 mensagens por hora</strong></li>
+                    <li><strong>Intervalo mínimo: 60-90 segundos entre mensagens</strong></li>
+                  </ul>
+                  
+                  <p className="mt-3"><strong>Números ANTIGOS (mais de 30 dias):</strong></p>
+                  <ul className="list-disc list-inside ml-4 space-y-1">
+                    <li><strong>Máximo 200-300 mensagens por dia</strong></li>
+                    <li><strong>Máximo 80-120 mensagens por hora</strong></li>
+                    <li><strong>Intervalo mínimo: 30-45 segundos entre mensagens</strong></li>
+                  </ul>
+                  
+                  <p className="mt-3 font-semibold">
+                    🚨 Ultrapassar estes limites pode resultar em BANIMENTO PERMANENTE
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="space-y-2">
             <Label>Tipo de Atraso</Label>
             <Select value={delaySettings.type} onValueChange={(value) => 
@@ -263,6 +295,9 @@ export default function WhatsAppSettings() {
                 <SelectItem value="random">Aleatório</SelectItem>
               </SelectContent>
             </Select>
+            <p className="text-xs text-gray-600 dark:text-gray-400">
+              Modo inteligente varia o tempo automaticamente para parecer mais humano
+            </p>
           </div>
 
           {delaySettings.type === "fixed" && (
@@ -275,9 +310,12 @@ export default function WhatsAppSettings() {
                 onChange={(e) => 
                   setDelaySettings(prev => ({ ...prev, customDelay: e.target.value }))
                 }
-                min="1"
-                max="60"
+                min="30"
+                max="300"
               />
+              <p className="text-xs text-amber-600 dark:text-amber-400 font-medium">
+                ⚠️ Nunca use menos de 30 segundos entre mensagens
+              </p>
             </div>
           )}
 
@@ -291,11 +329,32 @@ export default function WhatsAppSettings() {
                 setDelaySettings(prev => ({ ...prev, maxPerHour: e.target.value }))
               }
               min="10"
-              max="500"
+              max="120"
             />
-            <p className="text-xs text-gray-500">
-              Limite recomendado: 100 mensagens por hora para evitar bloqueios
-            </p>
+            <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded p-2">
+              <p className="text-xs text-amber-700 dark:text-amber-300 font-medium">
+                💡 Para números novos: máximo 20-30/hora | Para números antigos: máximo 80-120/hora
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="max-per-day">Máximo de Mensagens por Dia</Label>
+            <Input
+              id="max-per-day"
+              type="number"
+              value={delaySettings.maxPerDay || "100"}
+              onChange={(e) => 
+                setDelaySettings(prev => ({ ...prev, maxPerDay: e.target.value }))
+              }
+              min="10"
+              max="300"
+            />
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded p-2">
+              <p className="text-xs text-red-700 dark:text-red-300 font-medium">
+                🚨 Para números novos: máximo 50-100/dia | Para números antigos: máximo 200-300/dia
+              </p>
+            </div>
           </div>
         </CardContent>
       </Card>
