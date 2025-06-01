@@ -298,21 +298,34 @@ export default function AdminUsers() {
             <p className="text-gray-600">Gerencie especialistas, administradores e membros</p>
           </div>
           <div className="space-x-2">
-            <Button
-              onClick={quickAddClarissa}
-              variant="outline"
-              className="flex items-center gap-2"
-            >
-              <Crown className="h-4 w-4" />
-              Adicionar Clarissa Vaz
-            </Button>
-            <Button
-              onClick={() => setIsAddingSpecialist(true)}
-              className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700"
-            >
-              <Crown className="h-4 w-4" />
-              Novo Especialista
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700">
+                  <Crown className="h-4 w-4" />
+                  Especialistas ({users.filter(u => u.role === 'specialist').length})
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-56">
+                <DropdownMenuItem onClick={() => setIsAddingSpecialist(true)}>
+                  <Crown className="h-4 w-4 mr-2" />
+                  Novo Especialista
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                {users.filter(u => u.role === 'specialist').length === 0 ? (
+                  <DropdownMenuItem disabled>
+                    <User className="h-4 w-4 mr-2" />
+                    Nenhum especialista cadastrado
+                  </DropdownMenuItem>
+                ) : (
+                  users.filter(u => u.role === 'specialist').map(specialist => (
+                    <DropdownMenuItem key={specialist.id}>
+                      <User className="h-4 w-4 mr-2" />
+                      {specialist.firstName} {specialist.lastName}
+                    </DropdownMenuItem>
+                  ))
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
             <Button
               onClick={() => setIsAddingUser(true)}
               className="flex items-center gap-2"
@@ -341,6 +354,7 @@ export default function AdminUsers() {
                     value={newSpecialist.firstName}
                     onChange={(e) => setNewSpecialist({...newSpecialist, firstName: e.target.value})}
                     placeholder="Nome"
+                    className={validationErrors.includes("specialistFirstName") ? "border-red-500 focus:border-red-500" : ""}
                   />
                 </div>
                 <div>
@@ -350,6 +364,7 @@ export default function AdminUsers() {
                     value={newSpecialist.lastName}
                     onChange={(e) => setNewSpecialist({...newSpecialist, lastName: e.target.value})}
                     placeholder="Sobrenome"
+                    className={validationErrors.includes("specialistLastName") ? "border-red-500 focus:border-red-500" : ""}
                   />
                 </div>
                 <div>
@@ -481,6 +496,7 @@ export default function AdminUsers() {
                     value={newUser.username}
                     onChange={(e) => setNewUser({...newUser, username: e.target.value})}
                     placeholder="username.unico"
+                    className={validationErrors.includes("username") ? "border-red-500 focus:border-red-500" : ""}
                   />
                 </div>
                 <div>
@@ -491,6 +507,7 @@ export default function AdminUsers() {
                     value={newUser.email}
                     onChange={(e) => setNewUser({...newUser, email: e.target.value})}
                     placeholder="email@exemplo.com"
+                    className={validationErrors.includes("email") ? "border-red-500 focus:border-red-500" : ""}
                   />
                 </div>
                 <div>
@@ -501,6 +518,7 @@ export default function AdminUsers() {
                     value={newUser.password}
                     onChange={(e) => setNewUser({...newUser, password: e.target.value})}
                     placeholder="Senha segura"
+                    className={validationErrors.includes("password") ? "border-red-500 focus:border-red-500" : ""}
                   />
                 </div>
                 <div>
@@ -669,6 +687,35 @@ export default function AdminUsers() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Modal de confirmação de exclusão */}
+      <Dialog open={deleteConfirm.show} onOpenChange={(open) => !open && setDeleteConfirm({show: false, user: null})}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirmar Exclusão</DialogTitle>
+            <DialogDescription>
+              Tem certeza que deseja excluir o usuário <strong>{deleteConfirm.user?.firstName} {deleteConfirm.user?.lastName}</strong>?
+              Esta ação não pode ser desfeita.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2">
+            <Button 
+              variant="outline" 
+              onClick={() => setDeleteConfirm({show: false, user: null})}
+            >
+              Cancelar
+            </Button>
+            <Button 
+              variant="destructive" 
+              onClick={confirmDelete}
+              className="flex items-center gap-2"
+            >
+              <Trash2 className="h-4 w-4" />
+              Excluir
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
