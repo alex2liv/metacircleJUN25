@@ -101,7 +101,7 @@ export default function AdminDashboard() {
             <img 
               src={metaSyncLogo} 
               alt="MetaSync" 
-              className="h-12"
+              className="h-24"
             />
             <div className="border-l border-gray-300 pl-3">
               <h1 className="text-xl font-bold text-gray-900">
