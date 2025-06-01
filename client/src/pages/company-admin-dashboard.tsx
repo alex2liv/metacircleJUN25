@@ -229,6 +229,60 @@ export default function CompanyAdminDashboard() {
               </Dialog>
               <Dialog>
                 <DialogTrigger asChild>
+                  <Button className="bg-indigo-600 hover:bg-indigo-700">
+                    <MessageSquare className="w-4 h-4 mr-2" />
+                    Iniciar Conversa
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Iniciar Nova Conversa</DialogTitle>
+                    <DialogDescription>
+                      Comece uma conversa com sua equipe
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="conversation-community">Selecionar Comunidade</Label>
+                      <Select>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Escolha uma comunidade" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="community-1">📚 Discussões Gerais</SelectItem>
+                          <SelectItem value="community-2">💡 Ideias e Sugestões</SelectItem>
+                          <SelectItem value="community-3">🎯 Metas e Objetivos</SelectItem>
+                          <SelectItem value="community-4">🤝 Networking</SelectItem>
+                          <SelectItem value="community-5">🏢 Gestão da Empresa</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label htmlFor="conversation-subject">Assunto</Label>
+                      <Input id="conversation-subject" placeholder="Sobre o que vamos conversar?" />
+                    </div>
+                    <div>
+                      <Label htmlFor="conversation-message">Mensagem</Label>
+                      <textarea 
+                        id="conversation-message"
+                        className="w-full min-h-[100px] p-3 border rounded-md resize-none"
+                        placeholder="Digite sua mensagem..."
+                      />
+                    </div>
+                    <div className="flex justify-end space-x-2">
+                      <Button variant="outline">
+                        Cancelar
+                      </Button>
+                      <Button className="bg-indigo-600 hover:bg-indigo-700">
+                        <MessageSquare className="w-4 h-4 mr-2" />
+                        Iniciar Conversa
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <Dialog>
+                <DialogTrigger asChild>
                   <Button className="bg-blue-600 hover:bg-blue-700">
                     <Calendar className="w-4 h-4 mr-2" />
                     Novo Evento
