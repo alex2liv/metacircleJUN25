@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Users, UserPlus, Settings, LogOut, Bell, Search, Filter, MoreVertical, Edit, Trash2, Building2 } from "lucide-react";
+import { Users, UserPlus, Settings, LogOut, Bell, Search, Filter, MoreVertical, Edit, Trash2, Building2, Plus, MessageSquare, User, Calendar } from "lucide-react";
 import { useParams, useLocation } from "wouter";
 
 interface UserData {
@@ -156,6 +156,128 @@ export default function CompanyAdminDashboard() {
               </div>
             </div>
             <div className="flex flex-col gap-2">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button className="bg-green-600 hover:bg-green-700">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Novo Post
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Criar Novo Post</DialogTitle>
+                    <DialogDescription>
+                      Escolha onde publicar seu post
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="space-select">Selecionar Espaço</Label>
+                      <Select>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Escolha um espaço" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">🌐 Todos os Espaços</SelectItem>
+                          <SelectItem value="space-1">📚 Discussões Gerais</SelectItem>
+                          <SelectItem value="space-2">💡 Ideias e Sugestões</SelectItem>
+                          <SelectItem value="space-3">🎯 Metas e Objetivos</SelectItem>
+                          <SelectItem value="space-4">🤝 Networking</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label htmlFor="post-title">Título do Post</Label>
+                      <Input id="post-title" placeholder="Digite o título..." />
+                    </div>
+                    <div>
+                      <Label htmlFor="post-content">Conteúdo</Label>
+                      <textarea 
+                        id="post-content"
+                        className="w-full min-h-[100px] p-3 border rounded-md resize-none"
+                        placeholder="Escreva seu post..."
+                      />
+                    </div>
+                    <div className="flex justify-end space-x-2">
+                      <Button variant="outline">
+                        Cancelar
+                      </Button>
+                      <Button className="bg-green-600 hover:bg-green-700">
+                        <MessageSquare className="w-4 h-4 mr-2" />
+                        Publicar Post
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button className="bg-blue-600 hover:bg-blue-700">
+                    <Calendar className="w-4 h-4 mr-2" />
+                    Novo Evento
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Criar Novo Evento</DialogTitle>
+                    <DialogDescription>
+                      Configure um evento para sua comunidade
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="event-space-select">Selecionar Espaço</Label>
+                      <Select>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Escolha um espaço" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">🌐 Todos os Espaços</SelectItem>
+                          <SelectItem value="space-1">📚 Discussões Gerais</SelectItem>
+                          <SelectItem value="space-2">💡 Ideias e Sugestões</SelectItem>
+                          <SelectItem value="space-3">🎯 Metas e Objetivos</SelectItem>
+                          <SelectItem value="space-4">🤝 Networking</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label htmlFor="event-title">Título do Evento</Label>
+                      <Input id="event-title" placeholder="Digite o título..." />
+                    </div>
+                    <div>
+                      <Label htmlFor="event-description">Descrição</Label>
+                      <textarea 
+                        id="event-description"
+                        className="w-full min-h-[80px] p-3 border rounded-md resize-none"
+                        placeholder="Descreva o evento..."
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <Label htmlFor="event-date">Data</Label>
+                        <Input id="event-date" type="date" />
+                      </div>
+                      <div>
+                        <Label htmlFor="event-time">Horário</Label>
+                        <Input id="event-time" type="time" />
+                      </div>
+                    </div>
+                    <div>
+                      <Label htmlFor="event-location">Local/Link</Label>
+                      <Input id="event-location" placeholder="Presencial ou link online..." />
+                    </div>
+                    <div className="flex justify-end space-x-2">
+                      <Button variant="outline">
+                        Cancelar
+                      </Button>
+                      <Button className="bg-blue-600 hover:bg-blue-700">
+                        <Calendar className="w-4 h-4 mr-2" />
+                        Criar Evento
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
               <Button className="bg-purple-600 hover:bg-purple-700">
                 <UserPlus className="w-4 h-4 mr-2" />
                 Especialistas (0)
