@@ -1229,6 +1229,154 @@ export default function AdminUsers() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Modal de Edição de Usuário */}
+      <Dialog open={editUserModal.show} onOpenChange={(open) => !open && setEditUserModal({show: false, user: null})}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Editar Perfil de Usuário</DialogTitle>
+            <DialogDescription>
+              Edite as informações do usuário {editUserModal.user?.firstName} {editUserModal.user?.lastName}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="editFirstName">Nome</Label>
+              <Input
+                id="editFirstName"
+                value={editFormData.firstName}
+                onChange={(e) => setEditFormData(prev => ({...prev, firstName: e.target.value}))}
+                className={validationErrors.includes("editFirstName") ? "border-red-500" : ""}
+                placeholder="Digite o nome"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="editLastName">Sobrenome</Label>
+              <Input
+                id="editLastName"
+                value={editFormData.lastName}
+                onChange={(e) => setEditFormData(prev => ({...prev, lastName: e.target.value}))}
+                className={validationErrors.includes("editLastName") ? "border-red-500" : ""}
+                placeholder="Digite o sobrenome"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="editUsername">Nome de usuário</Label>
+              <Input
+                id="editUsername"
+                value={editFormData.username}
+                onChange={(e) => setEditFormData(prev => ({...prev, username: e.target.value}))}
+                className={validationErrors.includes("editUsername") ? "border-red-500" : ""}
+                placeholder="Digite o nome de usuário"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="editEmail">Email</Label>
+              <Input
+                id="editEmail"
+                type="email"
+                value={editFormData.email}
+                onChange={(e) => setEditFormData(prev => ({...prev, email: e.target.value}))}
+                className={validationErrors.includes("editEmail") ? "border-red-500" : ""}
+                placeholder="Digite o email"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="editPhone">Telefone</Label>
+              <div className="flex gap-2">
+                <Select value={userCountryCode} onValueChange={setUserCountryCode}>
+                  <SelectTrigger className="w-20">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="+55">🇧🇷 +55</SelectItem>
+                    <SelectItem value="+1">🇺🇸 +1</SelectItem>
+                    <SelectItem value="+44">🇬🇧 +44</SelectItem>
+                    <SelectItem value="+49">🇩🇪 +49</SelectItem>
+                    <SelectItem value="+33">🇫🇷 +33</SelectItem>
+                    <SelectItem value="+34">🇪🇸 +34</SelectItem>
+                    <SelectItem value="+39">🇮🇹 +39</SelectItem>
+                    <SelectItem value="+81">🇯🇵 +81</SelectItem>
+                    <SelectItem value="+86">🇨🇳 +86</SelectItem>
+                  </SelectContent>
+                </Select>
+                <Input
+                  id="editPhone"
+                  value={editFormData.phone?.replace(/^\+\d+\s*/, "") || ""}
+                  onChange={(e) => setEditFormData(prev => ({...prev, phone: `${userCountryCode} ${e.target.value}`}))}
+                  placeholder="Digite o telefone"
+                  className="flex-1"
+                />
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="editRole">Função</Label>
+              <Select value={editFormData.role} onValueChange={(value: "admin" | "specialist" | "member") => setEditFormData(prev => ({...prev, role: value}))}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="admin">Administrador</SelectItem>
+                  <SelectItem value="specialist">Especialista</SelectItem>
+                  <SelectItem value="member">Membro</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            {editFormData.role === "specialist" && (
+              <div className="col-span-2 space-y-2">
+                <Label htmlFor="editSpeciality">Especialidade</Label>
+                <Input
+                  id="editSpeciality"
+                  value={editFormData.speciality || ""}
+                  onChange={(e) => setEditFormData(prev => ({...prev, speciality: e.target.value}))}
+                  placeholder="Digite a especialidade"
+                />
+              </div>
+            )}
+            
+            <div className="col-span-2 space-y-2">
+              <Label htmlFor="editBio">Biografia</Label>
+              <textarea
+                id="editBio"
+                value={editFormData.bio || ""}
+                onChange={(e) => setEditFormData(prev => ({...prev, bio: e.target.value}))}
+                placeholder="Digite uma breve biografia"
+                className="w-full p-2 border rounded-md resize-none h-20"
+              />
+            </div>
+            
+            <div className="col-span-2 flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="editIsActive"
+                checked={editFormData.isActive}
+                onChange={(e) => setEditFormData(prev => ({...prev, isActive: e.target.checked}))}
+                className="rounded"
+              />
+              <Label htmlFor="editIsActive">Usuário ativo</Label>
+            </div>
+          </div>
+          
+          <DialogFooter>
+            <Button 
+              variant="outline" 
+              onClick={() => setEditUserModal({show: false, user: null})}
+            >
+              Cancelar
+            </Button>
+            <Button onClick={saveUserEdit}>
+              Salvar Alterações
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
