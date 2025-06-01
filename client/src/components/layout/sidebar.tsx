@@ -3,27 +3,31 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { 
-  Home, 
-  MessageSquare, 
-  BookOpen, 
-  Calendar, 
-  Trophy, 
+  LayoutDashboard, 
   Users, 
-  Circle,
+  MessageSquare, 
+  Calendar, 
+  BarChart3, 
+  Settings, 
+  Building2,
   MoreHorizontal,
-  Eye
+  Eye,
+  UserPlus,
+  Phone
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 import metaSyncIcon from "@assets/icone_matasync.png";
 
 const navigationItems = [
-  { name: "Dashboard", href: "/dashboard", icon: Home },
-  { name: "Geral", href: "/spaces", icon: MessageSquare, badge: "12", badgeVariant: "secondary" as const },
-  { name: "Cursos", href: "/courses", icon: BookOpen, badge: "3", badgeVariant: "default" as const },
-  { name: "Eventos", href: "/events", icon: Calendar, badge: "2", badgeVariant: "destructive" as const },
-  { name: "Ranking", href: "/ranking", icon: Trophy },
-  { name: "Membros", href: "/members", icon: Users },
+  { name: "Dashboard Admin", href: "/admin/users", icon: LayoutDashboard },
+  { name: "Gerenciar Usuários", href: "/admin/users", icon: Users, badge: "248", badgeVariant: "secondary" as const },
+  { name: "Comunidades", href: "/spaces", icon: MessageSquare, badge: "4", badgeVariant: "default" as const },
+  { name: "Eventos", href: "/events", icon: Calendar, badge: "3", badgeVariant: "destructive" as const },
+  { name: "Relatórios", href: "/analytics-dashboard", icon: BarChart3 },
+  { name: "Convites", href: "/invite-members", icon: UserPlus },
+  { name: "WhatsApp", href: "/whatsapp-settings", icon: Phone, badge: "NOVO", badgeVariant: "default" as const },
+  { name: "Configurações", href: "/settings", icon: Settings },
   { name: "👁️ Visão Cliente", href: "/client-view", icon: Eye, badge: "DEMO", badgeVariant: "outline" as const },
 ];
 
@@ -42,13 +46,15 @@ export default function Sidebar() {
 
   return (
     <div className="flex flex-col w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700">
-      {/* Community Header */}
+      {/* Company Admin Header */}
       <div className="p-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center space-x-3">
-          <img src={metaSyncIcon} alt="MetaSync" className="w-10 h-10 object-contain" />
+          <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
+            <Building2 className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+          </div>
           <div>
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">MetaSync</h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400">248 membros</p>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">AB7 Admin</h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Painel Administrativo</p>
           </div>
         </div>
       </div>
@@ -88,28 +94,26 @@ export default function Sidebar() {
           );
         })}
 
-        {/* Direct Messages Section */}
+        {/* Administrative Contacts Section */}
         <div className="pt-6">
           <h3 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-            Mensagens Diretas
+            Contatos Administrativos
           </h3>
           <div className="mt-2 space-y-1">
-            {directMessages.map((dm) => (
-              <a
-                key={dm.id}
-                href="#"
-                className="text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md"
-              >
-                <Avatar className="mr-3 h-6 w-6">
-                  <AvatarImage src={dm.avatar} alt={dm.name} />
-                  <AvatarFallback>{dm.name[0]}</AvatarFallback>
-                </Avatar>
-                <span className="truncate">{dm.name}</span>
-                {dm.isOnline && (
-                  <span className="ml-auto w-2 h-2 bg-green-400 rounded-full"></span>
-                )}
-              </a>
-            ))}
+            <div className="text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+              <Avatar className="mr-3 h-6 w-6">
+                <AvatarFallback>MS</AvatarFallback>
+              </Avatar>
+              <span className="truncate">Suporte MetaSync</span>
+              <span className="ml-auto w-2 h-2 bg-green-400 rounded-full"></span>
+            </div>
+            <div className="text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700 group flex items-center px-3 py-2 text-sm font-medium rounded-md">
+              <Avatar className="mr-3 h-6 w-6">
+                <AvatarFallback>AB</AvatarFallback>
+              </Avatar>
+              <span className="truncate">Equipe AB7</span>
+              <span className="ml-auto w-2 h-2 bg-yellow-400 rounded-full"></span>
+            </div>
           </div>
         </div>
       </nav>
@@ -127,8 +131,8 @@ export default function Sidebar() {
             <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
               {user?.firstName} {user?.lastName}
             </p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 truncate capitalize">
-              {user?.role}
+            <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+              Admin da Empresa
             </p>
           </div>
           <Button variant="ghost" size="sm">
