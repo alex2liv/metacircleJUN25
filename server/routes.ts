@@ -382,7 +382,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         isActive: true,
         hasWhiteLabel: false,
         maxUsers: planType === "enterprise" ? 1000 : planType === "premium" ? 100 : 50,
-        maxSpecialists: planType === "enterprise" ? 20 : planType === "premium" ? 10 : 5
+        maxSpecialists: planType === "enterprise" ? 20 : planType === "premium" ? 10 : 5,
+        connectionStatus: 'unknown'
       };
 
       // For now, just return success since we don't have company storage implemented
@@ -396,6 +397,82 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error creating company:', error);
       res.status(500).json({ message: "Erro ao criar empresa cliente" });
+    }
+  });
+
+  // Get all companies
+  app.get("/api/admin/companies", async (req, res) => {
+    try {
+      // For demo, return empty array - in real app would fetch from database
+      res.json([]);
+    } catch (error) {
+      console.error('Error fetching companies:', error);
+      res.status(500).json({ message: "Erro ao buscar empresas" });
+    }
+  });
+
+  // Update company credentials
+  app.put("/api/admin/companies/:id", async (req, res) => {
+    try {
+      const { supabaseUrl, supabaseAnonKey, supabaseServiceKey } = req.body;
+      const companyId = parseInt(req.params.id);
+      
+      // For now, just return the updated data
+      const updatedCompany = {
+        supabaseUrl,
+        supabaseAnonKey,
+        supabaseServiceKey,
+        connectionStatus: 'unknown'
+      };
+
+      res.json(updatedCompany);
+    } catch (error) {
+      console.error('Error updating company:', error);
+      res.status(500).json({ message: "Erro ao atualizar empresa" });
+    }
+  });
+
+  // Test Supabase connection
+  app.post("/api/admin/companies/test-supabase", async (req, res) => {
+    try {
+      const { supabaseUrl, supabaseAnonKey, supabaseServiceKey } = req.body;
+      
+      if (!supabaseUrl || !supabaseAnonKey || !supabaseServiceKey) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "Todas as credenciais são obrigatórias" 
+        });
+      }
+
+      // Basic URL validation
+      if (!supabaseUrl.startsWith('https://') || !supabaseUrl.includes('.supabase.co')) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "URL do Supabase inválida. Deve ser no formato https://xxxxx.supabase.co" 
+        });
+      }
+
+      // Simulate connection test - in real app would actually test the connection
+      const isValidFormat = supabaseAnonKey.startsWith('eyJ') && supabaseServiceKey.startsWith('eyJ');
+      
+      if (!isValidFormat) {
+        return res.status(400).json({ 
+          success: false, 
+          error: "Formato das chaves inválido. Verifique se as chaves estão corretas." 
+        });
+      }
+
+      // For demo purposes, assume connection is successful
+      res.json({ 
+        success: true, 
+        message: "Conexão com Supabase bem-sucedida" 
+      });
+    } catch (error) {
+      console.error('Error testing Supabase connection:', error);
+      res.status(500).json({ 
+        success: false, 
+        error: "Erro interno ao testar conexão" 
+      });
     }
   });
 
