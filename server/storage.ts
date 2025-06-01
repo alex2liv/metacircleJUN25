@@ -143,8 +143,32 @@ export class MemStorage implements IStorage {
       createdAt: new Date(),
     };
 
+    // Usuário de teste para comunidade de podólogos
+    const podologistUser: User = {
+      id: this.currentId++,
+      username: "usuario.podologos",
+      email: "user@podologos.com.br",
+      password: "123456",
+      firstName: "Usuário",
+      lastName: "Teste",
+      avatar: null,
+      role: "member",
+      isActive: true,
+      createdAt: new Date(),
+      phone: null,
+      speciality: null,
+      bio: null,
+      companyId: 1,
+      lastLoginAt: null,
+      emailVerified: true,
+      emailVerifiedAt: new Date(),
+      resetToken: null,
+      resetTokenExpiresAt: null,
+    };
+
     this.users.set(user1.id, user1);
     this.users.set(user2.id, user2);
+    this.users.set(podologistUser.id, podologistUser);
 
     // Create sample community
     const community: Community = {
