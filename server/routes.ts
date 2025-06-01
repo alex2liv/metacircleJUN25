@@ -513,15 +513,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // For demo purposes, simulate authentication for company users/specialists
+      // For demo purposes, simulate authentication for company admin
       // In real app, would authenticate against company's database (PostgreSQL or Supabase)
-      const validUsers = [
-        { email: "admin@clarissavargas.com", password: "123456", name: "Clarissa Vargas", role: "admin", type: "specialist" },
-        { email: "especialista@clarissavargas.com", password: "123456", name: "Dr. Silva", role: "specialist", type: "specialist" },
-        { email: "usuario@clarissavargas.com", password: "123456", name: "João Cliente", role: "user", type: "user" }
+      const validAdmins = [
+        { email: "admin@clarissavargas.com", password: "123456", name: "Clarissa Vargas", role: "company_admin", type: "admin" }
       ];
 
-      const user = validUsers.find(u => u.email === email && u.password === password);
+      const user = validAdmins.find(u => u.email === email && u.password === password);
       
       if (user) {
         res.json({ 

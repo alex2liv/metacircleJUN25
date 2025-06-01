@@ -151,8 +151,8 @@ export default function CompanyLogin() {
             <CardTitle className="text-2xl font-bold">{company.name}</CardTitle>
             <CardDescription className="mt-2">
               {company.hasWhiteLabel 
-                ? "Login de Especialistas e Usuários" 
-                : "Portal de Acesso - Comunidade MetaSync"}
+                ? "Painel Administrativo" 
+                : "Painel Administrativo - MetaSync"}
             </CardDescription>
           </div>
           
@@ -218,11 +218,9 @@ export default function CompanyLogin() {
 
           <div className="mt-6 space-y-3 text-center text-sm">
             <div className="bg-gray-50 p-3 rounded-md text-left">
-              <p className="font-medium text-gray-700 mb-2">Credenciais de teste:</p>
+              <p className="font-medium text-gray-700 mb-2">Credencial de Admin:</p>
               <div className="space-y-1 text-xs text-gray-600">
-                <div><strong>Admin:</strong> admin@clarissavargas.com / 123456</div>
-                <div><strong>Especialista:</strong> especialista@clarissavargas.com / 123456</div>
-                <div><strong>Usuário:</strong> usuario@clarissavargas.com / 123456</div>
+                <div><strong>Admin da Empresa:</strong> admin@clarissavargas.com / 123456</div>
               </div>
             </div>
             <Link href={`/company/${companySlug}/register`} className="text-primary hover:underline">

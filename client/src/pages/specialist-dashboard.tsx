@@ -1,302 +1,292 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Calendar, Users, MessageSquare, DollarSign, Clock, Video, Phone, CheckCircle2 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { useLocation } from "wouter";
 import { useState, useEffect } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Calendar, MessageCircle, Users, Bell, Settings, LogOut, Clock, Video, FileText, TrendingUp } from "lucide-react";
+import { useParams, useLocation } from "wouter";
 
-interface Appointment {
+interface UserData {
   id: number;
-  clientName: string;
-  date: string;
-  time: string;
-  type: "video" | "phone" | "presencial";
-  status: "confirmado" | "pendente" | "concluido";
-  planType: "basic" | "intermediate" | "premium";
+  name: string;
+  email: string;
+  role: string;
+  type: string;
+  companySlug: string;
 }
 
-interface SpecialistStats {
-  totalAppointments: number;
-  todayAppointments: number;
-  monthlyEarnings: number;
-  activeClients: number;
-  completedSessions: number;
-  avgRating: number;
+interface Company {
+  name: string;
+  hasWhiteLabel: boolean;
 }
 
 export default function SpecialistDashboard() {
+  const params = useParams();
   const [, setLocation] = useLocation();
-  const [specialistData, setSpecialistData] = useState(() => {
-    const savedSettings = localStorage.getItem('specialistSettings');
-    if (savedSettings) {
-      const settings = JSON.parse(savedSettings);
-      return {
-        name: settings.specialistName || "Especialista",
-        speciality: settings.specialistSpeciality || "Especialista",
-        avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=256&h=256",
-        phone: settings.specialistWhatsApp || "",
-        email: settings.specialistEmail || ""
-      };
-    }
-    
-    return {
-      name: "Especialista",
-      speciality: "Especialista", 
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=256&h=256",
-      phone: "",
-      email: ""
-    };
-  });
+  const [user, setUser] = useState<UserData | null>(null);
+  const [company, setCompany] = useState<Company | null>(null);
+  
+  const companySlug = params.slug;
 
-  // Atualizar dados quando localStorage mudar
   useEffect(() => {
-    const handleStorageChange = () => {
-      const savedSettings = localStorage.getItem('specialistSettings');
-      if (savedSettings) {
-        const settings = JSON.parse(savedSettings);
-        setSpecialistData({
-          name: settings.specialistName || "Especialista",
-          speciality: settings.specialistSpeciality || "Especialista",
-          avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=256&h=256",
-          phone: settings.specialistWhatsApp || "",
-          email: settings.specialistEmail || ""
-        });
-      }
-    };
+    // In real app, get user data from authentication state
+    setUser({
+      id: 124,
+      name: "Dr. Silva",
+      email: "especialista@clarissavargas.com",
+      role: "specialist",
+      type: "specialist",
+      companySlug: companySlug || ""
+    });
 
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
+    setCompany({
+      name: "Clarissa Vargas",
+      hasWhiteLabel: false
+    });
+  }, [companySlug]);
 
-  const stats: SpecialistStats = {
-    totalAppointments: 156,
-    todayAppointments: 3,
-    monthlyEarnings: 4850.00,
-    activeClients: 42,
-    completedSessions: 134,
-    avgRating: 4.8
+  const handleLogout = () => {
+    setLocation(`/company/${companySlug}`);
   };
 
-  const todayAppointments: Appointment[] = [
-    {
-      id: 1,
-      clientName: "Ana Silva",
-      date: "2025-06-01",
-      time: "09:00",
-      type: "video",
-      status: "confirmado",
-      planType: "premium"
-    },
-    {
-      id: 2,
-      clientName: "Carlos Santos",
-      date: "2025-06-01", 
-      time: "14:30",
-      type: "phone",
-      status: "pendente",
-      planType: "intermediate"
-    },
-    {
-      id: 3,
-      clientName: "Maria Costa",
-      date: "2025-06-01",
-      time: "16:00",
-      type: "video",
-      status: "confirmado",
-      planType: "basic"
-    }
-  ];
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "confirmado":
-        return <Badge className="bg-green-100 text-green-800">Confirmado</Badge>;
-      case "pendente":
-        return <Badge className="bg-yellow-100 text-yellow-800">Pendente</Badge>;
-      case "concluido":
-        return <Badge className="bg-blue-100 text-blue-800">Concluído</Badge>;
-      default:
-        return <Badge variant="outline">Desconhecido</Badge>;
-    }
-  };
-
-  const getPlanBadge = (planType: string) => {
-    switch (planType) {
-      case "premium":
-        return <Badge className="bg-purple-100 text-purple-800">Premium</Badge>;
-      case "intermediate":
-        return <Badge className="bg-blue-100 text-blue-800">Intermediário</Badge>;
-      case "basic":
-        return <Badge className="bg-gray-100 text-gray-800">Básico</Badge>;
-      default:
-        return <Badge variant="outline">-</Badge>;
-    }
-  };
-
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case "video":
-        return <Video className="w-4 h-4" />;
-      case "phone":
-        return <Phone className="w-4 h-4" />;
-      default:
-        return <Users className="w-4 h-4" />;
-    }
-  };
+  if (!user || !company) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full" />
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6">
-      {/* Header do Especialista */}
-      <div className="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-6 rounded-lg">
-        <div className="flex items-center gap-4">
-          <Avatar className="w-16 h-16 border-4 border-white/20">
-            <AvatarImage src={specialistData.avatar} />
-            <AvatarFallback className="bg-white/20 text-white text-lg">
-              {specialistData.name.split(' ').map(n => n[0]).join('')}
-            </AvatarFallback>
-          </Avatar>
-          <div>
-            <h1 className="text-2xl font-bold">{specialistData.name}</h1>
-            <p className="text-purple-100">{specialistData.speciality}</p>
-            <p className="text-purple-200 text-sm">WhatsApp: {specialistData.phone}</p>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center space-x-4">
+              <h1 className="text-xl font-semibold text-gray-900">{company.name}</h1>
+              <Badge variant="secondary">Especialista</Badge>
+              {!company.hasWhiteLabel && (
+                <Badge variant="outline" className="text-xs">Powered by MetaSync</Badge>
+              )}
+            </div>
+            <div className="flex items-center space-x-4">
+              <Bell className="w-5 h-5 text-gray-400" />
+              <div className="flex items-center space-x-2">
+                <Avatar className="w-8 h-8">
+                  <AvatarFallback>{user.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                </Avatar>
+                <span className="text-sm font-medium text-gray-700">{user.name}</span>
+              </div>
+              <Button variant="ghost" size="sm" onClick={handleLogout}>
+                <LogOut className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Estatísticas */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-blue-600" />
-              <div>
-                <p className="text-sm text-gray-600">Hoje</p>
-                <p className="text-2xl font-bold">{stats.todayAppointments}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900">Painel do Especialista</h2>
+          <p className="text-gray-600 mt-1">Gerencie seus clientes e sessões</p>
+        </div>
 
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <DollarSign className="w-5 h-5 text-green-600" />
-              <div>
-                <p className="text-sm text-gray-600">Este Mês</p>
-                <p className="text-2xl font-bold">R$ {stats.monthlyEarnings.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Clientes Ativos</CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">12</div>
+              <p className="text-xs text-muted-foreground">
+                +2 este mês
+              </p>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <Users className="w-5 h-5 text-purple-600" />
-              <div>
-                <p className="text-sm text-gray-600">Clientes Ativos</p>
-                <p className="text-2xl font-bold">{stats.activeClients}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Sessões Hoje</CardTitle>
+              <Calendar className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">5</div>
+              <p className="text-xs text-muted-foreground">
+                3 concluídas
+              </p>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-5 h-5 text-green-600" />
-              <div>
-                <p className="text-sm text-gray-600">Sessões Completas</p>
-                <p className="text-2xl font-bold">{stats.completedSessions}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Mensagens</CardTitle>
+              <MessageCircle className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">8</div>
+              <p className="text-xs text-muted-foreground">
+                3 não lidas
+              </p>
+            </CardContent>
+          </Card>
 
-      {/* Agenda do Dia */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Clock className="w-5 h-5" />
-            Agenda de Hoje - {new Date().toLocaleDateString('pt-BR')}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {todayAppointments.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">Nenhum agendamento para hoje</p>
-          ) : (
-            <div className="space-y-4">
-              {todayAppointments.map((appointment) => (
-                <div key={appointment.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-2">
-                      {getTypeIcon(appointment.type)}
-                      <span className="font-medium">{appointment.time}</span>
-                    </div>
-                    <div>
-                      <p className="font-medium">{appointment.clientName}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        {getStatusBadge(appointment.status)}
-                        {getPlanBadge(appointment.planType)}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    {appointment.type === "video" && (
-                      <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                        Iniciar Video
-                      </Button>
-                    )}
-                    {appointment.type === "phone" && (
-                      <Button size="sm" variant="outline">
-                        Ligar
-                      </Button>
-                    )}
-                    <Button size="sm" variant="outline">
-                      Ver Detalhes
-                    </Button>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Avaliação</CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">4.8</div>
+              <p className="text-xs text-muted-foreground">
+                Média de satisfação
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* Próximas Sessões */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Próximas Sessões</CardTitle>
+              <CardDescription>Seus atendimentos agendados</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center space-x-4 p-3 bg-green-50 rounded-lg">
+                <Avatar>
+                  <AvatarFallback>JC</AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <p className="font-medium">João Cliente</p>
+                  <p className="text-sm text-gray-600">Consulta Psicológica</p>
+                  <div className="flex items-center text-sm text-gray-500 mt-1">
+                    <Clock className="w-3 h-3 mr-1" />
+                    14:00 - 15:00
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                <Button size="sm">
+                  <Video className="w-3 h-3 mr-1" />
+                  Iniciar
+                </Button>
+              </div>
 
-      {/* Ações Rápidas */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Gerenciar Agenda</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-600 mb-4">Configure horários disponíveis e bloqueie datas</p>
-            <Button className="w-full" onClick={() => setLocation("/specialist-agenda")}>Abrir Agenda</Button>
-          </CardContent>
-        </Card>
+              <div className="flex items-center space-x-4 p-3 border rounded-lg">
+                <Avatar>
+                  <AvatarFallback>MS</AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <p className="font-medium">Maria Santos</p>
+                  <p className="text-sm text-gray-600">Acompanhamento</p>
+                  <div className="flex items-center text-sm text-gray-500 mt-1">
+                    <Clock className="w-3 h-3 mr-1" />
+                    15:30 - 16:30
+                  </div>
+                </div>
+                <Button variant="outline" size="sm">Ver Perfil</Button>
+              </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Relatórios</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-600 mb-4">Veja estatísticas detalhadas e ganhos</p>
-            <Button variant="outline" className="w-full">Ver Relatórios</Button>
-          </CardContent>
-        </Card>
+              <div className="flex items-center space-x-4 p-3 border rounded-lg">
+                <Avatar>
+                  <AvatarFallback>AB</AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <p className="font-medium">Ana Beatriz</p>
+                  <p className="text-sm text-gray-600">Primeira Consulta</p>
+                  <div className="flex items-center text-sm text-gray-500 mt-1">
+                    <Clock className="w-3 h-3 mr-1" />
+                    17:00 - 18:00
+                  </div>
+                </div>
+                <Button variant="outline" size="sm">Preparar</Button>
+              </div>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Configurações</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-600 mb-4">Ajuste preços, perfil e notificações</p>
-            <Button variant="outline" className="w-full">Configurar</Button>
-          </CardContent>
-        </Card>
+          {/* Clientes Recentes */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Atividade Recente</CardTitle>
+              <CardDescription>Últimas interações com clientes</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-start space-x-3">
+                <Avatar className="w-8 h-8">
+                  <AvatarFallback>JC</AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <p className="text-sm font-medium">João Cliente enviou uma mensagem</p>
+                  <p className="text-xs text-gray-500">Há 5 minutos</p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-3">
+                <Avatar className="w-8 h-8">
+                  <AvatarFallback>MS</AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <p className="text-sm font-medium">Sessão concluída com Maria Santos</p>
+                  <p className="text-xs text-gray-500">Há 2 horas</p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-3">
+                <Avatar className="w-8 h-8">
+                  <AvatarFallback>AB</AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <p className="text-sm font-medium">Ana Beatriz agendou consulta</p>
+                  <p className="text-xs text-gray-500">Há 3 horas</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card className="cursor-pointer hover:shadow-md transition-shadow">
+            <CardContent className="flex items-center space-x-4 p-6">
+              <Calendar className="w-8 h-8 text-primary" />
+              <div>
+                <h3 className="font-medium">Gerenciar Agenda</h3>
+                <p className="text-sm text-gray-600">Configure horários e disponibilidade</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-md transition-shadow">
+            <CardContent className="flex items-center space-x-4 p-6">
+              <Users className="w-8 h-8 text-primary" />
+              <div>
+                <h3 className="font-medium">Meus Clientes</h3>
+                <p className="text-sm text-gray-600">Visualizar perfis e histórico</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-md transition-shadow">
+            <CardContent className="flex items-center space-x-4 p-6">
+              <FileText className="w-8 h-8 text-primary" />
+              <div>
+                <h3 className="font-medium">Relatórios</h3>
+                <p className="text-sm text-gray-600">Acompanhe métricas e progresso</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {!company.hasWhiteLabel && (
+          <div className="mt-8 text-center">
+            <p className="text-sm text-gray-500">
+              Powered by <span className="font-semibold text-primary">MetaSync</span> - 
+              Sua plataforma de comunidades digitais
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

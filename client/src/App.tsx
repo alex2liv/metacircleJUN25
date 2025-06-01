@@ -42,6 +42,8 @@ import Login from "@/pages/login";
 import Onboarding from "@/pages/onboarding";
 import AIAssistant from "@/pages/ai-assistant";
 import NotFound from "@/pages/not-found";
+import CompanyAdminDashboard from "@/pages/company-admin-dashboard";
+import UserDashboard from "@/pages/user-dashboard";
 
 function Router() {
   return (
