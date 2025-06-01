@@ -356,6 +356,44 @@ export default function WhatsAppSettings() {
               </p>
             </div>
           </div>
+
+          {/* Aviso Legal */}
+          <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-4 mt-4">
+            <div className="flex items-start space-x-3">
+              <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 flex-shrink-0"></div>
+              <div>
+                <h4 className="font-semibold text-orange-800 dark:text-orange-200 mb-2">
+                  ⚖️ AVISO LEGAL E RESPONSABILIDADE
+                </h4>
+                <div className="text-sm text-orange-700 dark:text-orange-300 space-y-2">
+                  <p>
+                    <strong>A empresa META não autoriza oficialmente o uso do WhatsApp para automação 
+                    através de métodos não oficiais.</strong> O uso aprovado é apenas através da 
+                    API oficial do WhatsApp Business.
+                  </p>
+                  
+                  <p>
+                    <strong>A MetaSync Digital não se responsabiliza por:</strong>
+                  </p>
+                  <ul className="list-disc list-inside ml-2 space-y-1">
+                    <li>Perda ou banimento de números por uso inadequado</li>
+                    <li>Bloqueios temporários ou permanentes do WhatsApp</li>
+                    <li>Violações dos termos de uso do WhatsApp</li>
+                    <li>Consequências legais do uso não autorizado</li>
+                  </ul>
+                  
+                  <p className="font-semibold">
+                    ⚠️ Use por sua própria conta e risco. Recomendamos o uso da API oficial 
+                    do WhatsApp Business para operações comerciais.
+                  </p>
+                  
+                  <p className="text-xs mt-2 opacity-75">
+                    Este sistema é fornecido apenas para fins educacionais e de demonstração.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
