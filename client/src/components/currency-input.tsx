@@ -9,13 +9,6 @@ interface CurrencyInputProps {
 }
 
 export function CurrencyInput({ value, onChange, placeholder = "0,00", className, disabled }: CurrencyInputProps) {
-  const formatCurrency = (num: number): string => {
-    return num.toLocaleString('pt-BR', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
-  };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     
@@ -27,10 +20,12 @@ export function CurrencyInput({ value, onChange, placeholder = "0,00", className
       return;
     }
     
-    // Converte diretamente para número
-    const numericValue = parseInt(numbersOnly);
+    // Converte para número sem formatação especial
+    const numericValue = Number(numbersOnly);
     onChange(numericValue);
   };
+
+  const displayValue = value === 0 ? '' : `${value},00`;
 
   return (
     <div className="relative">
@@ -39,7 +34,7 @@ export function CurrencyInput({ value, onChange, placeholder = "0,00", className
       </span>
       <Input
         type="text"
-        value={value === 0 ? '' : formatCurrency(value)}
+        value={displayValue}
         onChange={handleChange}
         placeholder={placeholder}
         className={`pl-10 ${className}`}
