@@ -256,6 +256,25 @@ export default function MetaSyncAdmin() {
     setShowWhiteLabelModal(true);
   };
 
+  const deactivateWhiteLabel = (companyId: number) => {
+    setCompanies(companies.map(company => 
+      company.id === companyId 
+        ? { 
+            ...company, 
+            hasWhiteLabel: false, 
+            whiteLabelExpiresAt: undefined,
+            hideMetaSyncBranding: false 
+          }
+        : company
+    ));
+    
+    const company = companies.find(c => c.id === companyId);
+    toast({
+      title: "White Label desativado",
+      description: `${company?.name} voltará a exibir a marca MetaSync`,
+    });
+  };
+
   const processWhiteLabelPayment = () => {
     if (!selectedCompany) return;
 
@@ -487,7 +506,14 @@ export default function MetaSyncAdmin() {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => setLocation(`/admin/company/${company.slug}`)}
+                      onClick={() => {
+                        toast({
+                          title: "Acessando empresa",
+                          description: `Redirecionando para painel da ${company.name}...`,
+                        });
+                        // Simula redirecionamento para o painel da empresa
+                        setLocation('/admin/users');
+                      }}
                     >
                       <Eye className="h-4 w-4 mr-2" />
                       Gerenciar
