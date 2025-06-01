@@ -143,7 +143,7 @@ export default function Login() {
           title: "Login realizado!",
           description: "Bem-vindo à Comunidade de Podólogos.",
         });
-        setLocation("/dashboard");
+        setLocation("/client-view");
       } else {
         const error = await response.json();
         throw new Error(error.message || "Credenciais inválidas");
