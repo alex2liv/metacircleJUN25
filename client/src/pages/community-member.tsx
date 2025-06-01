@@ -317,10 +317,15 @@ export default function CommunityMember() {
         <div id="plans-comparison" className="mt-16">
           <Card className="lg:col-span-3">
             <CardHeader className="text-center">
-              <CardTitle className="text-2xl">Escolha o Plano Ideal para Você</CardTitle>
+              <CardTitle className="text-2xl">🚀 Acelere Seu Crescimento Profissional</CardTitle>
               <CardDescription>
-                Compare os recursos disponíveis em cada plano e escolha o que melhor atende suas necessidades
+                Desbloqueie todo o potencial da nossa comunidade e tenha acesso exclusivo aos melhores especialistas
               </CardDescription>
+              <div className="mt-4 p-4 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-lg border border-yellow-300">
+                <p className="text-sm font-medium text-yellow-800">
+                  🔥 <strong>Oferta Especial:</strong> Teste o Plano Premium GRÁTIS por 7 dias e veja a diferença!
+                </p>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -331,16 +336,16 @@ export default function CommunityMember() {
                     <h3 className="font-semibold text-lg">Recursos</h3>
                   </div>
                   <div className="space-y-6 text-sm">
-                    <div className="py-4 border-b">Acesso à Comunidade</div>
-                    <div className="py-4 border-b">Conteúdos Básicos</div>
-                    <div className="py-4 border-b">Participação em Eventos</div>
-                    <div className="py-4 border-b">Chat da Comunidade</div>
-                    <div className="py-4 border-b">WhatsApp com Especialista</div>
-                    <div className="py-4 border-b">Videochamadas Individuais</div>
-                    <div className="py-4 border-b">Conteúdos Premium</div>
-                    <div className="py-4 border-b">Consultorias Exclusivas</div>
-                    <div className="py-4 border-b">Certificados de Participação</div>
-                    <div className="py-4 border-b">Suporte Prioritário</div>
+                    <div className="py-4 border-b">Acesso à Comunidade Exclusiva</div>
+                    <div className="py-4 border-b">WhatsApp direto com especialista</div>
+                    <div className="py-4 border-b">Consultorias personalizadas</div>
+                    <div className="py-4 border-b">Acesso a conteúdos exclusivos</div>
+                    <div className="py-4 border-b">Videochamadas 1:1 ilimitadas</div>
+                    <div className="py-4 border-b">Participação em Lives VIP</div>
+                    <div className="py-4 border-b">Material didático premium</div>
+                    <div className="py-4 border-b">Certificados reconhecidos</div>
+                    <div className="py-4 border-b">Suporte prioritário 24h</div>
+                    <div className="py-4 border-b">Grupo exclusivo de networking</div>
                   </div>
                 </div>
 
@@ -396,16 +401,19 @@ export default function CommunityMember() {
                 </div>
 
                 {/* Premium Plan */}
-                <div className="relative border-2 border-yellow-300 rounded-lg p-6 bg-gradient-to-br from-yellow-50 to-orange-50">
+                <div className="relative border-2 border-yellow-300 rounded-lg p-6 bg-gradient-to-br from-yellow-50 to-orange-50 transform hover:scale-105 transition-transform duration-300">
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-yellow-600 text-white flex items-center gap-1">
+                    <Badge className="bg-gradient-to-r from-yellow-600 to-orange-600 text-white flex items-center gap-1 animate-pulse">
                       <Crown className="w-3 h-3" />
-                      Premium
+                      VIP PREMIUM
                     </Badge>
                   </div>
                   <div className="text-center space-y-2 h-20 flex flex-col justify-center">
-                    <h3 className="font-semibold text-lg">Premium</h3>
-                    <p className="text-2xl font-bold text-yellow-600">R$ 99,90</p>
+                    <h3 className="font-semibold text-lg text-yellow-800">Premium VIP</h3>
+                    <div className="flex items-center justify-center gap-2">
+                      <span className="text-lg text-gray-500 line-through">R$ 149,90</span>
+                      <p className="text-2xl font-bold text-yellow-600">R$ 99,90</p>
+                    </div>
                     <p className="text-sm text-gray-600">/mês</p>
                   </div>
                   <div className="space-y-6 text-center">
@@ -420,29 +428,82 @@ export default function CommunityMember() {
                     <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
                     <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
                   </div>
-                  <Button className="w-full mt-6 bg-yellow-600 hover:bg-yellow-700">
-                    Fazer Upgrade
-                  </Button>
+                  <div className="space-y-3 mt-6">
+                    <Button 
+                      className="w-full bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white font-semibold"
+                      onClick={() => {
+                        toast({
+                          title: "Teste Premium Ativado!",
+                          description: "Você terá 7 dias de acesso completo ao plano premium.",
+                        });
+                      }}
+                    >
+                      🚀 Testar 7 Dias GRÁTIS
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className="w-full border-yellow-600 text-yellow-700 hover:bg-yellow-50"
+                    >
+                      Fazer Upgrade
+                    </Button>
+                  </div>
                 </div>
 
               </div>
 
-              {/* Additional Benefits */}
-              <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="text-center p-4 bg-blue-50 rounded-lg">
-                  <Users className="w-8 h-8 text-blue-600 mx-auto mb-2" />
-                  <h4 className="font-semibold text-blue-900">Comunidade Ativa</h4>
-                  <p className="text-sm text-blue-700 mt-1">150+ profissionais conectados</p>
+              {/* Special Premium Benefits */}
+              <div className="mt-12 p-8 bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl text-white">
+                <div className="text-center mb-8">
+                  <Crown className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
+                  <h3 className="text-2xl font-bold mb-2">Contato Direto com Especialistas</h3>
+                  <p className="text-gray-300 max-w-2xl mx-auto">
+                    Tenha acesso direto ao WhatsApp da nossa especialista para suporte personalizado
+                  </p>
                 </div>
-                <div className="text-center p-4 bg-green-50 rounded-lg">
-                  <MessageCircle className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                  <h4 className="font-semibold text-green-900">Suporte Direto</h4>
-                  <p className="text-sm text-green-700 mt-1">WhatsApp com especialistas</p>
-                </div>
-                <div className="text-center p-4 bg-purple-50 rounded-lg">
-                  <BookOpen className="w-8 h-8 text-purple-600 mx-auto mb-2" />
-                  <h4 className="font-semibold text-purple-900">Conteúdo Exclusivo</h4>
-                  <p className="text-sm text-purple-700 mt-1">Material didático atualizado</p>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                      <span>WhatsApp direto com especialista</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                      <span>Respostas prioritárias</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                      <span>Consultorias personalizadas</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                      <span>Acesso a conteúdos exclusivos</span>
+                    </div>
+                    
+                    <div className="mt-6 p-4 bg-yellow-600/20 rounded-lg border border-yellow-500/30">
+                      <p className="text-sm text-yellow-300 font-medium">
+                        ⚠️ Recursos Premium Incluem
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="text-center">
+                    <Button 
+                      size="lg"
+                      className="bg-yellow-600 hover:bg-yellow-700 text-black font-bold px-8 py-4 text-lg"
+                      onClick={() => {
+                        toast({
+                          title: "Teste Premium Ativado!",
+                          description: "Você terá 7 dias de acesso completo ao plano premium.",
+                        });
+                      }}
+                    >
+                      🚀 Fazer Upgrade - R$ 99,90/mês
+                    </Button>
+                    <p className="text-sm text-gray-400 mt-3">
+                      Cancele a qualquer momento
+                    </p>
+                  </div>
                 </div>
               </div>
 
