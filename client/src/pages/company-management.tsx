@@ -400,6 +400,12 @@ export default function CompanyManagement() {
                         <p className="text-sm text-gray-600">
                           {company.slug} • {company.planType} • {company.databaseType}
                         </p>
+                        <div className="mt-2">
+                          <Link href={`/company/${company.slug}`} target="_blank" className="text-blue-600 hover:text-blue-800 text-sm font-medium inline-flex items-center">
+                            <ExternalLink className="w-3 h-3 mr-1" />
+                            {window.location.origin}/company/{company.slug}
+                          </Link>
+                        </div>
                       </div>
                       <div className="flex gap-2">
                         <Link href={`/company/${company.slug}`} target="_blank">
