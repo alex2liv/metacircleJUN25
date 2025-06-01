@@ -419,11 +419,26 @@ export default function QuickActions() {
                   {qrCode && !whatsappConnected && (
                     <div className="flex flex-col items-center p-4 bg-white dark:bg-gray-900 border rounded-lg">
                       <h4 className="text-sm font-medium mb-3">Escaneie com WhatsApp</h4>
-                      <img 
-                        src={qrCode} 
-                        alt="QR Code WhatsApp" 
-                        className="w-48 h-48 border border-gray-200 dark:border-gray-600 rounded"
-                      />
+                      <div className="relative">
+                        <img 
+                          src={qrCode} 
+                          alt="QR Code WhatsApp" 
+                          className="w-48 h-48 border border-gray-200 dark:border-gray-600 rounded"
+                          onError={(e) => {
+                            console.error('Error loading QR Code image:', e);
+                            console.log('QR Code data:', qrCode.substring(0, 100) + '...');
+                          }}
+                          onLoad={() => {
+                            console.log('QR Code image loaded successfully');
+                          }}
+                        />
+                        {/* Fallback se imagem não carregar */}
+                        {!qrCode.startsWith('data:image/') && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800 border rounded">
+                            <span className="text-sm text-gray-500">QR Code inválido</span>
+                          </div>
+                        )}
+                      </div>
                       <div className="mt-3 p-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded text-center">
                         <p className="text-xs text-green-800 dark:text-green-200 font-medium">
                           QR Code oficial do WhatsApp Web
@@ -438,6 +453,10 @@ export default function QuickActions() {
                         3. Toque em "WhatsApp Web"<br/>
                         4. Escaneie este código
                       </p>
+                      {/* Debug info */}
+                      <div className="mt-2 p-2 bg-gray-100 dark:bg-gray-800 rounded text-xs">
+                        <p>QR Data: {qrCode.substring(0, 50)}...</p>
+                      </div>
                     </div>
                   )}
 
