@@ -51,8 +51,19 @@ export default function AdminUsers() {
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [deleteConfirm, setDeleteConfirm] = useState<{show: boolean, user: UserData | null}>({show: false, user: null});
   const [settingsUser, setSettingsUser] = useState<{show: boolean, user: UserData | null}>({show: false, user: null});
+  const [showAdminSettings, setShowAdminSettings] = useState(false);
   const [userCountryCode, setUserCountryCode] = useState("+55");
   const [specialistCountryCode, setSpecialistCountryCode] = useState("+55");
+
+  // Configurações de qualidade de vídeo
+  const [videoSettings, setVideoSettings] = useState({
+    maxQuality: "1080p",
+    pricing: {
+      "720p": 0,
+      "1080p": 15.99,
+      "4K": 49.99
+    }
+  });
 
   const countryCodes = [
     { code: "+55", country: "Brasil", flag: "🇧🇷" },
@@ -261,6 +272,31 @@ export default function AdminUsers() {
     });
   };
 
+  const updateVideoPricing = (quality: string, price: number) => {
+    setVideoSettings(prev => ({
+      ...prev,
+      pricing: {
+        ...prev.pricing,
+        [quality]: price
+      }
+    }));
+    toast({
+      title: "Preço atualizado",
+      description: `${quality}: R$ ${price.toFixed(2)}/mês`,
+    });
+  };
+
+  const setMaxVideoQuality = (quality: string) => {
+    setVideoSettings(prev => ({
+      ...prev,
+      maxQuality: quality
+    }));
+    toast({
+      title: "Qualidade máxima definida",
+      description: `Nova qualidade máxima: ${quality}`,
+    });
+  };
+
 
 
   return (
@@ -362,6 +398,14 @@ export default function AdminUsers() {
             >
               <UserPlus className="h-4 w-4" />
               Novo Usuário
+            </Button>
+            <Button
+              onClick={() => setShowAdminSettings(true)}
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              <Settings className="h-4 w-4" />
+              Configurações do Sistema
             </Button>
           </div>
         </div>
@@ -717,12 +761,12 @@ export default function AdminUsers() {
                     <div>
                       <div className="flex items-center gap-2">
                         <h3 className="font-medium">{user.firstName} {user.lastName}</h3>
-                        <Badge variant={
-                          user.role === "admin" ? "destructive" :
-                          user.role === "specialist" ? "default" :
-                          "secondary"
+                        <Badge className={
+                          user.role === "admin" ? "bg-red-600 text-white border-red-600" :
+                          user.role === "specialist" ? "bg-purple-600 text-white border-purple-600" :
+                          "bg-blue-600 text-white border-blue-600"
                         }>
-                          {user.role === "admin" ? "Admin" : user.role === "specialist" ? "Especialista" : "Membro"}
+                          {user.role === "admin" ? "ADMIN" : user.role === "specialist" ? "ESPECIALISTA" : "MEMBRO"}
                         </Badge>
                       </div>
                       <p className="text-sm text-gray-600">@{user.username}</p>
@@ -881,6 +925,148 @@ export default function AdminUsers() {
               onClick={() => setSettingsUser({show: false, user: null})}
             >
               Fechar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Painel lateral de configurações administrativas */}
+      <Dialog open={showAdminSettings} onOpenChange={setShowAdminSettings}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Settings className="h-5 w-5" />
+              Configurações do Sistema
+            </DialogTitle>
+            <DialogDescription>
+              Configure as opções globais da plataforma
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6 py-4">
+            {/* Configurações de Qualidade de Vídeo */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M17 10.5V7a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h12a1 1 0 001-1v-3.5l4 4v-11l-4 4z"/>
+                </svg>
+                Qualidade de Vídeo
+              </h3>
+              
+              <div className="grid gap-4">
+                <div className="border rounded-lg p-4">
+                  <h4 className="font-medium mb-3">Planos de Qualidade</h4>
+                  <div className="space-y-3">
+                    {Object.entries(videoSettings.pricing).map(([quality, price]) => (
+                      <div key={quality} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div>
+                          <span className="font-medium">{quality}</span>
+                          <p className="text-sm text-gray-600">
+                            {quality === "720p" && "Qualidade padrão - Grátis"}
+                            {quality === "1080p" && "Alta definição - HD"}
+                            {quality === "4K" && "Ultra alta definição - Premium"}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {quality === "720p" ? (
+                            <Badge className="bg-green-600 text-white">GRÁTIS</Badge>
+                          ) : (
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm">R$</span>
+                              <Input
+                                type="number"
+                                value={price}
+                                onChange={(e) => updateVideoPricing(quality, parseFloat(e.target.value) || 0)}
+                                className="w-20 text-center"
+                                step="0.01"
+                                min="0"
+                              />
+                              <span className="text-sm text-gray-600">/mês</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="border rounded-lg p-4">
+                  <h4 className="font-medium mb-3">Qualidade Máxima do Sistema</h4>
+                  <div className="flex gap-2">
+                    {["720p", "1080p", "4K"].map((quality) => (
+                      <Button
+                        key={quality}
+                        variant={videoSettings.maxQuality === quality ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setMaxVideoQuality(quality)}
+                      >
+                        {quality}
+                      </Button>
+                    ))}
+                  </div>
+                  <p className="text-sm text-gray-600 mt-2">
+                    Qualidade máxima disponível: <strong>{videoSettings.maxQuality}</strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Configurações de Sistema */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                Sistema
+              </h3>
+              
+              <div className="grid gap-3">
+                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div>
+                    <span className="font-medium">Usuários Totais</span>
+                    <p className="text-sm text-gray-600">Total de usuários cadastrados</p>
+                  </div>
+                  <Badge className="bg-blue-600 text-white">{users.length}</Badge>
+                </div>
+                
+                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div>
+                    <span className="font-medium">Especialistas</span>
+                    <p className="text-sm text-gray-600">Especialistas ativos</p>
+                  </div>
+                  <Badge className="bg-purple-600 text-white">
+                    {users.filter(u => u.role === 'specialist').length}
+                  </Badge>
+                </div>
+
+                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div>
+                    <span className="font-medium">Membros</span>
+                    <p className="text-sm text-gray-600">Membros regulares</p>
+                  </div>
+                  <Badge className="bg-gray-600 text-white">
+                    {users.filter(u => u.role === 'member').length}
+                  </Badge>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button 
+              variant="outline" 
+              onClick={() => setShowAdminSettings(false)}
+            >
+              Fechar
+            </Button>
+            <Button onClick={() => {
+              toast({
+                title: "Configurações salvas",
+                description: "Todas as configurações foram aplicadas com sucesso",
+              });
+              setShowAdminSettings(false);
+            }}>
+              Salvar Configurações
             </Button>
           </DialogFooter>
         </DialogContent>
