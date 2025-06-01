@@ -476,5 +476,70 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Company routes - Get company by slug
+  app.get("/api/company/:slug", async (req, res) => {
+    try {
+      const { slug } = req.params;
+      
+      // For demo, return a sample company based on slug
+      const company = {
+        id: 1,
+        name: slug === "clarissa-vargas" ? "Clarissa Vargas" : "Empresa Demo",
+        slug: slug,
+        planType: "premium",
+        databaseType: "supabase",
+        isActive: true,
+        hasWhiteLabel: false
+      };
+      
+      res.json(company);
+    } catch (error) {
+      console.error('Error fetching company:', error);
+      res.status(500).json({ message: "Erro ao buscar empresa" });
+    }
+  });
+
+  // Company authentication - Login
+  app.post("/api/company/:slug/auth/login", async (req, res) => {
+    try {
+      const { slug } = req.params;
+      const { email, password } = req.body;
+      
+      // Basic validation
+      if (!email || !password) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Email e senha são obrigatórios" 
+        });
+      }
+
+      // For demo purposes, simulate authentication
+      // In real app, would authenticate against company's database
+      if (email === "admin@clarissavargas.com" && password === "123456") {
+        res.json({ 
+          success: true, 
+          message: "Login realizado com sucesso",
+          user: {
+            id: 1,
+            email: email,
+            name: "Admin Clarissa",
+            role: "admin"
+          }
+        });
+      } else {
+        res.status(401).json({ 
+          success: false, 
+          message: "Credenciais inválidas" 
+        });
+      }
+    } catch (error) {
+      console.error('Error during company login:', error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Erro interno do servidor" 
+      });
+    }
+  });
+
   return httpServer;
 }

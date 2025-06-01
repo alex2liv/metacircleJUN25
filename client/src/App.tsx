@@ -30,6 +30,7 @@ import AdminDashboard from "@/pages/admin-dashboard";
 import AdminUsers from "@/pages/admin-users";
 import MetaSyncAdmin from "@/pages/metasync-admin";
 import CompanyManagement from "@/pages/company-management";
+import CompanyLogin from "@/pages/company-login";
 import EmailVerification from "@/pages/email-verification";
 import AnalyticsDashboard from "@/pages/analytics-dashboard";
 import InviteMembers from "@/pages/invite-members";
@@ -87,6 +88,7 @@ function StandaloneRouter() {
       <Route path="/login" component={Login} />
       <Route path="/onboarding" component={Onboarding} />
       <Route path="/company-management" component={CompanyManagement} />
+      <Route path="/company/:slug" component={CompanyLogin} />
       <Route path="/specialist-login" component={SpecialistLogin} />
       <Route component={Landing} />
     </Switch>

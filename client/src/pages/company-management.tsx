@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Building2, Database, Settings, CheckCircle, XCircle, AlertCircle, ArrowLeft, Home } from "lucide-react";
+import { Plus, Building2, Database, Settings, CheckCircle, XCircle, AlertCircle, ArrowLeft, Home, ExternalLink } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Link } from "wouter";
@@ -402,6 +402,12 @@ export default function CompanyManagement() {
                         </p>
                       </div>
                       <div className="flex gap-2">
+                        <Link href={`/company/${company.slug}`} target="_blank">
+                          <Button variant="outline" size="sm">
+                            <ExternalLink className="w-4 h-4 mr-2" />
+                            Acessar Login
+                          </Button>
+                        </Link>
                         {company.databaseType === 'supabase' && company.supabaseUrl && (
                           <Button 
                             variant="outline" 
