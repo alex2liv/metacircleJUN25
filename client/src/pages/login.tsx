@@ -62,14 +62,14 @@ export default function Login() {
     defaultValues: { email: "", password: "" },
   });
 
-  const recoveryForm = useForm<RecoveryForm>({
-    resolver: zodResolver(recoverySchema),
-    defaultValues: { email: "", recoveryCode: "", newPassword: "", confirmPassword: "" },
+  const forgotPasswordForm = useForm<ForgotPasswordForm>({
+    resolver: zodResolver(forgotPasswordSchema),
+    defaultValues: { email: "" },
   });
 
-  const backDoorForm = useForm<BackDoorForm>({
-    resolver: zodResolver(backDoorSchema),
-    defaultValues: { masterKey: "", newAdminPassword: "" },
+  const resetPasswordForm = useForm<ResetPasswordForm>({
+    resolver: zodResolver(resetPasswordSchema),
+    defaultValues: { resetCode: "", newPassword: "", confirmPassword: "" },
   });
 
   // Handlers de login por tipo de usuário
@@ -213,6 +213,70 @@ export default function Login() {
     }
   };
 
+  // Recuperação de senha - Enviar email
+  const handleForgotPassword = async (data: ForgotPasswordForm) => {
+    setIsLoading(true);
+    try {
+      const response = await apiRequest("POST", "/api/auth/forgot-password", { email: data.email });
+      
+      if (response.ok) {
+        const result = await response.json();
+        setResetEmail(data.email);
+        setResetStep("code");
+        toast({
+          title: "Email enviado!",
+          description: "Código de recuperação enviado para seu email.",
+        });
+      } else {
+        const error = await response.json();
+        throw new Error(error.message || "Erro ao enviar email");
+      }
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: error instanceof Error ? error.message : "Erro ao enviar email",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Recuperação de senha - Redefinir com código
+  const handleResetPassword = async (data: ResetPasswordForm) => {
+    setIsLoading(true);
+    try {
+      const response = await apiRequest("POST", "/api/auth/reset-password", {
+        email: resetEmail,
+        resetCode: data.resetCode,
+        newPassword: data.newPassword
+      });
+      
+      if (response.ok) {
+        toast({
+          title: "Senha redefinida!",
+          description: "Sua senha foi atualizada com sucesso.",
+        });
+        setForgotPasswordOpen(false);
+        setResetStep("email");
+        setResetEmail("");
+        resetPasswordForm.reset();
+        forgotPasswordForm.reset();
+      } else {
+        const error = await response.json();
+        throw new Error(error.message || "Erro ao redefinir senha");
+      }
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: error instanceof Error ? error.message : "Erro ao redefinir senha",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4">
       <Card className="w-full max-w-lg bg-white shadow-2xl border-0">
@@ -287,13 +351,128 @@ export default function Login() {
             </Button>
 
             <div className="text-center">
-              <Button
-                type="button"
-                variant="link"
-                className="text-sm text-blue-600 hover:text-blue-800"
-              >
-                Esqueci minha senha
-              </Button>
+              <Dialog open={forgotPasswordOpen} onOpenChange={setForgotPasswordOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="link"
+                    className="text-sm text-blue-600 hover:text-blue-800"
+                  >
+                    Esqueci minha senha
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>
+                      {resetStep === "email" ? "Recuperar Senha" : "Digite o Código"}
+                    </DialogTitle>
+                    <DialogDescription>
+                      {resetStep === "email" 
+                        ? "Digite seu email para receber o código de recuperação"
+                        : `Digite o código enviado para ${resetEmail}`
+                      }
+                    </DialogDescription>
+                  </DialogHeader>
+                  
+                  {resetStep === "email" ? (
+                    <form onSubmit={forgotPasswordForm.handleSubmit(handleForgotPassword)} className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="reset-email">Email</Label>
+                        <Input
+                          id="reset-email"
+                          type="email"
+                          placeholder="seu.email@exemplo.com"
+                          {...forgotPasswordForm.register("email")}
+                        />
+                        {forgotPasswordForm.formState.errors.email && (
+                          <p className="text-sm text-red-500">
+                            {forgotPasswordForm.formState.errors.email.message}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => setForgotPasswordOpen(false)}
+                          className="flex-1"
+                        >
+                          Cancelar
+                        </Button>
+                        <Button type="submit" disabled={isLoading} className="flex-1">
+                          {isLoading ? "Enviando..." : "Enviar Código"}
+                        </Button>
+                      </div>
+                    </form>
+                  ) : (
+                    <form onSubmit={resetPasswordForm.handleSubmit(handleResetPassword)} className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="reset-code">Código de 6 dígitos</Label>
+                        <Input
+                          id="reset-code"
+                          placeholder="123456"
+                          maxLength={6}
+                          {...resetPasswordForm.register("resetCode")}
+                        />
+                        {resetPasswordForm.formState.errors.resetCode && (
+                          <p className="text-sm text-red-500">
+                            {resetPasswordForm.formState.errors.resetCode.message}
+                          </p>
+                        )}
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="new-password">Nova Senha</Label>
+                        <Input
+                          id="new-password"
+                          type="password"
+                          placeholder="Digite sua nova senha"
+                          {...resetPasswordForm.register("newPassword")}
+                        />
+                        {resetPasswordForm.formState.errors.newPassword && (
+                          <p className="text-sm text-red-500">
+                            {resetPasswordForm.formState.errors.newPassword.message}
+                          </p>
+                        )}
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="confirm-password">Confirmar Senha</Label>
+                        <Input
+                          id="confirm-password"
+                          type="password"
+                          placeholder="Confirme sua nova senha"
+                          {...resetPasswordForm.register("confirmPassword")}
+                        />
+                        {resetPasswordForm.formState.errors.confirmPassword && (
+                          <p className="text-sm text-red-500">
+                            {resetPasswordForm.formState.errors.confirmPassword.message}
+                          </p>
+                        )}
+                      </div>
+                      
+                      <div className="flex gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={() => {
+                            setResetStep("email");
+                            setResetEmail("");
+                            resetPasswordForm.reset();
+                          }}
+                          className="flex-1"
+                        >
+                          <ArrowLeft className="w-4 h-4 mr-1" />
+                          Voltar
+                        </Button>
+                        <Button type="submit" disabled={isLoading} className="flex-1">
+                          {isLoading ? "Redefinindo..." : "Redefinir Senha"}
+                        </Button>
+                      </div>
+                    </form>
+                  )}
+                </DialogContent>
+              </Dialog>
             </div>
           </form>
         </CardContent>
