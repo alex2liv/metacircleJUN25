@@ -228,9 +228,13 @@ export default function MetaSyncAdmin() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setLocation('/metasync-admin')}>
                 <Settings className="h-4 w-4 mr-2" />
-                Configurações
+                Painel MetaSync
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setLocation('/admin/users')}>
+                <Users className="h-4 w-4 mr-2" />
+                Gerenciar Usuários
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <LogOut className="h-4 w-4 mr-2" />

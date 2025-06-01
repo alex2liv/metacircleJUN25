@@ -13,6 +13,7 @@ import { useUserRole } from "@/hooks/use-user-role";
 import { useToast } from "@/hooks/use-toast";
 import { validateSecureUrl, hasAdminAccess, validateFormInput } from "@/lib/security";
 import { Settings2, Lock, ExternalLink, Save, Shield, Users, Upload, Camera } from "lucide-react";
+import { CurrencyInput } from "@/components/currency-input";
 
 const perfectPaySettingsSchema = z.object({
   defaultPassword: z.string().min(1, "Senha é obrigatória").max(50, "Senha muito longa"),
@@ -405,12 +406,11 @@ export default function Settings() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="basicPlanPrice">Preço Plano Básico (R$)</Label>
-                    <Input
-                      id="basicPlanPrice"
-                      type="number"
-                      placeholder="10"
-                      {...specialistForm.register("basicPlanPrice", { valueAsNumber: true })}
+                    <Label htmlFor="basicPlanPrice">Preço Plano Básico</Label>
+                    <CurrencyInput
+                      value={specialistForm.watch("basicPlanPrice") || 0}
+                      onChange={(value) => specialistForm.setValue("basicPlanPrice", value)}
+                      placeholder="10,00"
                     />
                     {specialistForm.formState.errors.basicPlanPrice && (
                       <p className="text-sm text-red-500">
@@ -420,12 +420,11 @@ export default function Settings() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="intermediatePlanPrice">Preço Plano Intermediário (R$)</Label>
-                    <Input
-                      id="intermediatePlanPrice"
-                      type="number"
-                      placeholder="39"
-                      {...specialistForm.register("intermediatePlanPrice", { valueAsNumber: true })}
+                    <Label htmlFor="intermediatePlanPrice">Preço Plano Intermediário</Label>
+                    <CurrencyInput
+                      value={specialistForm.watch("intermediatePlanPrice") || 0}
+                      onChange={(value) => specialistForm.setValue("intermediatePlanPrice", value)}
+                      placeholder="39,00"
                     />
                     {specialistForm.formState.errors.intermediatePlanPrice && (
                       <p className="text-sm text-red-500">
@@ -435,12 +434,11 @@ export default function Settings() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="premiumPlanPrice">Preço Plano Premium (R$)</Label>
-                    <Input
-                      id="premiumPlanPrice"
-                      type="number"
-                      placeholder="99"
-                      {...specialistForm.register("premiumPlanPrice", { valueAsNumber: true })}
+                    <Label htmlFor="premiumPlanPrice">Preço Plano Premium</Label>
+                    <CurrencyInput
+                      value={specialistForm.watch("premiumPlanPrice") || 0}
+                      onChange={(value) => specialistForm.setValue("premiumPlanPrice", value)}
+                      placeholder="99,00"
                     />
                     {specialistForm.formState.errors.premiumPlanPrice && (
                       <p className="text-sm text-red-500">
