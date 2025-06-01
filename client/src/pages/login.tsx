@@ -128,25 +128,30 @@ export default function Login() {
   const handleUserLogin = async (data: LoginForm) => {
     setIsLoading(true);
     try {
-      // Verificar se usuário está na lista de emails importados
-      const importedEmails = JSON.parse(localStorage.getItem("importedEmails") || "[]");
-      const userExists = importedEmails.includes(data.email);
+      const response = await apiRequest("POST", "/api/auth/login", {
+        email: data.email,
+        password: data.password
+      });
       
-      if (userExists) {
-        localStorage.setItem("userRole", "member");
-        localStorage.setItem("userEmail", data.email);
+      if (response.ok) {
+        const result = await response.json();
+        localStorage.setItem("userRole", result.user.role);
+        localStorage.setItem("userEmail", result.user.email);
+        localStorage.setItem("userName", result.user.firstName + " " + result.user.lastName);
+        
         toast({
           title: "Login realizado!",
-          description: "Bem-vindo à comunidade MetaCircle.",
+          description: "Bem-vindo à Comunidade de Podólogos.",
         });
-        setLocation("/client-view");
+        setLocation("/dashboard");
       } else {
-        throw new Error("Usuário não encontrado na lista de membros");
+        const error = await response.json();
+        throw new Error(error.message || "Credenciais inválidas");
       }
     } catch (error) {
       toast({
         title: "Erro no login",
-        description: "Usuário não autorizado ou credenciais incorretas.",
+        description: error instanceof Error ? error.message : "Usuário não autorizado ou credenciais incorretas.",
         variant: "destructive",
       });
     } finally {

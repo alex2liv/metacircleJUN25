@@ -56,6 +56,64 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // User authentication
+  app.post("/api/auth/login", async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      
+      if (!email || !password) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Email e senha são obrigatórios" 
+        });
+      }
+
+      // Find user by email
+      const user = await storage.getUserByEmail(email);
+      if (!user) {
+        return res.status(401).json({ 
+          success: false, 
+          message: "Usuário não encontrado" 
+        });
+      }
+
+      // Verify password (simple comparison for demo)
+      if (user.password !== password) {
+        return res.status(401).json({ 
+          success: false, 
+          message: "Senha incorreta" 
+        });
+      }
+
+      // Check if user is active
+      if (!user.isActive) {
+        return res.status(401).json({ 
+          success: false, 
+          message: "Usuário inativo" 
+        });
+      }
+
+      res.json({ 
+        success: true, 
+        message: "Login realizado com sucesso",
+        user: {
+          id: user.id,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          role: user.role,
+          username: user.username
+        }
+      });
+    } catch (error) {
+      console.error('Error during login:', error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Erro interno do servidor" 
+      });
+    }
+  });
+
   // Force admin access for development
   app.post("/api/auth/force-admin", async (req, res) => {
     try {
