@@ -4,13 +4,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, Shield, User, UserCheck, Mail, ArrowLeft, Key } from "lucide-react";
+import { Eye, EyeOff, Mail, ArrowLeft } from "lucide-react";
 import { Link, useLocation } from "wouter";
+import { apiRequest } from "@/lib/queryClient";
 import metaSyncIcon from "@assets/icone_matasync.png";
 
 // Schemas de validação
@@ -29,23 +30,31 @@ const recoverySchema = z.object({
   path: ["confirmPassword"],
 });
 
-const backDoorSchema = z.object({
-  masterKey: z.string().min(1, "Chave mestra é obrigatória"),
-  newAdminPassword: z.string().min(6, "Nova senha deve ter pelo menos 6 caracteres"),
+const forgotPasswordSchema = z.object({
+  email: z.string().email("Email inválido"),
+});
+
+const resetPasswordSchema = z.object({
+  resetCode: z.string().min(6, "Código deve ter 6 dígitos").max(6, "Código deve ter 6 dígitos"),
+  newPassword: z.string().min(6, "Nova senha deve ter pelo menos 6 caracteres"),
+  confirmPassword: z.string(),
+}).refine((data) => data.newPassword === data.confirmPassword, {
+  message: "Senhas não coincidem",
+  path: ["confirmPassword"],
 });
 
 type LoginForm = z.infer<typeof loginSchema>;
-type RecoveryForm = z.infer<typeof recoverySchema>;
-type BackDoorForm = z.infer<typeof backDoorSchema>;
+type ForgotPasswordForm = z.infer<typeof forgotPasswordSchema>;
+type ResetPasswordForm = z.infer<typeof resetPasswordSchema>;
 
 export default function Login() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState("admin");
-  const [recoveryStep, setRecoveryStep] = useState<"email" | "code" | "backdoor">("email");
-  const [recoveryEmail, setRecoveryEmail] = useState("");
+  const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
+  const [resetStep, setResetStep] = useState<"email" | "code">("email");
+  const [resetEmail, setResetEmail] = useState("");
 
   // Formulários
   const loginForm = useForm<LoginForm>({

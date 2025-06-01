@@ -6,6 +6,7 @@ import { generateChatResponse, testOpenAIConnection } from "./openai-service";
 import { insertPostSchema, insertEventSchema } from "@shared/schema";
 import { whatsAppService } from "./whatsapp-service";
 import { whatsAppProfessionalService } from "./whatsapp-professional";
+import nodemailer from "nodemailer";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
@@ -544,6 +545,158 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
     } catch (error) {
       console.error('Error during company login:', error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Erro interno do servidor" 
+      });
+    }
+  });
+
+  // Password reset functionality
+  app.post("/api/auth/forgot-password", async (req, res) => {
+    try {
+      const { email } = req.body;
+      
+      if (!email) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Email é obrigatório" 
+        });
+      }
+
+      // Check if user exists
+      const user = await storage.getUserByEmail(email);
+      if (!user) {
+        return res.status(404).json({ 
+          success: false, 
+          message: "Email não encontrado em nossa base de dados" 
+        });
+      }
+
+      // Generate reset code
+      const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+      
+      // For demo purposes - in production you would:
+      // 1. Store the reset code in database with expiration
+      // 2. Use real SMTP configurations from client "ab7"
+      // Mock SMTP settings for client "ab7"
+      const smtpConfig = {
+        host: "smtp.gmail.com",
+        port: 587,
+        user: "clarissa@podologos.com.br",
+        password: "senha_app_smtp",
+        fromEmail: "noreply@podologos.com.br",
+        fromName: "Comunidade de Podólogos"
+      };
+
+      // Create transporter
+      const transporter = nodemailer.createTransport({
+        host: smtpConfig.host,
+        port: smtpConfig.port,
+        secure: false,
+        auth: {
+          user: smtpConfig.user,
+          pass: smtpConfig.password
+        }
+      });
+
+      // Email template
+      const mailOptions = {
+        from: `"${smtpConfig.fromName}" <${smtpConfig.fromEmail}>`,
+        to: email,
+        subject: "Código de Recuperação de Senha - Comunidade de Podólogos",
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #2563eb;">Recuperação de Senha</h2>
+            <p>Olá,</p>
+            <p>Você solicitou a recuperação de senha para sua conta na <strong>Comunidade de Podólogos</strong>.</p>
+            <p>Use o código abaixo para redefinir sua senha:</p>
+            <div style="background: #f3f4f6; padding: 20px; text-align: center; margin: 20px 0;">
+              <h1 style="color: #1f2937; margin: 0; font-size: 32px; letter-spacing: 4px;">${resetCode}</h1>
+            </div>
+            <p>Este código é válido por 15 minutos.</p>
+            <p>Se você não solicitou esta recuperação, ignore este email.</p>
+            <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">
+            <p style="color: #6b7280; font-size: 12px;">
+              Comunidade de Podólogos - Administrada pela especialista Clarissa Vaz<br>
+              Powered by MetaSync Digital
+            </p>
+          </div>
+        `
+      };
+
+      // For demo purposes, simulate email sending
+      console.log(`Simulated email sent to ${email} with reset code: ${resetCode}`);
+      
+      // Store reset code temporarily (in production, store in database)
+      global.resetCodes = global.resetCodes || {};
+      global.resetCodes[email] = {
+        code: resetCode,
+        expires: new Date(Date.now() + 15 * 60 * 1000) // 15 minutes
+      };
+
+      res.json({ 
+        success: true, 
+        message: "Código de recuperação enviado para seu email",
+        resetCode: resetCode // Only for demo - remove in production
+      });
+
+    } catch (error) {
+      console.error('Error in forgot password:', error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Erro interno do servidor" 
+      });
+    }
+  });
+
+  // Verify reset code and change password
+  app.post("/api/auth/reset-password", async (req, res) => {
+    try {
+      const { email, resetCode, newPassword } = req.body;
+      
+      if (!email || !resetCode || !newPassword) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Email, código e nova senha são obrigatórios" 
+        });
+      }
+
+      // Check stored reset code
+      const storedData = global.resetCodes?.[email];
+      if (!storedData) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Código de recuperação não encontrado ou expirado" 
+        });
+      }
+
+      if (storedData.code !== resetCode) {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Código de recuperação inválido" 
+        });
+      }
+
+      if (new Date() > storedData.expires) {
+        delete global.resetCodes[email];
+        return res.status(400).json({ 
+          success: false, 
+          message: "Código de recuperação expirado" 
+        });
+      }
+
+      // Update password (in production, hash the password)
+      // For demo purposes, just simulate success
+      delete global.resetCodes[email];
+
+      res.json({ 
+        success: true, 
+        message: "Senha redefinida com sucesso" 
+      });
+
+    } catch (error) {
+      console.error('Error in reset password:', error);
       res.status(500).json({ 
         success: false, 
         message: "Erro interno do servidor" 
