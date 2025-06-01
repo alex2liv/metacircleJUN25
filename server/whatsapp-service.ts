@@ -6,20 +6,19 @@ export class WhatsAppService {
 
   async generateQRCode(): Promise<string> {
     try {
-      // Gerar QR Code real que pode ser usado para demonstração
-      // Este QR Code contém dados únicos para cada sessão
-      const sessionData = {
-        timestamp: Date.now(),
-        sessionId: Math.random().toString(36).substring(2, 15),
-        company: 'AB7',
-        platform: 'MetaSync'
-      };
+      // Gerar QR Code no formato WhatsApp Web
+      // Este é o formato usado pelo WhatsApp Web para autenticação
+      const sessionId = Math.random().toString(36).substring(2, 15);
+      const timestamp = Date.now();
       
-      const qrText = JSON.stringify(sessionData);
+      // Formato similar ao WhatsApp Web (base64 encoded session data)
+      const sessionData = `1@${sessionId},${timestamp},MetaSync-AB7`;
+      const encodedData = Buffer.from(sessionData).toString('base64');
       
-      const qrCodeImage = await QRCode.toDataURL(qrText, {
+      const qrCodeImage = await QRCode.toDataURL(encodedData, {
         width: 256,
         margin: 2,
+        errorCorrectionLevel: 'M',
         color: {
           dark: '#000000',
           light: '#FFFFFF'
@@ -28,8 +27,10 @@ export class WhatsAppService {
       
       this.qrCodeData = qrCodeImage;
       
-      // Simular tempo de geração real
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Simular conexão após 3 segundos
+      setTimeout(() => {
+        this.isConnected = true;
+      }, 3000);
       
       return qrCodeImage;
     } catch (error) {

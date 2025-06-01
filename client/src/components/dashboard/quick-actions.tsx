@@ -448,7 +448,13 @@ export default function QuickActions() {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => setShowFormatExample(true)}
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            console.log('Botão Exemplo clicado');
+                            setShowFormatExample(true);
+                          }}
                         >
                           📋 Exemplo
                         </Button>
