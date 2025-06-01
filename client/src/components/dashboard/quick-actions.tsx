@@ -714,6 +714,90 @@ export default function QuickActions() {
             </div>
           </div>
         )}
+
+        {/* Modal de Conexão via Telefone */}
+        <Dialog open={showPhoneConnection} onOpenChange={setShowPhoneConnection}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Conectar WhatsApp</DialogTitle>
+              <DialogDescription>
+                {step === 'phone' 
+                  ? 'Digite seu número de telefone para receber o código de verificação'
+                  : 'Digite o código de 8 dígitos enviado para seu WhatsApp'
+                }
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="space-y-4">
+              {step === 'phone' ? (
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="phone">Número de Telefone</Label>
+                    <Input
+                      id="phone"
+                      placeholder="+55 11 99999-9999"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                    />
+                    <p className="text-xs text-gray-500">
+                      Inclua o código do país (ex: +55 para Brasil)
+                    </p>
+                  </div>
+                  
+                  <div className="flex space-x-2">
+                    <Button 
+                      variant="outline" 
+                      className="flex-1"
+                      onClick={() => setShowPhoneConnection(false)}
+                    >
+                      Cancelar
+                    </Button>
+                    <Button 
+                      className="flex-1"
+                      onClick={sendVerificationCode}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? "Enviando..." : "Enviar Código"}
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="code">Código de Verificação</Label>
+                    <Input
+                      id="code"
+                      placeholder="12345678"
+                      value={verificationCode}
+                      onChange={(e) => setVerificationCode(e.target.value)}
+                      maxLength={8}
+                    />
+                    <p className="text-xs text-gray-500">
+                      Código enviado para {phoneNumber}
+                    </p>
+                  </div>
+                  
+                  <div className="flex space-x-2">
+                    <Button 
+                      variant="outline" 
+                      className="flex-1"
+                      onClick={() => setStep('phone')}
+                    >
+                      Voltar
+                    </Button>
+                    <Button 
+                      className="flex-1"
+                      onClick={verifyCode}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? "Verificando..." : "Verificar"}
+                    </Button>
+                  </div>
+                </>
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
         
       </CardContent>
     </Card>
