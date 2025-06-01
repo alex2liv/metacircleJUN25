@@ -394,6 +394,12 @@ export default function QuickActions() {
                         WhatsApp {whatsappConnected ? 'Conectado' : 'Desconectado'}
                       </span>
                     </div>
+                    
+                    {/* Debug info */}
+                    <div className="text-xs text-gray-500">
+                      Connected: {whatsappConnected.toString()} | QR: {qrCode ? 'Yes' : 'No'}
+                    </div>
+                    
                     {!whatsappConnected && (
                       <Button 
                         variant="outline" 
