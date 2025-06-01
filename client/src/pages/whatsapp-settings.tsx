@@ -177,7 +177,7 @@ export default function WhatsAppSettings() {
                   1. Abra o WhatsApp no seu telefone
                 </p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  2. Toque em Configurações &gt; Aparelhos conectados
+                  2. Toque em Configurações {'>'} Aparelhos conectados
                 </p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   3. Toque em "Conectar um aparelho" e escaneie este código
