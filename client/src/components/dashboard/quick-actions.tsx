@@ -555,6 +555,62 @@ export default function QuickActions() {
             </div>
           </DialogContent>
         </Dialog>
+
+        {/* Dialog de Exemplo de Formato */}
+        {showFormatExample && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full m-4">
+              <div className="p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                    Formato da Lista
+                  </h3>
+                  <button 
+                    onClick={() => setShowFormatExample(false)}
+                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                  >
+                    ✕
+                  </button>
+                </div>
+                
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                      Sua lista deve seguir exatamente este formato:
+                    </p>
+                    <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded-md font-mono text-sm">
+                      João, Silva, +5517981466889<br/>
+                      Maria, Santos, +5511987654321<br/>
+                      Pedro, Oliveira, +5521999887766
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <h4 className="font-medium text-gray-900 dark:text-gray-100">Regras obrigatórias:</h4>
+                    <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1 list-disc list-inside">
+                      <li>Nome, Sobrenome, Telefone (separados por vírgula)</li>
+                      <li>Telefone deve iniciar com +55</li>
+                      <li>Cada contato em uma linha separada</li>
+                      <li>Nome e sobrenome com pelo menos 2 caracteres</li>
+                    </ul>
+                  </div>
+                  
+                  <div className="bg-yellow-50 dark:bg-yellow-900/20 p-3 rounded-md">
+                    <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                      ⚠️ Listas que não seguirem este formato serão rejeitadas pelo sistema
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="mt-6 flex justify-end">
+                  <Button onClick={() => setShowFormatExample(false)}>
+                    Entendi
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         
       </CardContent>
     </Card>
