@@ -45,8 +45,6 @@ import NotFound from "@/pages/not-found";
 function Router() {
   return (
     <Switch>
-      <Route path="/login" component={Login} />
-      <Route path="/onboarding" component={Onboarding} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/spaces" component={Spaces} />
       <Route path="/events" component={Events} />
@@ -64,7 +62,6 @@ function Router() {
       <Route path="/schedule-clarissa" component={ScheduleClarissa} />
       <Route path="/clarissa-chat" component={ClarissaChat} />
       <Route path="/specialist-admin" component={SpecialistAdmin} />
-      <Route path="/specialist-login" component={SpecialistLogin} />
       <Route path="/specialist-dashboard" component={SpecialistDashboard} />
       <Route path="/specialist-agenda" component={SpecialistAgenda} />
       <Route path="/admin" component={AdminDashboard} />
@@ -84,14 +81,34 @@ function Router() {
   );
 }
 
+function StandaloneRouter() {
+  return (
+    <Switch>
+      <Route path="/login" component={Login} />
+      <Route path="/onboarding" component={Onboarding} />
+      <Route path="/company-management" component={CompanyManagement} />
+      <Route path="/specialist-login" component={SpecialistLogin} />
+      <Route component={Landing} />
+    </Switch>
+  );
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <TooltipProvider>
-          <AppLayout>
-            <Router />
-          </AppLayout>
+          <Switch>
+            <Route path="/login" component={() => <StandaloneRouter />} />
+            <Route path="/onboarding" component={() => <StandaloneRouter />} />
+            <Route path="/company-management" component={() => <StandaloneRouter />} />
+            <Route path="/specialist-login" component={() => <StandaloneRouter />} />
+            <Route component={() => 
+              <AppLayout>
+                <Router />
+              </AppLayout>
+            } />
+          </Switch>
           <Toaster />
         </TooltipProvider>
       </ThemeProvider>
