@@ -591,6 +591,14 @@ Pedro,Oliveira,pedro.oliveira@email.com,+55 11 77777-7777,member,`;
               </DropdownMenuContent>
             </DropdownMenu>
             <Button
+              onClick={() => setShowBulkImport(true)}
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              <Upload className="h-4 w-4" />
+              Importar Usuários
+            </Button>
+            <Button
               onClick={() => setIsAddingUser(true)}
               className="flex items-center gap-2"
             >
