@@ -172,17 +172,17 @@ export default function CompanyAdminDashboard() {
                   </DialogHeader>
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="space-select">Selecionar Espaço</Label>
+                      <Label htmlFor="community-select">Selecionar Comunidade</Label>
                       <Select>
                         <SelectTrigger>
-                          <SelectValue placeholder="Escolha um espaço" />
+                          <SelectValue placeholder="Escolha uma comunidade" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="all">🌐 Todos os Espaços</SelectItem>
-                          <SelectItem value="space-1">📚 Discussões Gerais</SelectItem>
-                          <SelectItem value="space-2">💡 Ideias e Sugestões</SelectItem>
-                          <SelectItem value="space-3">🎯 Metas e Objetivos</SelectItem>
-                          <SelectItem value="space-4">🤝 Networking</SelectItem>
+                          <SelectItem value="all">🌐 Todas as Comunidades</SelectItem>
+                          <SelectItem value="community-1">📚 Discussões Gerais</SelectItem>
+                          <SelectItem value="community-2">💡 Ideias e Sugestões</SelectItem>
+                          <SelectItem value="community-3">🎯 Metas e Objetivos</SelectItem>
+                          <SelectItem value="community-4">🤝 Networking</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -226,17 +226,17 @@ export default function CompanyAdminDashboard() {
                   </DialogHeader>
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="event-space-select">Selecionar Espaço</Label>
+                      <Label htmlFor="event-community-select">Selecionar Comunidade</Label>
                       <Select>
                         <SelectTrigger>
-                          <SelectValue placeholder="Escolha um espaço" />
+                          <SelectValue placeholder="Escolha uma comunidade" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="all">🌐 Todos os Espaços</SelectItem>
-                          <SelectItem value="space-1">📚 Discussões Gerais</SelectItem>
-                          <SelectItem value="space-2">💡 Ideias e Sugestões</SelectItem>
-                          <SelectItem value="space-3">🎯 Metas e Objetivos</SelectItem>
-                          <SelectItem value="space-4">🤝 Networking</SelectItem>
+                          <SelectItem value="all">🌐 Todas as Comunidades</SelectItem>
+                          <SelectItem value="community-1">📚 Discussões Gerais</SelectItem>
+                          <SelectItem value="community-2">💡 Ideias e Sugestões</SelectItem>
+                          <SelectItem value="community-3">🎯 Metas e Objetivos</SelectItem>
+                          <SelectItem value="community-4">🤝 Networking</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
