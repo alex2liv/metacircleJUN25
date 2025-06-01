@@ -50,6 +50,26 @@ export default function AdminUsers() {
   const [editingUser, setEditingUser] = useState<UserData | null>(null);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [deleteConfirm, setDeleteConfirm] = useState<{show: boolean, user: UserData | null}>({show: false, user: null});
+  const [userCountryCode, setUserCountryCode] = useState("+55");
+  const [specialistCountryCode, setSpecialistCountryCode] = useState("+55");
+
+  const countryCodes = [
+    { code: "+55", country: "Brasil", flag: "🇧🇷" },
+    { code: "+1", country: "Estados Unidos", flag: "🇺🇸" },
+    { code: "+44", country: "Reino Unido", flag: "🇬🇧" },
+    { code: "+33", country: "França", flag: "🇫🇷" },
+    { code: "+49", country: "Alemanha", flag: "🇩🇪" },
+    { code: "+34", country: "Espanha", flag: "🇪🇸" },
+    { code: "+39", country: "Itália", flag: "🇮🇹" },
+    { code: "+351", country: "Portugal", flag: "🇵🇹" },
+    { code: "+52", country: "México", flag: "🇲🇽" },
+    { code: "+54", country: "Argentina", flag: "🇦🇷" },
+    { code: "+56", country: "Chile", flag: "🇨🇱" },
+    { code: "+57", country: "Colômbia", flag: "🇨🇴" },
+    { code: "+81", country: "Japão", flag: "🇯🇵" },
+    { code: "+86", country: "China", flag: "🇨🇳" },
+    { code: "+91", country: "Índia", flag: "🇮🇳" },
+  ];
   
   // Formulário para novo usuário
   const [newUser, setNewUser] = useState<UserData>({
@@ -119,7 +139,8 @@ export default function AdminUsers() {
     setValidationErrors([]);
     const userToSave = {
       ...newUser,
-      id: Date.now() // usar timestamp para ID único
+      id: Date.now(),
+      phone: newUser.phone ? `${userCountryCode} ${newUser.phone}` : ""
     };
 
     setUsers([...users, userToSave]);
@@ -165,7 +186,8 @@ export default function AdminUsers() {
     setValidationErrors([]);
     const specialistToSave = {
       ...newSpecialist,
-      id: Date.now()
+      id: Date.now(),
+      phone: newSpecialist.phone ? `${specialistCountryCode} ${newSpecialist.phone}` : ""
     };
 
     setUsers([...users, specialistToSave]);
@@ -387,12 +409,35 @@ export default function AdminUsers() {
                 </div>
                 <div>
                   <Label htmlFor="specialistPhone">Telefone *</Label>
-                  <Input
-                    id="specialistPhone"
-                    value={newSpecialist.phone}
-                    onChange={(e) => setNewSpecialist({...newSpecialist, phone: e.target.value})}
-                    placeholder="17999999999"
-                  />
+                  <div className="flex gap-2">
+                    <Select value={specialistCountryCode} onValueChange={setSpecialistCountryCode}>
+                      <SelectTrigger className="w-32">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {countryCodes.map((country) => (
+                          <SelectItem key={country.code} value={country.code}>
+                            <span className="flex items-center gap-2">
+                              {country.flag} {country.code}
+                            </span>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      id="specialistPhone"
+                      value={newSpecialist.phone}
+                      onChange={(e) => {
+                        const cleanNumber = e.target.value.replace(/[^\d]/g, '');
+                        setNewSpecialist({...newSpecialist, phone: cleanNumber});
+                      }}
+                      placeholder="999999999"
+                      className="flex-1"
+                    />
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Formato final: {specialistCountryCode} {newSpecialist.phone}
+                  </p>
                 </div>
               </div>
 
@@ -513,12 +558,36 @@ export default function AdminUsers() {
                 </div>
                 <div>
                   <Label htmlFor="phone">Telefone</Label>
-                  <Input
-                    id="phone"
-                    value={newUser.phone}
-                    onChange={(e) => setNewUser({...newUser, phone: e.target.value})}
-                    placeholder="17999999999"
-                  />
+                  <div className="flex gap-2">
+                    <Select value={userCountryCode} onValueChange={setUserCountryCode}>
+                      <SelectTrigger className="w-32">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {countryCodes.map((country) => (
+                          <SelectItem key={country.code} value={country.code}>
+                            <span className="flex items-center gap-2">
+                              {country.flag} {country.code}
+                            </span>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Input
+                      id="phone"
+                      value={newUser.phone}
+                      onChange={(e) => {
+                        // Remove caracteres não numéricos
+                        const cleanNumber = e.target.value.replace(/[^\d]/g, '');
+                        setNewUser({...newUser, phone: cleanNumber});
+                      }}
+                      placeholder="999999999"
+                      className="flex-1"
+                    />
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Formato final: {userCountryCode} {newUser.phone}
+                  </p>
                 </div>
               </div>
 
