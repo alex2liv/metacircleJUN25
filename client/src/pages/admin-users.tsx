@@ -48,11 +48,23 @@ export default function AdminUsers() {
   
   const [isAddingUser, setIsAddingUser] = useState(false);
   const [isAddingSpecialist, setIsAddingSpecialist] = useState(false);
-  const [editingUser, setEditingUser] = useState<UserData | null>(null);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [deleteConfirm, setDeleteConfirm] = useState<{show: boolean, user: UserData | null}>({show: false, user: null});
   const [settingsUser, setSettingsUser] = useState<{show: boolean, user: UserData | null}>({show: false, user: null});
   const [showAdminSettings, setShowAdminSettings] = useState(false);
+  const [editUserModal, setEditUserModal] = useState<{show: boolean, user: UserData | null}>({show: false, user: null});
+  const [editFormData, setEditFormData] = useState<UserData>({
+    firstName: "",
+    lastName: "",
+    username: "",
+    email: "",
+    password: "",
+    phone: "",
+    role: "member",
+    speciality: "",
+    bio: "",
+    isActive: true
+  });
   const [userCountryCode, setUserCountryCode] = useState("+55");
   const [specialistCountryCode, setSpecialistCountryCode] = useState("+55");
 
@@ -272,11 +284,36 @@ export default function AdminUsers() {
   };
 
   const handleEditUser = (user: UserData) => {
-    setEditingUser(user);
+    setEditFormData(user);
+    setEditUserModal({show: true, user});
     setSettingsUser({show: false, user: null});
+  };
+
+  const saveUserEdit = () => {
+    const errors = [];
+    if (!editFormData.firstName) errors.push("editFirstName");
+    if (!editFormData.lastName) errors.push("editLastName");
+    if (!editFormData.username) errors.push("editUsername");
+    if (!editFormData.email) errors.push("editEmail");
+
+    if (errors.length > 0) {
+      setValidationErrors(errors);
+      toast({
+        title: "Campos obrigatórios",
+        description: "Preencha todos os campos destacados em vermelho",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setValidationErrors([]);
+    setUsers(users.map(u => 
+      u.id === editFormData.id ? editFormData : u
+    ));
+    setEditUserModal({show: false, user: null});
     toast({
-      title: "Modo de edição",
-      description: "Função de edição será implementada em breve",
+      title: "Usuário atualizado",
+      description: `${editFormData.firstName} ${editFormData.lastName} foi atualizado com sucesso`,
     });
   };
 
@@ -995,7 +1032,20 @@ export default function AdminUsers() {
                               <Input
                                 type="number"
                                 value={price}
-                                onChange={(e) => updateVideoPricing(quality, parseFloat(e.target.value) || 0)}
+                                onChange={(e) => {
+                                  const newPrice = parseFloat(e.target.value) || 0;
+                                  setVideoSettings(prev => ({
+                                    ...prev,
+                                    pricing: {
+                                      ...prev.pricing,
+                                      [quality]: newPrice
+                                    }
+                                  }));
+                                }}
+                                onBlur={(e) => {
+                                  const finalPrice = parseFloat(e.target.value) || 0;
+                                  updateVideoPricing(quality, finalPrice);
+                                }}
                                 className="w-20 text-center"
                                 step="0.01"
                                 min="0"
@@ -1071,7 +1121,17 @@ export default function AdminUsers() {
                         <Input
                           type="number"
                           value={specialistContact.premiumPrice}
-                          onChange={(e) => updateSpecialistContact('premiumPrice', parseFloat(e.target.value) || 0)}
+                          onChange={(e) => {
+                            const newPrice = parseFloat(e.target.value) || 0;
+                            setSpecialistContact(prev => ({
+                              ...prev,
+                              premiumPrice: newPrice
+                            }));
+                          }}
+                          onBlur={(e) => {
+                            const finalPrice = parseFloat(e.target.value) || 0;
+                            updateSpecialistContact('premiumPrice', finalPrice);
+                          }}
                           className="w-24 text-center"
                           step="0.01"
                           min="0"
