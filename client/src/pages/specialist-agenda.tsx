@@ -126,6 +126,18 @@ export default function SpecialistAgenda() {
     }
   };
 
+  const handleStartTimeChange = (startTime: string) => {
+    setNewTimeSlot({...newTimeSlot, startTime});
+    
+    // Automaticamente adiciona +1 hora ao horário fim
+    if (startTime) {
+      const [hours, minutes] = startTime.split(':').map(Number);
+      const endHour = hours + 1;
+      const endTime = `${endHour.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+      setNewTimeSlot(prev => ({...prev, startTime, endTime}));
+    }
+  };
+
   const handleAddTimeSlot = () => {
     if (!newTimeSlot.day || !newTimeSlot.startTime || !newTimeSlot.endTime) {
       toast({
@@ -249,7 +261,7 @@ export default function SpecialistAgenda() {
                     <Input
                       type="time"
                       value={newTimeSlot.startTime}
-                      onChange={(e) => setNewTimeSlot({...newTimeSlot, startTime: e.target.value})}
+                      onChange={(e) => handleStartTimeChange(e.target.value)}
                     />
                   </div>
                   <div>
