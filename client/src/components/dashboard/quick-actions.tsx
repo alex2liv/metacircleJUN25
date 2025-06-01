@@ -20,8 +20,6 @@ export default function QuickActions() {
   const [customDelay, setCustomDelay] = useState<string>("5");
   const [isLoading, setIsLoading] = useState(false);
   const [whatsappConnected, setWhatsappConnected] = useState(false);
-  const [qrCode, setQrCode] = useState<string>("");
-  const [isGeneratingQR, setIsGeneratingQR] = useState(false);
   const [showFormatExample, setShowFormatExample] = useState(false);
   const [uploadError, setUploadError] = useState<string>("");
   const [showPhoneConnection, setShowPhoneConnection] = useState(false);
@@ -80,48 +78,7 @@ export default function QuickActions() {
     }
   };
 
-  const generateQRCode = async () => {
-    setIsGeneratingQR(true);
-    
-    try {
-      const response = await fetch('/api/whatsapp/generate-qr', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const data = await response.json();
-      console.log('QR Code response:', data); // Debug
-      
-      if (data.success && data.qrCode) {
-        setQrCode(data.qrCode);
-        console.log('QR Code set successfully'); // Debug
-        
-        toast({
-          title: "QR Code Gerado",
-          description: "Escaneie com seu WhatsApp para conectar",
-        });
-      } else {
-        console.error('QR Code generation failed:', data); // Debug
-        throw new Error(data.error || 'Falha ao gerar QR Code');
-      }
-      
-    } catch (error) {
-      console.error('Error generating QR Code:', error); // Debug
-      toast({
-        title: "Erro",
-        description: error instanceof Error ? error.message : "Falha ao gerar QR Code",
-        variant: "destructive",
-      });
-    } finally {
-      setIsGeneratingQR(false);
-    }
-  };
+
 
   const connectWhatsApp = () => {
     setWhatsappConnected(true);
