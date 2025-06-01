@@ -4,6 +4,7 @@ import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
 import { generateChatResponse, testOpenAIConnection } from "./openai-service";
 import { insertPostSchema, insertEventSchema } from "@shared/schema";
+import { whatsAppService } from "./whatsapp-service";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   const httpServer = createServer(app);
@@ -545,6 +546,111 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ 
         success: false, 
         message: "Erro interno do servidor" 
+      });
+    }
+  });
+
+  // WhatsApp Real Connection Routes
+  app.post("/api/whatsapp/generate-qr", async (req, res) => {
+    try {
+      const qrCode = await whatsAppService.generateQRCode();
+      res.json({ 
+        success: true, 
+        qrCode: qrCode 
+      });
+    } catch (error) {
+      console.error('Error generating WhatsApp QR Code:', error);
+      res.status(500).json({ 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Erro ao gerar QR Code' 
+      });
+    }
+  });
+
+  app.get("/api/whatsapp/status", async (req, res) => {
+    try {
+      const isConnected = whatsAppService.getConnectionStatus();
+      const currentQR = whatsAppService.getCurrentQRCode();
+      
+      res.json({ 
+        connected: isConnected,
+        hasQrCode: !!currentQR,
+        qrCode: currentQR
+      });
+    } catch (error) {
+      console.error('Error getting WhatsApp status:', error);
+      res.status(500).json({ 
+        connected: false, 
+        hasQrCode: false,
+        error: 'Erro ao verificar status do WhatsApp'
+      });
+    }
+  });
+
+  app.post("/api/whatsapp/send-message", async (req, res) => {
+    try {
+      const { number, message } = req.body;
+      
+      if (!number || !message) {
+        return res.status(400).json({ 
+          success: false, 
+          error: 'Número e mensagem são obrigatórios' 
+        });
+      }
+
+      const success = await whatsAppService.sendMessage(number, message);
+      
+      res.json({ 
+        success: success,
+        message: success ? 'Mensagem enviada com sucesso' : 'Falha ao enviar mensagem'
+      });
+    } catch (error) {
+      console.error('Error sending WhatsApp message:', error);
+      res.status(500).json({ 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Erro ao enviar mensagem'
+      });
+    }
+  });
+
+  app.post("/api/whatsapp/send-bulk", async (req, res) => {
+    try {
+      const { numbers, message, delay } = req.body;
+      
+      if (!numbers || !Array.isArray(numbers) || !message) {
+        return res.status(400).json({ 
+          success: false, 
+          error: 'Lista de números e mensagem são obrigatórios' 
+        });
+      }
+
+      const results = await whatsAppService.sendBulkMessages(numbers, message, delay || 5000);
+      
+      res.json({ 
+        success: true,
+        results: results
+      });
+    } catch (error) {
+      console.error('Error sending bulk WhatsApp messages:', error);
+      res.status(500).json({ 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Erro ao enviar mensagens em lote'
+      });
+    }
+  });
+
+  app.post("/api/whatsapp/disconnect", async (req, res) => {
+    try {
+      await whatsAppService.disconnect();
+      res.json({ 
+        success: true, 
+        message: 'WhatsApp desconectado com sucesso' 
+      });
+    } catch (error) {
+      console.error('Error disconnecting WhatsApp:', error);
+      res.status(500).json({ 
+        success: false, 
+        error: 'Erro ao desconectar WhatsApp'
       });
     }
   });

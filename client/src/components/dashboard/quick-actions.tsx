@@ -78,46 +78,30 @@ export default function QuickActions() {
     setIsGeneratingQR(true);
     
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // QR Code simulado para demonstração
-      const simulatedQR = "data:image/svg+xml;base64," + btoa(`
-        <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
-          <rect width="200" height="200" fill="white"/>
-          <rect x="10" y="10" width="20" height="20" fill="black"/>
-          <rect x="50" y="10" width="20" height="20" fill="black"/>
-          <rect x="90" y="10" width="20" height="20" fill="black"/>
-          <rect x="130" y="10" width="20" height="20" fill="black"/>
-          <rect x="170" y="10" width="20" height="20" fill="black"/>
-          <rect x="10" y="50" width="20" height="20" fill="black"/>
-          <rect x="170" y="50" width="20" height="20" fill="black"/>
-          <rect x="10" y="90" width="20" height="20" fill="black"/>
-          <rect x="50" y="90" width="20" height="20" fill="black"/>
-          <rect x="90" y="90" width="20" height="20" fill="black"/>
-          <rect x="130" y="90" width="20" height="20" fill="black"/>
-          <rect x="170" y="90" width="20" height="20" fill="black"/>
-          <rect x="10" y="130" width="20" height="20" fill="black"/>
-          <rect x="170" y="130" width="20" height="20" fill="black"/>
-          <rect x="10" y="170" width="20" height="20" fill="black"/>
-          <rect x="50" y="170" width="20" height="20" fill="black"/>
-          <rect x="90" y="170" width="20" height="20" fill="black"/>
-          <rect x="130" y="170" width="20" height="20" fill="black"/>
-          <rect x="170" y="170" width="20" height="20" fill="black"/>
-          <text x="100" y="195" text-anchor="middle" font-size="8" fill="gray">QR Code AB7</text>
-        </svg>
-      `);
-      
-      setQrCode(simulatedQR);
-      
-      toast({
-        title: "QR Code Gerado",
-        description: "Escaneie com seu WhatsApp para conectar",
+      const response = await fetch('/api/whatsapp/generate-qr', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
+      
+      const data = await response.json();
+      
+      if (data.success && data.qrCode) {
+        setQrCode(data.qrCode);
+        
+        toast({
+          title: "QR Code Gerado",
+          description: "Escaneie com seu WhatsApp para conectar",
+        });
+      } else {
+        throw new Error(data.error || 'Falha ao gerar QR Code');
+      }
       
     } catch (error) {
       toast({
         title: "Erro",
-        description: "Falha ao gerar QR Code",
+        description: error instanceof Error ? error.message : "Falha ao gerar QR Code",
         variant: "destructive",
       });
     } finally {
