@@ -145,8 +145,35 @@ export default function CompanyAdminDashboard() {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900">Painel Administrativo</h2>
-          <p className="text-gray-600 mt-1">Gerencie especialistas e usuários da sua empresa</p>
+          <div className="flex justify-between items-start">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                <Users className="w-6 h-6 text-blue-600" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Gerenciamento de Usuários</h2>
+                <p className="text-gray-600">Administração de Especialistas e Membros</p>
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              <Button className="bg-purple-600 hover:bg-purple-700">
+                <UserPlus className="w-4 h-4 mr-2" />
+                Especialistas (0)
+              </Button>
+              <Button variant="outline" className="text-blue-600 border-blue-600 hover:bg-blue-50">
+                <Users className="w-4 h-4 mr-2" />
+                Importar Usuários
+              </Button>
+              <Button className="bg-orange-500 hover:bg-orange-600">
+                <UserPlus className="w-4 h-4 mr-2" />
+                Novo Usuário
+              </Button>
+              <Button variant="outline" className="text-gray-600 border-gray-300">
+                <Settings className="w-4 h-4 mr-2" />
+                Configurações do Sistema
+              </Button>
+            </div>
+          </div>
         </div>
 
         {/* Stats Cards */}
@@ -191,114 +218,31 @@ export default function CompanyAdminDashboard() {
           </Card>
         </div>
 
-        {/* Team Management */}
-        <Card>
-          <CardHeader>
-            <div className="flex justify-between items-center">
-              <div>
-                <CardTitle>Gerenciar Equipe</CardTitle>
-                <CardDescription>Adicione e gerencie especialistas e usuários</CardDescription>
+        {/* Users Section */}
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">Usuários do Sistema</h3>
+            <p className="text-gray-600 text-sm">Gerencie especialistas, administradores e membros</p>
+          </div>
+          
+          <Card>
+            <CardHeader className="pb-4">
+              <div className="flex items-center gap-2">
+                <Users className="w-5 h-5 text-gray-600" />
+                <CardTitle className="text-base font-medium">Usuários Cadastrados (0)</CardTitle>
               </div>
-              <div className="flex gap-2">
-                <Dialog open={isAddUserOpen} onOpenChange={setIsAddUserOpen}>
-                  <DialogTrigger asChild>
-                    <Button variant="outline">
-                      <UserPlus className="w-4 h-4 mr-2" />
-                      Adicionar Especialista
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <DialogHeader>
-                      <DialogTitle>Adicionar Novo Especialista</DialogTitle>
-                      <DialogDescription>
-                        Adicione um especialista à sua empresa
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-4">
-                      <div>
-                        <Label htmlFor="name">Nome Completo</Label>
-                        <Input id="name" placeholder="Digite o nome completo" />
-                      </div>
-                      <div>
-                        <Label htmlFor="email">E-mail</Label>
-                        <Input id="email" type="email" placeholder="Digite o e-mail" />
-                      </div>
-                      <div>
-                        <Label htmlFor="specialty">Especialidade</Label>
-                        <Input id="specialty" placeholder="Ex: Psicólogo, Nutricionista, etc." />
-                      </div>
-                      <div className="flex justify-end space-x-2">
-                        <Button variant="outline" onClick={() => setIsAddUserOpen(false)}>
-                          Cancelar
-                        </Button>
-                        <Button onClick={handleAddUser}>
-                          Adicionar Especialista
-                        </Button>
-                      </div>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-                <Button>
-                  <UserPlus className="w-4 h-4 mr-2" />
-                  Adicionar Usuário
-                </Button>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            {/* Search and Filter */}
-            <div className="flex justify-between items-center mb-4">
-              <div className="flex items-center space-x-2">
-                <div className="relative">
-                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input placeholder="Buscar membros..." className="pl-8 w-64" />
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                  <User className="w-8 h-8 text-gray-400" />
                 </div>
-                <Select>
-                  <SelectTrigger className="w-32">
-                    <SelectValue placeholder="Filtrar" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todos</SelectItem>
-                    <SelectItem value="specialist">Especialistas</SelectItem>
-                    <SelectItem value="user">Usuários</SelectItem>
-                  </SelectContent>
-                </Select>
+                <p className="text-gray-500 font-medium mb-2">Nenhum usuário cadastrado ainda.</p>
+                <p className="text-gray-400 text-sm">Use os botões acima para adicionar usuários ao sistema.</p>
               </div>
-            </div>
-
-            {/* Team Members Table */}
-            <div className="space-y-3">
-              {teamMembers.map((member) => (
-                <div key={member.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
-                  <div className="flex items-center space-x-4">
-                    <Avatar>
-                      <AvatarFallback>{member.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="font-medium">{member.name}</p>
-                      <p className="text-sm text-gray-600">{member.email}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <Badge variant={member.role === "specialist" ? "default" : "secondary"}>
-                      {member.role === "specialist" ? "Especialista" : "Usuário"}
-                    </Badge>
-                    <Badge variant={member.status === "active" ? "default" : "destructive"}>
-                      {member.status === "active" ? "Ativo" : "Inativo"}
-                    </Badge>
-                    <div className="text-sm text-gray-500">
-                      <p>Último acesso</p>
-                      <p>{member.lastActivity}</p>
-                    </div>
-                    <Button variant="ghost" size="sm">
-                      <MoreVertical className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
 
         {!company.hasWhiteLabel && (
           <div className="mt-8 text-center">
