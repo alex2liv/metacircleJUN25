@@ -215,11 +215,11 @@ export default function Login() {
               className="h-8 w-8 object-contain"
             />
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            Comunidade Clarissa Vaz de Desenvolvimento Pessoal
+          <h1 className="text-xl font-bold text-gray-900 mb-2">
+            Seja bem-vindo à Comunidade de Podólogos
           </h1>
-          <p className="text-gray-500 text-sm">
-            Sistema de Autenticação Multiníveis
+          <p className="text-gray-600 text-sm">
+            Administrada pela especialista Clarissa Vaz
           </p>
         </CardHeader>
 
