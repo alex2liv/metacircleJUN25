@@ -70,6 +70,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Find user by email
       const user = await storage.getUserByEmail(email);
+      console.log(`Tentativa de login para: ${email}`);
+      console.log(`Usuário encontrado:`, user ? 'Sim' : 'Não');
+      
       if (!user) {
         return res.status(401).json({ 
           success: false, 

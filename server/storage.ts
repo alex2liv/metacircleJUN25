@@ -159,7 +159,6 @@ export class MemStorage implements IStorage {
       speciality: null,
       bio: null,
       companyId: 1,
-      lastLoginAt: null,
       emailVerified: true,
       emailVerifiedAt: new Date(),
       resetToken: null,
@@ -538,6 +537,5 @@ export class MemStorage implements IStorage {
   }
 }
 
-import { CleanStorage } from "./clean-storage";
-
-export const storage = new CleanStorage();
+// Use MemStorage with sample data for testing
+export const storage = new MemStorage();
