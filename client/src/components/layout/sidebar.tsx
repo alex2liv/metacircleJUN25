@@ -140,6 +140,21 @@ export default function Sidebar() {
           </Button>
         </div>
       </div>
+
+      {/* MetaSync Footer */}
+      <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+        <div className="flex items-center space-x-2 mb-2">
+          <img src={metaSyncIcon} alt="MetaSync" className="w-6 h-6" />
+          <div>
+            <p className="text-xs font-medium text-gray-700 dark:text-gray-300">
+              Powered by MetaSync Digital
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              Todos os direitos reservados
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
