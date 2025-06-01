@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
@@ -34,6 +34,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 import metaSyncIcon from "@assets/icone_matasync.png";
 import metaSyncLogo from "@assets/logo completo metasync.png";
+import metaCircleIcon from "@assets/image_1748796101122.png";
 
 interface CompanyData {
   id?: number;
@@ -71,22 +72,23 @@ export default function MetaSyncAdmin() {
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [deleteConfirm, setDeleteConfirm] = useState<{show: boolean, company: CompanyData | null}>({show: false, company: null});
   const [showWhiteLabelModal, setShowWhiteLabelModal] = useState(false);
+  const [showBrandingModal, setShowBrandingModal] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState<CompanyData | null>(null);
 
   // Dados simulados das empresas
   const [companies, setCompanies] = useState<CompanyData[]>([
     {
       id: 1,
-      name: "TechCorp Consultoria",
-      slug: "techcorp",
-      email: "admin@techcorp.com.br",
+      name: "MetaCircle",
+      slug: "metacircle",
+      email: "admin@metacircle.com.br",
       phone: "+55 11 99999-9999",
       whatsapp: "+55 11 99999-9999",
-      website: "https://techcorp.com.br",
+      website: "https://metacircle.com.br",
       planType: "premium",
       isActive: true,
-      maxUsers: 100,
-      maxSpecialists: 10,
+      maxUsers: 248,
+      maxSpecialists: 15,
       hasWhiteLabel: true,
       whiteLabelExpiresAt: new Date("2025-12-31"),
       hideMetaSyncBranding: true,
@@ -429,9 +431,13 @@ export default function MetaSyncAdmin() {
                 <div key={company.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                   <div className="flex items-center gap-3">
                     <Avatar>
-                      <AvatarFallback className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
-                        {company.name.split(' ').map(n => n[0]).join('').substring(0, 2)}
-                      </AvatarFallback>
+                      {company.name === "MetaCircle" ? (
+                        <AvatarImage src={metaCircleIcon} alt="MetaCircle" />
+                      ) : (
+                        <AvatarFallback className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+                          {company.name.split(' ').map(n => n[0]).join('').substring(0, 2)}
+                        </AvatarFallback>
+                      )}
                     </Avatar>
                     <div>
                       <div className="flex items-center gap-2">
