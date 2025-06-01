@@ -513,23 +513,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // For demo purposes, simulate authentication
-      // In real app, would authenticate against company's database
-      if (email === "admin@clarissavargas.com" && password === "123456") {
+      // For demo purposes, simulate authentication for company users/specialists
+      // In real app, would authenticate against company's database (PostgreSQL or Supabase)
+      const validUsers = [
+        { email: "admin@clarissavargas.com", password: "123456", name: "Clarissa Vargas", role: "admin", type: "specialist" },
+        { email: "especialista@clarissavargas.com", password: "123456", name: "Dr. Silva", role: "specialist", type: "specialist" },
+        { email: "usuario@clarissavargas.com", password: "123456", name: "João Cliente", role: "user", type: "user" }
+      ];
+
+      const user = validUsers.find(u => u.email === email && u.password === password);
+      
+      if (user) {
         res.json({ 
           success: true, 
           message: "Login realizado com sucesso",
           user: {
-            id: 1,
-            email: email,
-            name: "Admin Clarissa",
-            role: "admin"
+            id: Math.floor(Math.random() * 1000),
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            type: user.type,
+            companySlug: slug
           }
         });
       } else {
         res.status(401).json({ 
           success: false, 
-          message: "Credenciais inválidas" 
+          message: "Credenciais inválidas. Verifique seu email e senha." 
         });
       }
     } catch (error) {
