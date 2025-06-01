@@ -10,16 +10,48 @@ export const users = pgTable("users", {
   firstName: text("first_name").notNull(),
   lastName: text("last_name").notNull(),
   avatar: text("avatar"),
-  role: text("role").notNull().default("member"), // admin, moderator, member
+  role: text("role").notNull().default("member"), // metasync_admin, company_admin, specialist, member
   isActive: boolean("is_active").notNull().default(true),
   phone: text("phone"),
   speciality: text("speciality"),
   bio: text("bio"),
+  companyId: integer("company_id").references(() => companies.id), // null para metasync_admin
   isTemporaryPassword: boolean("is_temporary_password").notNull().default(false),
   passwordExpiresAt: timestamp("password_expires_at"),
   lastPasswordChange: timestamp("last_password_change").defaultNow(),
   resetToken: text("reset_token"),
   resetTokenExpiresAt: timestamp("reset_token_expires_at"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+// Tabela de empresas/clientes
+export const companies = pgTable("companies", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  slug: text("slug").notNull().unique(), // para URLs personalizadas
+  logo: text("logo"),
+  description: text("description"),
+  website: text("website"),
+  phone: text("phone"),
+  whatsapp: text("whatsapp"),
+  instagram: text("instagram"),
+  telegram: text("telegram"),
+  facebook: text("facebook"),
+  email: text("email"),
+  address: text("address"),
+  planType: text("plan_type").notNull().default("basic"), // basic, premium, enterprise
+  isActive: boolean("is_active").notNull().default(true),
+  subscriptionExpiresAt: timestamp("subscription_expires_at"),
+  maxUsers: integer("max_users").default(50),
+  maxSpecialists: integer("max_specialists").default(5),
+  customDomain: text("custom_domain"),
+  // Configurações de White Label
+  hasWhiteLabel: boolean("has_white_label").notNull().default(false),
+  whiteLabelExpiresAt: timestamp("white_label_expires_at"),
+  brandingColors: jsonb("branding_colors"), // cores personalizadas
+  customCSS: text("custom_css"), // CSS personalizado
+  footerText: text("footer_text"), // texto do rodapé personalizado
+  hideMetaSyncBranding: boolean("hide_metasync_branding").notNull().default(false),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -31,6 +63,7 @@ export const communities = pgTable("communities", {
   logo: text("logo"),
   domain: text("domain"),
   theme: jsonb("theme"), // colors, fonts, etc.
+  companyId: integer("company_id").notNull().references(() => companies.id),
   ownerId: integer("owner_id").notNull().references(() => users.id),
   isActive: boolean("is_active").notNull().default(true),
   createdAt: timestamp("created_at").notNull().defaultNow(),
