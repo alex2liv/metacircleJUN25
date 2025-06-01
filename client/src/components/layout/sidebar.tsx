@@ -45,9 +45,7 @@ export default function Sidebar() {
       {/* Community Header */}
       <div className="p-4 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center p-1">
-            <img src={metaSyncIcon} alt="MetaSync" className="w-full h-full object-contain" />
-          </div>
+          <img src={metaSyncIcon} alt="MetaSync" className="w-10 h-10 object-contain" />
           <div>
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">MetaSync</h2>
             <p className="text-sm text-gray-500 dark:text-gray-400">248 membros</p>
