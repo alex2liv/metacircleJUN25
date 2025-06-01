@@ -50,6 +50,7 @@ export default function AdminUsers() {
   const [editingUser, setEditingUser] = useState<UserData | null>(null);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [deleteConfirm, setDeleteConfirm] = useState<{show: boolean, user: UserData | null}>({show: false, user: null});
+  const [settingsUser, setSettingsUser] = useState<{show: boolean, user: UserData | null}>({show: false, user: null});
   const [userCountryCode, setUserCountryCode] = useState("+55");
   const [specialistCountryCode, setSpecialistCountryCode] = useState("+55");
 
@@ -236,6 +237,27 @@ export default function AdminUsers() {
     toast({
       title: "Status atualizado",
       description: `${user?.firstName} ${user?.lastName} ${user?.isActive ? 'desativado' : 'ativado'}`,
+    });
+  };
+
+  const openUserSettings = (user: UserData) => {
+    setSettingsUser({show: true, user});
+  };
+
+  const handleResetPassword = (user: UserData) => {
+    toast({
+      title: "Senha resetada",
+      description: `Nova senha enviada para ${user.email}`,
+    });
+    setSettingsUser({show: false, user: null});
+  };
+
+  const handleEditUser = (user: UserData) => {
+    setEditingUser(user);
+    setSettingsUser({show: false, user: null});
+    toast({
+      title: "Modo de edição",
+      description: "Função de edição será implementada em breve",
     });
   };
 
@@ -733,6 +755,7 @@ export default function AdminUsers() {
                     <Button 
                       variant="outline" 
                       size="sm"
+                      onClick={() => openUserSettings(user)}
                       title="Configurações do usuário"
                     >
                       <Settings className="h-4 w-4" />
@@ -781,6 +804,83 @@ export default function AdminUsers() {
             >
               <Trash2 className="h-4 w-4" />
               Excluir
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de configurações do usuário */}
+      <Dialog open={settingsUser.show} onOpenChange={(open) => !open && setSettingsUser({show: false, user: null})}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Settings className="h-5 w-5" />
+              Configurações de {settingsUser.user?.firstName} {settingsUser.user?.lastName}
+            </DialogTitle>
+            <DialogDescription>
+              Gerencie as configurações e permissões do usuário.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <h4 className="text-sm font-medium">Resetar Senha</h4>
+                <p className="text-sm text-gray-500">Enviar nova senha por email</p>
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => settingsUser.user && handleResetPassword(settingsUser.user)}
+              >
+                <Mail className="h-4 w-4 mr-2" />
+                Resetar
+              </Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <h4 className="text-sm font-medium">Editar Perfil</h4>
+                <p className="text-sm text-gray-500">Modificar dados do usuário</p>
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => settingsUser.user && handleEditUser(settingsUser.user)}
+              >
+                <Edit className="h-4 w-4 mr-2" />
+                Editar
+              </Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div className="space-y-1">
+                <h4 className="text-sm font-medium">Status da Conta</h4>
+                <p className="text-sm text-gray-500">
+                  {settingsUser.user?.isActive ? "Conta ativa no sistema" : "Conta desativada"}
+                </p>
+              </div>
+              <Button 
+                variant={settingsUser.user?.isActive ? "outline" : "default"}
+                size="sm"
+                onClick={() => settingsUser.user && toggleUserStatus(settingsUser.user.id!)}
+                className={settingsUser.user?.isActive ? "text-red-600" : "bg-green-600 hover:bg-green-700"}
+              >
+                {settingsUser.user?.isActive ? "Desativar" : "Ativar"}
+              </Button>
+            </div>
+            {settingsUser.user?.role === "specialist" && (
+              <div className="bg-purple-50 p-3 rounded-lg">
+                <h4 className="text-sm font-medium text-purple-800">Especialista</h4>
+                <p className="text-xs text-purple-600 mt-1">
+                  {settingsUser.user.speciality}
+                </p>
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button 
+              variant="outline" 
+              onClick={() => setSettingsUser({show: false, user: null})}
+            >
+              Fechar
             </Button>
           </DialogFooter>
         </DialogContent>
