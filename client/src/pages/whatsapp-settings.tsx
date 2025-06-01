@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,17 +7,16 @@ import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Phone, Smartphone, Settings, MessageCircle, Zap, Clock, CheckCircle, XCircle } from "lucide-react";
+import { QrCode, Smartphone, Settings, MessageCircle, Zap, Clock, CheckCircle, XCircle, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 
 export default function WhatsAppSettings() {
   const { toast } = useToast();
   const [isConnected, setIsConnected] = useState(false);
-  const [showPhoneConnection, setShowPhoneConnection] = useState(false);
-  const [phoneNumber, setPhoneNumber] = useState<string>("");
-  const [verificationCode, setVerificationCode] = useState<string>("");
-  const [step, setStep] = useState<'phone' | 'code'>('phone');
-  const [isLoading, setIsLoading] = useState(false);
+  const [showQRConnection, setShowQRConnection] = useState(false);
+  const [qrCode, setQRCode] = useState<string>("");
+  const [isGeneratingQR, setIsGeneratingQR] = useState(false);
   const [autoReply, setAutoReply] = useState(false);
   const [delaySettings, setDelaySettings] = useState({
     type: "intelligent",
@@ -25,63 +24,81 @@ export default function WhatsAppSettings() {
     maxPerHour: "100"
   });
 
-  const sendVerificationCode = async () => {
-    if (!phoneNumber || phoneNumber.length < 10) {
+  // Verificar status da conexão periodicamente
+  useEffect(() => {
+    const checkStatus = async () => {
+      try {
+        const response = await apiRequest("GET", "/api/whatsapp/status");
+        const data = await response.json();
+        setIsConnected(data.connected);
+        if (data.qrCode && !data.connected) {
+          setQRCode(data.qrCode);
+        }
+      } catch (error) {
+        console.error('Erro ao verificar status:', error);
+      }
+    };
+
+    checkStatus();
+    const interval = setInterval(checkStatus, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const generateQRCode = async () => {
+    setIsGeneratingQR(true);
+    setShowQRConnection(true);
+
+    try {
       toast({
-        title: "Número Inválido",
-        description: "Digite um número de telefone válido.",
+        title: "Gerando QR Code",
+        description: "Iniciando conexão com WhatsApp Web..."
+      });
+
+      const response = await apiRequest("POST", "/api/whatsapp/generate-qr");
+      const data = await response.json();
+
+      if (data.success && data.qrCode) {
+        setQRCode(data.qrCode);
+        toast({
+          title: "QR Code Gerado",
+          description: "Escaneie o código com seu WhatsApp para conectar"
+        });
+      } else {
+        throw new Error(data.error || 'Erro ao gerar QR Code');
+      }
+    } catch (error: any) {
+      toast({
+        title: "Erro ao Gerar QR Code",
+        description: error.message || 'Erro desconhecido',
         variant: "destructive"
       });
-      return;
+      setShowQRConnection(false);
+    } finally {
+      setIsGeneratingQR(false);
     }
-
-    setIsLoading(true);
-    
-    // Simular envio do código
-    setTimeout(() => {
-      setStep('code');
-      setIsLoading(false);
-      toast({
-        title: "Código Enviado",
-        description: "Verifique seu WhatsApp e digite o código de 8 dígitos recebido."
-      });
-    }, 2000);
   };
 
-  const verifyCode = async () => {
-    if (verificationCode.length !== 8) {
-      toast({
-        title: "Código Inválido",
-        description: "Digite o código de 8 dígitos.",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setIsLoading(true);
-    
-    // Simular verificação
-    setTimeout(() => {
-      setIsConnected(true);
-      setShowPhoneConnection(false);
-      setStep('phone');
-      setPhoneNumber('');
-      setVerificationCode('');
-      setIsLoading(false);
+  const disconnectWhatsApp = async () => {
+    try {
+      const response = await apiRequest("POST", "/api/whatsapp/disconnect");
+      const data = await response.json();
       
+      if (data.success) {
+        setIsConnected(false);
+        setQRCode("");
+        setShowQRConnection(false);
+        toast({
+          title: "WhatsApp Desconectado",
+          description: "Sua conta foi desconectada do sistema",
+        });
+      }
+    } catch (error) {
       toast({
-        title: "WhatsApp Conectado!",
-        description: "Sua conta foi conectada com sucesso."
+        title: "Erro ao Desconectar",
+        description: "Erro ao desconectar WhatsApp",
+        variant: "destructive"
       });
-    }, 1500);
-  };
-
-  const disconnectWhatsApp = () => {
-    setIsConnected(false);
-    toast({
-      title: "WhatsApp Desconectado",
-      description: "Sua conta foi desconectada do sistema",
-    });
+    }
   };
 
   return (
@@ -127,95 +144,66 @@ export default function WhatsAppSettings() {
                 Desconectar
               </Button>
             ) : (
-              <Button onClick={() => setShowPhoneConnection(true)}>
-                <Phone className="w-4 h-4 mr-2" />
-                Conectar via Telefone
+              <Button onClick={generateQRCode} disabled={isGeneratingQR}>
+                {isGeneratingQR ? (
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                ) : (
+                  <QrCode className="w-4 h-4 mr-2" />
+                )}
+                {isGeneratingQR ? "Gerando..." : "Gerar QR Code"}
               </Button>
             )}
           </div>
         </CardContent>
       </Card>
 
-      {/* Modal de Conexão via Telefone */}
-      <Dialog open={showPhoneConnection} onOpenChange={setShowPhoneConnection}>
+      {/* Modal de QR Code WhatsApp Web */}
+      <Dialog open={showQRConnection} onOpenChange={setShowQRConnection}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Conectar WhatsApp</DialogTitle>
+            <DialogTitle>Conectar WhatsApp Web</DialogTitle>
             <DialogDescription>
-              {step === 'phone' 
-                ? 'Digite seu número de telefone para receber o código de verificação'
-                : 'Digite o código de 8 dígitos enviado para seu WhatsApp'
-              }
+              Escaneie o QR Code com seu celular para conectar ao WhatsApp Web
             </DialogDescription>
           </DialogHeader>
           
           <div className="space-y-4">
-            {step === 'phone' ? (
-              <>
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Número de Telefone</Label>
-                  <Input
-                    id="phone"
-                    placeholder="+55 11 99999-9999"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
+            {qrCode ? (
+              <div className="flex flex-col items-center space-y-4">
+                <div className="bg-white p-4 rounded-lg border">
+                  <img 
+                    src={qrCode} 
+                    alt="QR Code WhatsApp Web" 
+                    className="w-64 h-64 object-contain"
                   />
-                  <p className="text-xs text-gray-500">
-                    Inclua o código do país (ex: +55 para Brasil)
-                  </p>
                 </div>
-                
-                <div className="flex space-x-2">
-                  <Button 
-                    variant="outline" 
-                    className="flex-1"
-                    onClick={() => setShowPhoneConnection(false)}
-                  >
-                    Cancelar
-                  </Button>
-                  <Button 
-                    className="flex-1"
-                    onClick={sendVerificationCode}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? "Enviando..." : "Enviar Código"}
-                  </Button>
+                <div className="text-center">
+                  <p className="font-medium">Como conectar:</p>
+                  <ol className="text-sm text-gray-600 dark:text-gray-400 mt-2 space-y-1">
+                    <li>1. Abra o WhatsApp no seu celular</li>
+                    <li>2. Toque nos três pontos (⋮) e selecione "Dispositivos conectados"</li>
+                    <li>3. Toque em "Conectar um dispositivo"</li>
+                    <li>4. Aponte a câmera para este QR Code</li>
+                  </ol>
                 </div>
-              </>
+              </div>
             ) : (
-              <>
-                <div className="space-y-2">
-                  <Label htmlFor="code">Código de Verificação</Label>
-                  <Input
-                    id="code"
-                    placeholder="12345678"
-                    value={verificationCode}
-                    onChange={(e) => setVerificationCode(e.target.value)}
-                    maxLength={8}
-                  />
-                  <p className="text-xs text-gray-500">
-                    Código enviado para {phoneNumber}
-                  </p>
-                </div>
-                
-                <div className="flex space-x-2">
-                  <Button 
-                    variant="outline" 
-                    className="flex-1"
-                    onClick={() => setStep('phone')}
-                  >
-                    Voltar
-                  </Button>
-                  <Button 
-                    className="flex-1"
-                    onClick={verifyCode}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? "Verificando..." : "Verificar"}
-                  </Button>
-                </div>
-              </>
+              <div className="flex flex-col items-center space-y-4 py-8">
+                <Loader2 className="w-8 h-8 animate-spin" />
+                <p className="text-center text-gray-600 dark:text-gray-400">
+                  Gerando QR Code do WhatsApp Web...
+                </p>
+              </div>
             )}
+            
+            <div className="flex justify-center">
+              <Button 
+                variant="outline" 
+                onClick={() => setShowQRConnection(false)}
+              >
+                Fechar
+              </Button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
