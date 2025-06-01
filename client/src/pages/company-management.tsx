@@ -7,9 +7,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Building2, Database, Settings, CheckCircle, XCircle, AlertCircle } from "lucide-react";
+import { Plus, Building2, Database, Settings, CheckCircle, XCircle, AlertCircle, ArrowLeft, Home } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { Link } from "wouter";
 
 interface Company {
   id: number;
@@ -201,6 +202,24 @@ export default function CompanyManagement() {
 
   return (
     <div className="container mx-auto p-6">
+      {/* Breadcrumb e navegação */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center space-x-2 text-sm text-gray-600">
+          <Link href="/metasync-admin" className="flex items-center hover:text-blue-600 transition-colors">
+            <Home className="w-4 h-4 mr-1" />
+            Dashboard MetaSync
+          </Link>
+          <span>/</span>
+          <span className="text-gray-900 font-medium">Gerenciamento de Empresas</span>
+        </div>
+        <Link href="/metasync-admin">
+          <Button variant="outline" size="sm">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Voltar ao Dashboard
+          </Button>
+        </Link>
+      </div>
+
       <div className="mb-8">
         <h1 className="text-3xl font-bold">Gerenciamento de Empresas</h1>
         <p className="text-gray-600 mt-2">
