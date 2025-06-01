@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Calendar, Users, MessageSquare, DollarSign, Clock, Video, Phone, CheckCircle2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
+import { useState, useEffect } from "react";
 
 interface Appointment {
   id: number;
@@ -27,15 +28,47 @@ interface SpecialistStats {
 
 export default function SpecialistDashboard() {
   const [, setLocation] = useLocation();
-  
-  // Simulando dados do especialista logado
-  const specialistData = {
-    name: "Clarissa Vaz",
-    speciality: "Coaching de Carreira",
-    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=256&h=256",
-    phone: "11910018833",
-    email: "clarissa@metasyncdigital.com.br"
-  };
+  const [specialistData, setSpecialistData] = useState(() => {
+    const savedSettings = localStorage.getItem('specialistSettings');
+    if (savedSettings) {
+      const settings = JSON.parse(savedSettings);
+      return {
+        name: settings.specialistName || "Especialista",
+        speciality: settings.specialistSpeciality || "Especialista",
+        avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=256&h=256",
+        phone: settings.specialistWhatsApp || "",
+        email: settings.specialistEmail || ""
+      };
+    }
+    
+    return {
+      name: "Especialista",
+      speciality: "Especialista", 
+      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=256&h=256",
+      phone: "",
+      email: ""
+    };
+  });
+
+  // Atualizar dados quando localStorage mudar
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const savedSettings = localStorage.getItem('specialistSettings');
+      if (savedSettings) {
+        const settings = JSON.parse(savedSettings);
+        setSpecialistData({
+          name: settings.specialistName || "Especialista",
+          speciality: settings.specialistSpeciality || "Especialista",
+          avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=256&h=256",
+          phone: settings.specialistWhatsApp || "",
+          email: settings.specialistEmail || ""
+        });
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   const stats: SpecialistStats = {
     totalAppointments: 156,
