@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Edit, CalendarPlus, UserPlus, Mail, MessageCircle, Plus, Calendar, MessageSquare, Upload, QrCode, Clock, Zap } from "lucide-react";
+import { Edit, CalendarPlus, UserPlus, Mail, MessageCircle, Plus, Calendar, MessageSquare, Upload, QrCode, Clock, Zap, Phone } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -24,6 +24,10 @@ export default function QuickActions() {
   const [isGeneratingQR, setIsGeneratingQR] = useState(false);
   const [showFormatExample, setShowFormatExample] = useState(false);
   const [uploadError, setUploadError] = useState<string>("");
+  const [showPhoneConnection, setShowPhoneConnection] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [verificationCode, setVerificationCode] = useState<string>("");
+  const [step, setStep] = useState<'phone' | 'code'>('phone');
 
   const calculateEndTime = (startTime: string) => {
     if (!startTime) return "";
@@ -125,6 +129,57 @@ export default function QuickActions() {
       title: "WhatsApp Conectado!",
       description: "Sua conta está agora conectada ao sistema",
     });
+  };
+
+  const sendVerificationCode = async () => {
+    if (!phoneNumber || phoneNumber.length < 10) {
+      toast({
+        title: "Número Inválido",
+        description: "Digite um número de telefone válido.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    
+    // Simular envio do código
+    setTimeout(() => {
+      setStep('code');
+      setIsLoading(false);
+      toast({
+        title: "Código Enviado",
+        description: "Verifique seu WhatsApp e digite o código de 8 dígitos recebido."
+      });
+    }, 2000);
+  };
+
+  const verifyCode = async () => {
+    if (verificationCode.length !== 8) {
+      toast({
+        title: "Código Inválido",
+        description: "Digite o código de 8 dígitos.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    
+    // Simular verificação
+    setTimeout(() => {
+      setWhatsappConnected(true);
+      setShowPhoneConnection(false);
+      setStep('phone');
+      setPhoneNumber('');
+      setVerificationCode('');
+      setIsLoading(false);
+      
+      toast({
+        title: "WhatsApp Conectado!",
+        description: "Sua conta foi conectada com sucesso."
+      });
+    }, 1500);
   };
 
   const validateListFormat = (content: string): { isValid: boolean; errors: string[] } => {
@@ -395,20 +450,16 @@ export default function QuickActions() {
                       </span>
                     </div>
                     
-                    {/* Debug info */}
-                    <div className="text-xs text-gray-500">
-                      Connected: {whatsappConnected.toString()} | QR: {qrCode ? 'Yes' : 'No'}
-                    </div>
+
                     
                     {!whatsappConnected && (
                       <Button 
                         variant="outline" 
                         size="sm"
-                        onClick={generateQRCode}
-                        disabled={isGeneratingQR}
+                        onClick={() => setShowPhoneConnection(true)}
                       >
-                        <QrCode className="w-4 h-4 mr-1" />
-                        {isGeneratingQR ? "Gerando..." : "Gerar QR Code"}
+                        <Phone className="w-4 h-4 mr-1" />
+                        Conectar via Telefone
                       </Button>
                     )}
                     {qrCode && !whatsappConnected && (
@@ -459,10 +510,7 @@ export default function QuickActions() {
                         3. Toque em "WhatsApp Web"<br/>
                         4. Escaneie este código
                       </p>
-                      {/* Debug info */}
-                      <div className="mt-2 p-2 bg-gray-100 dark:bg-gray-800 rounded text-xs">
-                        <p>QR Data: {qrCode.substring(0, 50)}...</p>
-                      </div>
+
                     </div>
                   )}
 
