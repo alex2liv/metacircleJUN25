@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { 
   User, 
   UserPlus,
@@ -47,6 +48,8 @@ export default function AdminUsers() {
   const [isAddingUser, setIsAddingUser] = useState(false);
   const [isAddingSpecialist, setIsAddingSpecialist] = useState(false);
   const [editingUser, setEditingUser] = useState<UserData | null>(null);
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const [deleteConfirm, setDeleteConfirm] = useState<{show: boolean, user: UserData | null}>({show: false, user: null});
   
   // Formulário para novo usuário
   const [newUser, setNewUser] = useState<UserData>({
@@ -96,18 +99,27 @@ export default function AdminUsers() {
   };
 
   const handleSaveUser = () => {
-    if (!newUser.firstName || !newUser.lastName || !newUser.username || !newUser.email || !newUser.password) {
+    const errors = [];
+    if (!newUser.firstName) errors.push("firstName");
+    if (!newUser.lastName) errors.push("lastName");
+    if (!newUser.username) errors.push("username");
+    if (!newUser.email) errors.push("email");
+    if (!newUser.password) errors.push("password");
+
+    if (errors.length > 0) {
+      setValidationErrors(errors);
       toast({
         title: "Campos obrigatórios",
-        description: "Preencha todos os campos obrigatórios",
+        description: "Preencha todos os campos destacados em vermelho",
         variant: "destructive"
       });
       return;
     }
 
+    setValidationErrors([]);
     const userToSave = {
       ...newUser,
-      id: users.length + 1
+      id: Date.now() // usar timestamp para ID único
     };
 
     setUsers([...users, userToSave]);
@@ -132,18 +144,28 @@ export default function AdminUsers() {
   };
 
   const handleSaveSpecialist = () => {
-    if (!newSpecialist.firstName || !newSpecialist.lastName || !newSpecialist.username || !newSpecialist.email || !newSpecialist.password || !newSpecialist.speciality) {
+    const errors = [];
+    if (!newSpecialist.firstName) errors.push("specialistFirstName");
+    if (!newSpecialist.lastName) errors.push("specialistLastName");
+    if (!newSpecialist.username) errors.push("specialistUsername");
+    if (!newSpecialist.email) errors.push("specialistEmail");
+    if (!newSpecialist.password) errors.push("specialistPassword");
+    if (!newSpecialist.speciality) errors.push("specialistSpeciality");
+
+    if (errors.length > 0) {
+      setValidationErrors(errors);
       toast({
         title: "Campos obrigatórios",
-        description: "Preencha todos os campos obrigatórios para o especialista",
+        description: "Preencha todos os campos destacados em vermelho",
         variant: "destructive"
       });
       return;
     }
 
+    setValidationErrors([]);
     const specialistToSave = {
       ...newSpecialist,
-      id: users.length + 1
+      id: Date.now()
     };
 
     setUsers([...users, specialistToSave]);
@@ -167,11 +189,31 @@ export default function AdminUsers() {
     });
   };
 
-  const handleDeleteUser = (id: number) => {
-    setUsers(users.filter(user => user.id !== id));
+  const handleDeleteUser = (user: UserData) => {
+    setDeleteConfirm({show: true, user});
+  };
+
+  const confirmDelete = () => {
+    if (deleteConfirm.user) {
+      setUsers(users.filter(u => u.id !== deleteConfirm.user!.id));
+      toast({
+        title: "Usuário removido",
+        description: `${deleteConfirm.user.firstName} ${deleteConfirm.user.lastName} foi removido do sistema`,
+      });
+    }
+    setDeleteConfirm({show: false, user: null});
+  };
+
+  const toggleUserStatus = (userId: number) => {
+    setUsers(users.map(user => 
+      user.id === userId 
+        ? { ...user, isActive: !user.isActive }
+        : user
+    ));
+    const user = users.find(u => u.id === userId);
     toast({
-      title: "Usuário removido",
-      description: "Usuário foi removido do sistema",
+      title: "Status atualizado",
+      description: `${user?.firstName} ${user?.lastName} ${user?.isActive ? 'desativado' : 'ativado'}`,
     });
   };
 
@@ -419,6 +461,7 @@ export default function AdminUsers() {
                     value={newUser.firstName}
                     onChange={(e) => setNewUser({...newUser, firstName: e.target.value})}
                     placeholder="Nome"
+                    className={validationErrors.includes("firstName") ? "border-red-500 focus:border-red-500" : ""}
                   />
                 </div>
                 <div>
@@ -428,6 +471,7 @@ export default function AdminUsers() {
                     value={newUser.lastName}
                     onChange={(e) => setNewUser({...newUser, lastName: e.target.value})}
                     placeholder="Sobrenome"
+                    className={validationErrors.includes("lastName") ? "border-red-500 focus:border-red-500" : ""}
                   />
                 </div>
                 <div>
@@ -612,7 +656,7 @@ export default function AdminUsers() {
                         variant="outline" 
                         size="sm" 
                         className="text-red-600"
-                        onClick={() => handleDeleteUser(user.id!)}
+                        onClick={() => handleDeleteUser(user)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
