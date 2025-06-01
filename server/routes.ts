@@ -551,9 +551,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Determinar qual serviço WhatsApp usar baseado no ambiente
-  const isProd = process.env.NODE_ENV === 'production';
-  const whatsappService = isProd ? whatsAppProfessionalService : whatsAppService;
+  // Usar serviço básico do WhatsApp (o profissional será usado no VPS)
+  const whatsappService = whatsAppService;
 
   // WhatsApp Connection Routes
   app.post("/api/whatsapp/generate-qr", async (req, res) => {
@@ -577,17 +576,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const isConnected = whatsappService.getConnectionStatus();
       const currentQR = whatsappService.getCurrentQRCode();
       
-      let stats = null;
-      if (isProd && 'getMessageStats' in whatsappService) {
-        stats = (whatsappService as any).getMessageStats();
-      }
-      
       res.json({ 
         connected: isConnected,
         hasQrCode: !!currentQR,
-        qrCode: currentQR,
-        stats,
-        environment: isProd ? 'production' : 'development'
+        qrCode: currentQR
       });
     } catch (error) {
       console.error('Error getting WhatsApp status:', error);
