@@ -82,8 +82,37 @@ export class MemStorage implements IStorage {
     this.memberPoints = new Map();
     this.currentId = 1;
 
-    // Initialize with sample data
-    this.initializeSampleData();
+    // Sistema limpo para teste real
+    this.initializeCleanSystem();
+  }
+
+  private initializeCleanSystem() {
+    // Sistema iniciado completamente limpo para teste real
+    // Apenas criar o admin inicial do MetaSync
+    const metaSyncAdmin: User = {
+      id: this.currentId++,
+      username: "admin.metasync",
+      email: "admin@metasyncdigital.com.br",
+      password: "hashed_password",
+      firstName: "Admin",
+      lastName: "MetaSync",
+      avatar: null,
+      role: "metasync_admin",
+      isActive: true,
+      phone: null,
+      speciality: null,
+      bio: null,
+      companyId: null,
+      plan: "premium",
+      subscriptionStartDate: new Date(),
+      subscriptionEndDate: null,
+      isSubscriptionActive: true,
+      resetToken: null,
+      resetTokenExpiresAt: null,
+      createdAt: new Date(),
+    };
+
+    this.users.set(metaSyncAdmin.id, metaSyncAdmin);
   }
 
   private initializeSampleData() {
@@ -485,4 +514,6 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+import { CleanStorage } from "./clean-storage";
+
+export const storage = new CleanStorage();
