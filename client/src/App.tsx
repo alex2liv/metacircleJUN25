@@ -14,6 +14,7 @@ import Courses from "@/pages/courses";
 import Settings from "@/pages/settings";
 import Calendar from "@/pages/calendar";
 import ClientView from "@/pages/client-view";
+import CommunityMember from "@/pages/community-member";
 import BasicPlanView from "@/pages/basic-plan-view";
 import GeneralChat from "@/pages/general-chat";
 import BasicChat from "@/pages/basic-chat";
@@ -57,6 +58,7 @@ function Router() {
       <Route path="/courses" component={Courses} />
       <Route path="/calendar" component={Calendar} />
       <Route path="/client-view" component={ClientView} />
+      <Route path="/community-member" component={CommunityMember} />
       <Route path="/basic-plan" component={BasicPlanView} />
       <Route path="/general-chat" component={GeneralChat} />
       <Route path="/basic-chat" component={BasicChat} />
