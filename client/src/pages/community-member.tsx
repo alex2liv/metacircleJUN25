@@ -120,27 +120,30 @@ export default function CommunityMember() {
             </CardContent>
           </Card>
 
-          {/* Community Stats */}
+          {/* Current Plan and Upgrade */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Users className="w-5 h-5" />
-                Nossa Comunidade
+                <Crown className="w-5 h-5 text-yellow-500" />
+                Seu Plano
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Membros Ativos</span>
-                <span className="font-semibold">150+</span>
+              <div className="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <h3 className="font-semibold text-blue-900">Plano Básico</h3>
+                <p className="text-2xl font-bold text-blue-600 mt-2">R$ 29,90/mês</p>
+                <Badge className="mt-2 bg-blue-100 text-blue-800">Ativo</Badge>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Conteúdos</span>
-                <span className="font-semibold">45</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Eventos Mensais</span>
-                <span className="font-semibold">8</span>
-              </div>
+              <Button 
+                className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+                onClick={() => {
+                  const element = document.getElementById('plans-comparison');
+                  element?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                <Crown className="w-4 h-4 mr-2" />
+                Comparar Planos
+              </Button>
             </CardContent>
           </Card>
 
@@ -309,6 +312,144 @@ export default function CommunityMember() {
           </Card>
 
         </div>
+
+        {/* Plans Comparison */}
+        <div id="plans-comparison" className="mt-16">
+          <Card className="lg:col-span-3">
+            <CardHeader className="text-center">
+              <CardTitle className="text-2xl">Escolha o Plano Ideal para Você</CardTitle>
+              <CardDescription>
+                Compare os recursos disponíveis em cada plano e escolha o que melhor atende suas necessidades
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                
+                {/* Features Column */}
+                <div className="space-y-4">
+                  <div className="h-20 flex items-center">
+                    <h3 className="font-semibold text-lg">Recursos</h3>
+                  </div>
+                  <div className="space-y-6 text-sm">
+                    <div className="py-4 border-b">Acesso à Comunidade</div>
+                    <div className="py-4 border-b">Conteúdos Básicos</div>
+                    <div className="py-4 border-b">Participação em Eventos</div>
+                    <div className="py-4 border-b">Chat da Comunidade</div>
+                    <div className="py-4 border-b">WhatsApp com Especialista</div>
+                    <div className="py-4 border-b">Videochamadas Individuais</div>
+                    <div className="py-4 border-b">Conteúdos Premium</div>
+                    <div className="py-4 border-b">Consultorias Exclusivas</div>
+                    <div className="py-4 border-b">Certificados de Participação</div>
+                    <div className="py-4 border-b">Suporte Prioritário</div>
+                  </div>
+                </div>
+
+                {/* Basic Plan */}
+                <div className="relative border-2 border-gray-200 rounded-lg p-6">
+                  <div className="text-center space-y-2 h-20 flex flex-col justify-center">
+                    <h3 className="font-semibold text-lg">Básico</h3>
+                    <p className="text-2xl font-bold text-blue-600">R$ 29,90</p>
+                    <p className="text-sm text-gray-600">/mês</p>
+                  </div>
+                  <div className="space-y-6 text-center">
+                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
+                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
+                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
+                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
+                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
+                    <div className="py-4 border-b">-</div>
+                    <div className="py-4 border-b">-</div>
+                    <div className="py-4 border-b">-</div>
+                    <div className="py-4 border-b">-</div>
+                    <div className="py-4 border-b">-</div>
+                  </div>
+                  <Button className="w-full mt-6 bg-blue-600 hover:bg-blue-700">
+                    Plano Atual
+                  </Button>
+                </div>
+
+                {/* Intermediate Plan */}
+                <div className="relative border-2 border-purple-300 rounded-lg p-6 bg-purple-50">
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <Badge className="bg-purple-600 text-white">Mais Popular</Badge>
+                  </div>
+                  <div className="text-center space-y-2 h-20 flex flex-col justify-center">
+                    <h3 className="font-semibold text-lg">Intermediário</h3>
+                    <p className="text-2xl font-bold text-purple-600">R$ 59,90</p>
+                    <p className="text-sm text-gray-600">/mês</p>
+                  </div>
+                  <div className="space-y-6 text-center">
+                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
+                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
+                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
+                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
+                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
+                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
+                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
+                    <div className="py-4 border-b">-</div>
+                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
+                    <div className="py-4 border-b">-</div>
+                  </div>
+                  <Button className="w-full mt-6 bg-purple-600 hover:bg-purple-700">
+                    Fazer Upgrade
+                  </Button>
+                </div>
+
+                {/* Premium Plan */}
+                <div className="relative border-2 border-yellow-300 rounded-lg p-6 bg-gradient-to-br from-yellow-50 to-orange-50">
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <Badge className="bg-yellow-600 text-white flex items-center gap-1">
+                      <Crown className="w-3 h-3" />
+                      Premium
+                    </Badge>
+                  </div>
+                  <div className="text-center space-y-2 h-20 flex flex-col justify-center">
+                    <h3 className="font-semibold text-lg">Premium</h3>
+                    <p className="text-2xl font-bold text-yellow-600">R$ 99,90</p>
+                    <p className="text-sm text-gray-600">/mês</p>
+                  </div>
+                  <div className="space-y-6 text-center">
+                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
+                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
+                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
+                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
+                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
+                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
+                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
+                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
+                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
+                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
+                  </div>
+                  <Button className="w-full mt-6 bg-yellow-600 hover:bg-yellow-700">
+                    Fazer Upgrade
+                  </Button>
+                </div>
+
+              </div>
+
+              {/* Additional Benefits */}
+              <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="text-center p-4 bg-blue-50 rounded-lg">
+                  <Users className="w-8 h-8 text-blue-600 mx-auto mb-2" />
+                  <h4 className="font-semibold text-blue-900">Comunidade Ativa</h4>
+                  <p className="text-sm text-blue-700 mt-1">150+ profissionais conectados</p>
+                </div>
+                <div className="text-center p-4 bg-green-50 rounded-lg">
+                  <MessageCircle className="w-8 h-8 text-green-600 mx-auto mb-2" />
+                  <h4 className="font-semibold text-green-900">Suporte Direto</h4>
+                  <p className="text-sm text-green-700 mt-1">WhatsApp com especialistas</p>
+                </div>
+                <div className="text-center p-4 bg-purple-50 rounded-lg">
+                  <BookOpen className="w-8 h-8 text-purple-600 mx-auto mb-2" />
+                  <h4 className="font-semibold text-purple-900">Conteúdo Exclusivo</h4>
+                  <p className="text-sm text-purple-700 mt-1">Material didático atualizado</p>
+                </div>
+              </div>
+
+            </CardContent>
+          </Card>
+        </div>
+
       </main>
 
       {/* Footer */}
