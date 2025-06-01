@@ -20,6 +20,17 @@ export default function ClientView() {
   
   // Indicador de que está na visão do cliente
   const isClientView = true;
+  
+  // Simulando status do plano do usuário - em produção viria da API
+  const userPlan = "premium"; // pode ser "basic", "intermediate", "premium"
+  const isPremiumUser = userPlan === "premium";
+  
+  // Configurações de contato com especialista (viria das configurações administrativas)
+  const specialistContactConfig = {
+    whatsappNumber: "5511910018833",
+    premiumOnly: true,
+    premiumPrice: 99.99
+  };
 
   const { data: stats } = useQuery({
     queryKey: ['/api/communities/3/stats'],

@@ -21,7 +21,8 @@ import {
   Phone,
   Mail,
   Crown,
-  Shield
+  Shield,
+  MessageCircle
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
@@ -63,6 +64,13 @@ export default function AdminUsers() {
       "1080p": 15.99,
       "4K": 49.99
     }
+  });
+
+  // Configurações de contato com especialista
+  const [specialistContact, setSpecialistContact] = useState({
+    whatsappNumber: "5511910018833",
+    premiumOnly: true,
+    premiumPrice: 99.99
   });
 
   const countryCodes = [
@@ -294,6 +302,17 @@ export default function AdminUsers() {
     toast({
       title: "Qualidade máxima definida",
       description: `Nova qualidade máxima: ${quality}`,
+    });
+  };
+
+  const updateSpecialistContact = (field: string, value: any) => {
+    setSpecialistContact(prev => ({
+      ...prev,
+      [field]: value
+    }));
+    toast({
+      title: "Configuração atualizada",
+      description: "Configurações de contato com especialista atualizadas",
     });
   };
 
@@ -1007,6 +1026,85 @@ export default function AdminUsers() {
                   <p className="text-sm text-gray-600 mt-2">
                     Qualidade máxima disponível: <strong>{videoSettings.maxQuality}</strong>
                   </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Configurações de Contato com Especialista */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold flex items-center gap-2">
+                <MessageCircle className="w-5 h-5" />
+                Contato com Especialista
+              </h3>
+              
+              <div className="grid gap-4">
+                <div className="border rounded-lg p-4">
+                  <h4 className="font-medium mb-3">Configurações de Acesso</h4>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div>
+                        <span className="font-medium">Acesso ao Especialista</span>
+                        <p className="text-sm text-gray-600">
+                          Disponível apenas para usuários premium
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={specialistContact.premiumOnly}
+                          onChange={(e) => updateSpecialistContact('premiumOnly', e.target.checked)}
+                          className="rounded"
+                        />
+                        <span className="text-sm">Premium Only</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div>
+                        <span className="font-medium">Preço do Plano Premium</span>
+                        <p className="text-sm text-gray-600">
+                          Valor mensal para acesso ao especialista
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm">R$</span>
+                        <Input
+                          type="number"
+                          value={specialistContact.premiumPrice}
+                          onChange={(e) => updateSpecialistContact('premiumPrice', parseFloat(e.target.value) || 0)}
+                          className="w-24 text-center"
+                          step="0.01"
+                          min="0"
+                        />
+                        <span className="text-sm text-gray-600">/mês</span>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="font-medium">WhatsApp do Especialista</label>
+                      <div className="flex gap-2">
+                        <Input
+                          type="text"
+                          value={specialistContact.whatsappNumber}
+                          onChange={(e) => updateSpecialistContact('whatsappNumber', e.target.value)}
+                          placeholder="5511999999999"
+                          className="flex-1"
+                        />
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            window.open(`https://wa.me/${specialistContact.whatsappNumber}`, '_blank');
+                          }}
+                        >
+                          Testar
+                        </Button>
+                      </div>
+                      <p className="text-xs text-gray-500">
+                        Formato: código do país + número (ex: 5511999999999)
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
