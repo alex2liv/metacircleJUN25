@@ -48,11 +48,11 @@ export function CurrencyInput({ value, onChange, placeholder = "0,00", className
     // Permite apenas números, vírgulas e remove outros caracteres
     const filteredValue = inputValue.replace(/[^\d,]/g, '');
     
-    // Se o usuário digitou apenas números (ex: "20"), adiciona ,00 automaticamente
+    // Se o usuário digitou apenas números (ex: "47"), trata como valor inteiro em reais
     if (/^\d+$/.test(filteredValue)) {
-      const formattedValue = `${filteredValue},00`;
-      setDisplayValue(formattedValue);
-      onChange(parseCurrency(formattedValue));
+      setDisplayValue(filteredValue);
+      // Converte diretamente para número (47 = 47.00 reais)
+      onChange(parseInt(filteredValue) || 0);
       return;
     }
     
