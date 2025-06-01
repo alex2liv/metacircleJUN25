@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -53,6 +53,7 @@ export default function SpecialistAdmin() {
   const { user } = useAuth();
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Configurações do especialista
   const [specialistConfig, setSpecialistConfig] = useState<SpecialistConfig>({
@@ -396,6 +397,51 @@ export default function SpecialistAdmin() {
     }, 1000);
   };
 
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validar tipo de arquivo
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Arquivo inválido",
+        description: "Por favor, selecione uma imagem (JPG, PNG, etc.)",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validar tamanho (5MB máximo)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "Arquivo muito grande",
+        description: "A imagem deve ter no máximo 5MB",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Criar preview da imagem
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const newAvatar = e.target?.result as string;
+      setSpecialistConfig(prev => ({
+        ...prev,
+        avatar: newAvatar
+      }));
+      
+      toast({
+        title: "Foto atualizada",
+        description: "Avatar alterado com sucesso!",
+      });
+    };
+    reader.readAsDataURL(file);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
       {/* Header fixo com logo e menu do usuário */}
@@ -484,7 +530,7 @@ export default function SpecialistAdmin() {
             </Button>
           </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Perfil do Especialista */}
           <Card>
             <CardHeader>
@@ -503,12 +549,23 @@ export default function SpecialistAdmin() {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <Button variant="outline" size="sm">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={handleAvatarClick}
+                  >
                     <Upload className="w-4 h-4 mr-2" />
                     Alterar Foto
                   </Button>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
                   <p className="text-xs text-gray-500 mt-1">
-                    Recomendado: 300x300px
+                    Recomendado: 300x300px, máximo 5MB
                   </p>
                 </div>
               </div>
@@ -1760,7 +1817,6 @@ export default function SpecialistAdmin() {
             </div>
           </CardContent>
         </Card>
-        </div>
         </div>
       </div>
     </div>
