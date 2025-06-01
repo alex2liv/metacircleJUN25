@@ -11,7 +11,7 @@ import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Shield, User, UserCheck, Mail, ArrowLeft, Key } from "lucide-react";
 import { Link, useLocation } from "wouter";
-import metaSyncLogo from "@assets/a88aad12-debb-48b7-9a26-acf54585d11e (1).png";
+import metaSyncIcon from "@assets/icone_matasync.png";
 
 // Schemas de validação
 const loginSchema = z.object({
@@ -208,15 +208,15 @@ export default function Login() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-4">
       <Card className="w-full max-w-lg bg-white shadow-2xl border-0">
         <CardHeader className="text-center pb-2">
-          <div className="mx-auto flex items-center justify-center mb-6">
+          <div className="flex items-center justify-start mb-6">
             <img 
-              src={metaSyncLogo} 
-              alt="MetaSync Digital" 
-              className="h-20 w-auto object-contain"
+              src={metaSyncIcon} 
+              alt="MetaSync" 
+              className="h-8 w-8 object-contain"
             />
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            MetaCircle
+            Comunidade Clarissa Vaz de Desenvolvimento Pessoal
           </h1>
           <p className="text-gray-500 text-sm">
             Sistema de Autenticação Multiníveis
