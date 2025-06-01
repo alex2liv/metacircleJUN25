@@ -45,6 +45,7 @@ export default function AdminUsers() {
   const [, setLocation] = useLocation();
   
   const [isAddingUser, setIsAddingUser] = useState(false);
+  const [isAddingSpecialist, setIsAddingSpecialist] = useState(false);
   const [editingUser, setEditingUser] = useState<UserData | null>(null);
   
   // Formulário para novo usuário
@@ -56,6 +57,20 @@ export default function AdminUsers() {
     password: "",
     phone: "",
     role: "member",
+    speciality: "",
+    bio: "",
+    isActive: true
+  });
+
+  // Formulário para novo especialista
+  const [newSpecialist, setNewSpecialist] = useState<UserData>({
+    firstName: "",
+    lastName: "",
+    username: "",
+    email: "",
+    password: "",
+    phone: "",
+    role: "specialist",
     speciality: "",
     bio: "",
     isActive: true
@@ -124,6 +139,42 @@ export default function AdminUsers() {
     toast({
       title: "Usuário cadastrado",
       description: `${userToSave.firstName} ${userToSave.lastName} foi adicionado com sucesso!`,
+    });
+  };
+
+  const handleSaveSpecialist = () => {
+    if (!newSpecialist.firstName || !newSpecialist.lastName || !newSpecialist.username || !newSpecialist.email || !newSpecialist.password || !newSpecialist.speciality) {
+      toast({
+        title: "Campos obrigatórios",
+        description: "Preencha todos os campos obrigatórios para o especialista",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    const specialistToSave = {
+      ...newSpecialist,
+      id: users.length + 1
+    };
+
+    setUsers([...users, specialistToSave]);
+    setNewSpecialist({
+      firstName: "",
+      lastName: "",
+      username: "",
+      email: "",
+      password: "",
+      phone: "",
+      role: "specialist",
+      speciality: "",
+      bio: "",
+      isActive: true
+    });
+    setIsAddingSpecialist(false);
+
+    toast({
+      title: "Especialista cadastrado",
+      description: `${specialistToSave.firstName} ${specialistToSave.lastName} foi adicionado como especialista!`,
     });
   };
 
