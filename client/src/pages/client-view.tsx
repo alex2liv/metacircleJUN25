@@ -21,8 +21,8 @@ export default function ClientView() {
   // Indicador de que está na visão do cliente
   const isClientView = true;
   
-  // Simulando status do plano do usuário - em produção viria da API
-  const userPlan = "premium"; // pode ser "basic", "intermediate", "premium"
+  // Para demonstração: mudando para usuário básico para mostrar a funcionalidade
+  const userPlan = "basic"; // pode ser "basic", "intermediate", "premium"
   const isPremiumUser = userPlan === "premium";
   
   // Configurações de contato com especialista (viria das configurações administrativas)
@@ -695,41 +695,92 @@ export default function ClientView() {
         </CardContent>
       </Card>
 
-      {/* Fale com a Especialista */}
-      <Card className="bg-gradient-to-r from-purple-600 to-blue-600 text-white">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex-1">
+      {/* Fale com a Especialista - Apenas para usuários Premium */}
+      {(!specialistContactConfig.premiumOnly || isPremiumUser) && (
+        <Card className="bg-gradient-to-r from-purple-600 to-blue-600 text-white">
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                <h3 className="text-xl font-bold mb-2 flex items-center gap-2">
+                  Precisa de Ajuda Personalizada?
+                  {specialistContactConfig.premiumOnly && (
+                    <Crown className="w-5 h-5 text-yellow-400" />
+                  )}
+                </h3>
+                <p className="text-purple-100 mb-4">
+                  Fale diretamente com nossa especialista e acelere seus resultados
+                  {specialistContactConfig.premiumOnly && (
+                    <span className="block text-sm text-yellow-200 mt-1">
+                      Exclusivo para membros Premium
+                    </span>
+                  )}
+                </p>
+                <div className="flex gap-3">
+                  <Button 
+                    className="bg-white text-purple-600 hover:bg-purple-50"
+                    onClick={() => {
+                      const message = encodeURIComponent('Olá! Vim do MetaCircle e gostaria de conversar com a especialista sobre minha comunidade');
+                      window.open(`https://wa.me/${specialistContactConfig.whatsappNumber}?text=${message}`, '_blank');
+                      toast({
+                        title: "Redirecionando para WhatsApp",
+                        description: "Você será direcionado para conversar com nossa especialista",
+                      });
+                    }}
+                  >
+                    <MessageCircle className="w-4 h-4 mr-2" />
+                    Falar com Especialista
+                  </Button>
+                </div>
+              </div>
+              <div className="hidden md:block">
+                <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center">
+                  <MessageCircle className="w-12 h-12 text-white" />
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Upgrade para Premium - Aparece apenas para usuários não-premium quando a seção está restrita */}
+      {specialistContactConfig.premiumOnly && !isPremiumUser && (
+        <Card className="bg-gradient-to-r from-gray-600 to-gray-700 text-white border-2 border-dashed border-gray-400">
+          <CardContent className="p-6">
+            <div className="text-center">
+              <Crown className="w-12 h-12 text-yellow-400 mx-auto mb-3" />
               <h3 className="text-xl font-bold mb-2">
-                Precisa de Ajuda Personalizada?
+                Contato Direto com Especialista
               </h3>
-              <p className="text-purple-100 mb-4">
-                Fale diretamente com nossa especialista e acelere seus resultados
+              <p className="text-gray-200 mb-4">
+                Tenha acesso direto ao WhatsApp da nossa especialista para suporte personalizado
               </p>
-              <div className="flex gap-3">
-                <Button 
-                  className="bg-white text-purple-600 hover:bg-purple-50"
-                  onClick={() => {
-                    window.open('https://wa.me/5511910018833?text=Olá! Vim do MetaCircle e gostaria de conversar com a especialista sobre minha comunidade', '_blank');
-                    toast({
-                      title: "Redirecionando para WhatsApp",
-                      description: "Você será direcionado para conversar com nossa especialista",
-                    });
-                  }}
-                >
-                  <MessageCircle className="w-4 h-4 mr-2" />
-                  Falar com Especialista
-                </Button>
+              <div className="bg-white/10 rounded-lg p-4 mb-4">
+                <p className="text-sm text-gray-200 mb-2">
+                  Recursos Premium incluem:
+                </p>
+                <ul className="text-sm text-left space-y-1">
+                  <li>• WhatsApp direto com especialista</li>
+                  <li>• Suporte prioritário</li>
+                  <li>• Consultorias personalizadas</li>
+                  <li>• Acesso a conteúdos exclusivos</li>
+                </ul>
               </div>
+              <Button 
+                className="bg-yellow-500 text-black hover:bg-yellow-400 font-semibold"
+                onClick={() => {
+                  toast({
+                    title: "Upgrade para Premium",
+                    description: `Plano Premium: R$ ${specialistContactConfig.premiumPrice.toFixed(2)}/mês`,
+                  });
+                }}
+              >
+                <Crown className="w-4 h-4 mr-2" />
+                Fazer Upgrade - R$ {specialistContactConfig.premiumPrice.toFixed(2)}/mês
+              </Button>
             </div>
-            <div className="hidden md:block">
-              <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center">
-                <MessageCircle className="w-12 h-12 text-white" />
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Aviso sobre notificações WhatsApp */}
       <Card className="bg-green-50 border-green-200">
