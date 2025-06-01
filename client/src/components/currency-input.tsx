@@ -13,7 +13,11 @@ export function CurrencyInput({ value, onChange, placeholder = "0,00", className
   const [displayValue, setDisplayValue] = useState("");
 
   useEffect(() => {
-    setDisplayValue(formatCurrency(value));
+    if (value === 0) {
+      setDisplayValue("");
+    } else {
+      setDisplayValue(formatCurrency(value));
+    }
   }, [value]);
 
   const formatCurrency = (num: number): string => {
@@ -24,53 +28,32 @@ export function CurrencyInput({ value, onChange, placeholder = "0,00", className
   };
 
   const parseCurrency = (str: string): number => {
-    // Remove tudo exceto números, vírgulas e pontos
-    const cleanStr = str.replace(/[^\d,]/g, '');
+    // Remove tudo exceto números
+    const numbersOnly = str.replace(/[^\d]/g, '');
     
     // Se está vazio, retorna 0
-    if (!cleanStr) return 0;
+    if (!numbersOnly) return 0;
     
-    // Se tem vírgula, considera como separador decimal
-    if (cleanStr.includes(',')) {
-      const parts = cleanStr.split(',');
-      const integerPart = parts[0] || '0';
-      const decimalPart = (parts[1] || '').padEnd(2, '0').substring(0, 2);
-      return parseFloat(`${integerPart}.${decimalPart}`);
-    }
-    
-    // Se não tem vírgula, trata como valor inteiro
-    return parseFloat(cleanStr);
+    // Converte para número
+    return parseInt(numbersOnly);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     
-    // Permite apenas números, vírgulas e remove outros caracteres
-    const filteredValue = inputValue.replace(/[^\d,]/g, '');
+    // Remove tudo exceto números
+    const numbersOnly = inputValue.replace(/[^\d]/g, '');
     
-    // Se o usuário digitou apenas números (ex: "47"), trata como valor inteiro em reais
-    if (/^\d+$/.test(filteredValue)) {
-      setDisplayValue(filteredValue);
-      // Converte diretamente para número (47 = 47.00 reais)
-      onChange(parseInt(filteredValue) || 0);
+    if (numbersOnly === '') {
+      setDisplayValue('');
+      onChange(0);
       return;
     }
     
-    // Se tem vírgula, permite edição dos decimais
-    if (filteredValue.includes(',')) {
-      const parts = filteredValue.split(',');
-      if (parts.length === 2) {
-        const integerPart = parts[0];
-        const decimalPart = parts[1].substring(0, 2); // máximo 2 casas decimais
-        const newValue = `${integerPart},${decimalPart}`;
-        setDisplayValue(newValue);
-        onChange(parseCurrency(newValue));
-        return;
-      }
-    }
-    
-    setDisplayValue(filteredValue);
-    onChange(parseCurrency(filteredValue));
+    // Trata como número inteiro (47 = 47.00)
+    const numericValue = parseInt(numbersOnly);
+    setDisplayValue(numbersOnly);
+    onChange(numericValue);
   };
 
   const handleBlur = () => {
