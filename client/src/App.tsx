@@ -25,6 +25,7 @@ import ClarissaChat from "@/pages/clarissa-chat";
 import SpecialistAdmin from "@/pages/specialist-admin";
 import SpecialistLogin from "@/pages/specialist-login";
 import SpecialistDashboard from "@/pages/specialist-dashboard";
+import AdminDashboard from "@/pages/admin-dashboard";
 import EmailVerification from "@/pages/email-verification";
 import AnalyticsDashboard from "@/pages/analytics-dashboard";
 import InviteMembers from "@/pages/invite-members";

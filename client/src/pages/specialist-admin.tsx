@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { 
   User, 
   Phone, 
@@ -21,9 +22,14 @@ import {
   MessageSquare,
   Bell,
   CheckCircle,
-  Bot
+  Bot,
+  LogOut,
+  UserCircle,
+  Shield
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useLocation } from "wouter";
+import metaSyncLogo from "@assets/MetaSync Logo Jun2025.png";
 
 interface SpecialistConfig {
   name: string;
@@ -46,6 +52,7 @@ interface AvailabilitySlot {
 export default function SpecialistAdmin() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
 
   // Configurações do especialista
   const [specialistConfig, setSpecialistConfig] = useState<SpecialistConfig>({
@@ -379,43 +386,103 @@ export default function SpecialistAdmin() {
     setAvailability(newAvailability);
   };
 
+  const handleLogout = () => {
+    toast({
+      title: "Logout realizado",
+      description: "Redirecionando para a tela de login...",
+    });
+    setTimeout(() => {
+      setLocation("/specialist-login");
+    }, 1000);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-6">
-      <div className="max-w-6xl mx-auto space-y-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-3 rounded-lg">
-                <Settings className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900">
-                  Configurações do Especialista
-                </h1>
-                <p className="text-gray-600">
-                  Gerencie o perfil, disponibilidades e automações
-                </p>
-              </div>
-            </div>
-            
-            <div className="flex gap-3">
-              <Button 
-                variant="outline" 
-                className="flex items-center gap-2"
-                onClick={() => window.open('/analytics-dashboard', '_blank')}
-              >
-                📊 Analytics
-              </Button>
-              <Button 
-                className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
-                onClick={() => window.open('/invite-members', '_blank')}
-              >
-                📧 Convites Beta (800 pessoas)
-              </Button>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
+      {/* Header fixo com logo e menu do usuário */}
+      <div className="bg-white border-b border-gray-200 px-6 py-4">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          {/* Logo MetaSync */}
+          <div className="flex items-center gap-3">
+            <img 
+              src={metaSyncLogo} 
+              alt="MetaSync" 
+              className="h-12"
+            />
+            <div className="border-l border-gray-300 pl-3">
+              <h1 className="text-xl font-bold text-gray-900">
+                Área do Especialista
+              </h1>
+              <p className="text-sm text-gray-600">
+                Configurações e Administração
+              </p>
             </div>
           </div>
+
+          {/* Menu do usuário */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="flex items-center gap-2 p-2">
+                <Avatar className="h-8 w-8">
+                  <AvatarImage src={specialistConfig.avatar} />
+                  <AvatarFallback className="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
+                    {specialistConfig.name.split(' ').map(n => n[0]).join('')}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="text-left hidden md:block">
+                  <p className="text-sm font-medium">{specialistConfig.name}</p>
+                  <p className="text-xs text-gray-500">Especialista</p>
+                </div>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <div className="px-2 py-1.5 text-sm font-medium">
+                {specialistConfig.name}
+              </div>
+              <div className="px-2 py-1 text-xs text-gray-500">
+                {specialistConfig.email}
+              </div>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setLocation("/specialist-dashboard")}>
+                <UserCircle className="mr-2 h-4 w-4" />
+                <span>Dashboard</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setLocation("/settings")}>
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Configurações</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => window.open("/analytics-dashboard", "_blank")}>
+                <Bell className="mr-2 h-4 w-4" />
+                <span>Analytics</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleLogout} className="text-red-600">
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Sair</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
+      </div>
+
+      {/* Conteúdo principal */}
+      <div className="p-6">
+        <div className="max-w-6xl mx-auto space-y-8">
+          {/* Botões de ação rápida */}
+          <div className="flex justify-end gap-3">
+            <Button 
+              variant="outline" 
+              className="flex items-center gap-2"
+              onClick={() => window.open('/analytics-dashboard', '_blank')}
+            >
+              📊 Analytics
+            </Button>
+            <Button 
+              className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+              onClick={() => window.open('/invite-members', '_blank')}
+            >
+              📧 Convites Beta (800 pessoas)
+            </Button>
+          </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Perfil do Especialista */}
@@ -1693,6 +1760,8 @@ export default function SpecialistAdmin() {
             </div>
           </CardContent>
         </Card>
+        </div>
+        </div>
       </div>
     </div>
   );
