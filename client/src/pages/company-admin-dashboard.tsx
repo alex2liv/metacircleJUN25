@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Users, UserPlus, Settings, LogOut, Bell, Search, Filter, MoreVertical, Edit, Trash2, Building2, Plus, MessageSquare, User, Calendar } from "lucide-react";
+import { Users, UserPlus, Settings, LogOut, Bell, Search, Filter, MoreVertical, Edit, Trash2, Building2, Plus, MessageSquare, User, Calendar, Clock, Eye, EyeOff } from "lucide-react";
 import { useParams, useLocation } from "wouter";
 
 interface UserData {
@@ -41,6 +41,23 @@ export default function CompanyAdminDashboard() {
   const [company, setCompany] = useState<Company | null>(null);
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [isAddUserOpen, setIsAddUserOpen] = useState(false);
+  const [eventStartTime, setEventStartTime] = useState("");
+  const [eventEndTime, setEventEndTime] = useState("");
+  const [showEndTime, setShowEndTime] = useState(false);
+
+  // Função para calcular hora final automaticamente (1 hora depois)
+  const calculateEndTime = (startTime: string) => {
+    if (!startTime) return "";
+    const [hours, minutes] = startTime.split(':');
+    const startHour = parseInt(hours);
+    const endHour = (startHour + 1) % 24;
+    return `${endHour.toString().padStart(2, '0')}:${minutes}`;
+  };
+
+  const handleStartTimeChange = (value: string) => {
+    setEventStartTime(value);
+    setEventEndTime(calculateEndTime(value));
+  };
   
   const companySlug = params.slug;
 
@@ -258,10 +275,58 @@ export default function CompanyAdminDashboard() {
                         <Input id="event-date" type="date" />
                       </div>
                       <div>
-                        <Label htmlFor="event-time">Horário</Label>
-                        <Input id="event-time" type="time" />
+                        <Label htmlFor="event-start-time">Horário de Início</Label>
+                        <Input 
+                          id="event-start-time" 
+                          type="time" 
+                          value={eventStartTime}
+                          onChange={(e) => handleStartTimeChange(e.target.value)}
+                        />
                       </div>
                     </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <Label className="text-sm font-medium">Horário de Término</Label>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setShowEndTime(!showEndTime)}
+                        className="h-8 px-2 text-xs"
+                      >
+                        {showEndTime ? (
+                          <>
+                            <EyeOff className="w-3 h-3 mr-1" />
+                            Ocultar
+                          </>
+                        ) : (
+                          <>
+                            <Eye className="w-3 h-3 mr-1" />
+                            Mostrar
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                    
+                    {showEndTime && (
+                      <div>
+                        <Input 
+                          id="event-end-time" 
+                          type="time" 
+                          value={eventEndTime}
+                          onChange={(e) => setEventEndTime(e.target.value)}
+                          placeholder="Horário de término"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          {eventStartTime && eventEndTime && 
+                            `Duração: ${Math.abs(
+                              (parseInt(eventEndTime.split(':')[0]) * 60 + parseInt(eventEndTime.split(':')[1])) - 
+                              (parseInt(eventStartTime.split(':')[0]) * 60 + parseInt(eventStartTime.split(':')[1]))
+                            ) / 60}h`
+                          }
+                        </p>
+                      </div>
+                    )}
                     <div>
                       <Label htmlFor="event-location">Local/Link</Label>
                       <Input id="event-location" placeholder="Presencial ou link online..." />
