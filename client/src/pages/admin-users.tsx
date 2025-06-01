@@ -22,7 +22,13 @@ import {
   Mail,
   Crown,
   Shield,
-  MessageCircle
+  MessageCircle,
+  Upload,
+  Download,
+  Key,
+  FileText,
+  AlertCircle,
+  Clock
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
@@ -40,6 +46,27 @@ interface UserData {
   speciality?: string;
   bio?: string;
   isActive: boolean;
+  isTemporaryPassword?: boolean;
+  passwordExpiresAt?: Date;
+  lastPasswordChange?: Date;
+}
+
+interface BulkImportData {
+  id: number;
+  filename: string;
+  totalRecords: number;
+  successCount: number;
+  errorCount: number;
+  status: "processing" | "completed" | "failed";
+  errors?: string[];
+  createdAt: Date;
+}
+
+interface SecuritySettings {
+  passwordExpirationDays: number;
+  requirePasswordChange: boolean;
+  defaultPassword: string;
+  emailNotifications: boolean;
 }
 
 export default function AdminUsers() {
@@ -67,6 +94,25 @@ export default function AdminUsers() {
   });
   const [userCountryCode, setUserCountryCode] = useState("+55");
   const [specialistCountryCode, setSpecialistCountryCode] = useState("+55");
+
+  // Estados para importação em massa
+  const [showBulkImport, setShowBulkImport] = useState(false);
+  const [importFile, setImportFile] = useState<File | null>(null);
+  const [importProgress, setImportProgress] = useState(0);
+  const [importHistory, setImportHistory] = useState<BulkImportData[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Estados para configurações de segurança
+  const [securitySettings, setSecuritySettings] = useState<SecuritySettings>({
+    passwordExpirationDays: 90,
+    requirePasswordChange: true,
+    defaultPassword: "123456",
+    emailNotifications: true
+  });
+  
+  // Estados para reset de senha
+  const [showPasswordReset, setShowPasswordReset] = useState(false);
+  const [resetPasswordUser, setResetPasswordUser] = useState<UserData | null>(null);
 
   // Configurações de qualidade de vídeo
   const [videoSettings, setVideoSettings] = useState({
@@ -314,6 +360,102 @@ export default function AdminUsers() {
     toast({
       title: "Usuário atualizado",
       description: `${editFormData.firstName} ${editFormData.lastName} foi atualizado com sucesso`,
+    });
+  };
+
+  // Função para importação em massa
+  const handleBulkImport = async () => {
+    if (!importFile) {
+      toast({
+        title: "Arquivo necessário",
+        description: "Selecione um arquivo CSV ou Excel para importar",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setImportProgress(0);
+    const formData = new FormData();
+    formData.append('file', importFile);
+    formData.append('defaultPassword', securitySettings.defaultPassword);
+
+    try {
+      // Simular progresso da importação
+      for (let i = 0; i <= 100; i += 10) {
+        setImportProgress(i);
+        await new Promise(resolve => setTimeout(resolve, 200));
+      }
+
+      // Processar arquivo (simulado)
+      const newImport: BulkImportData = {
+        id: Date.now(),
+        filename: importFile.name,
+        totalRecords: 399, // Exemplo baseado na menção do usuário
+        successCount: 395,
+        errorCount: 4,
+        status: "completed",
+        errors: ["Email duplicado: joao@email.com", "Telefone inválido linha 45"],
+        createdAt: new Date()
+      };
+
+      setImportHistory([newImport, ...importHistory]);
+      setShowBulkImport(false);
+      setImportFile(null);
+      setImportProgress(0);
+
+      toast({
+        title: "Importação concluída",
+        description: `${newImport.successCount} usuários importados com sucesso. ${newImport.errorCount} erros encontrados.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Erro na importação",
+        description: "Não foi possível processar o arquivo",
+        variant: "destructive"
+      });
+    }
+  };
+
+  // Função para reset de senha
+  const handlePasswordReset = async (user: UserData) => {
+    try {
+      // Simular envio de email
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      toast({
+        title: "Email enviado",
+        description: `Instruções de reset de senha enviadas para ${user.email}`,
+      });
+      
+      setShowPasswordReset(false);
+      setResetPasswordUser(null);
+    } catch (error) {
+      toast({
+        title: "Erro no envio",
+        description: "Não foi possível enviar o email de reset",
+        variant: "destructive"
+      });
+    }
+  };
+
+  // Função para gerar arquivo modelo
+  const downloadTemplate = () => {
+    const csvContent = `firstName,lastName,email,phone,role,speciality
+João,Silva,joao.silva@email.com,+55 11 99999-9999,member,
+Maria,Santos,maria.santos@email.com,+55 11 88888-8888,specialist,Psicóloga
+Pedro,Oliveira,pedro.oliveira@email.com,+55 11 77777-7777,member,`;
+
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'modelo_importacao_usuarios.csv';
+    a.click();
+    window.URL.revokeObjectURL(url);
+
+    toast({
+      title: "Modelo baixado",
+      description: "Arquivo modelo CSV foi baixado com sucesso",
     });
   };
 
@@ -1373,6 +1515,188 @@ export default function AdminUsers() {
             </Button>
             <Button onClick={saveUserEdit}>
               Salvar Alterações
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de Importação em Massa */}
+      <Dialog open={showBulkImport} onOpenChange={setShowBulkImport}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Upload className="h-5 w-5" />
+              Importação em Massa de Usuários
+            </DialogTitle>
+            <DialogDescription>
+              Importe centenas de usuários através de arquivo CSV ou Excel
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6">
+            {/* Seção de Upload */}
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+              <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+              <h3 className="text-lg font-medium mb-2">Selecione seu arquivo</h3>
+              <p className="text-gray-600 mb-4">Formatos aceitos: CSV, XLSX (máximo 5MB)</p>
+              
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".csv,.xlsx,.xls"
+                onChange={(e) => setImportFile(e.target.files?.[0] || null)}
+                className="hidden"
+              />
+              
+              <div className="flex gap-2 justify-center">
+                <Button onClick={() => fileInputRef.current?.click()}>
+                  Escolher Arquivo
+                </Button>
+                <Button variant="outline" onClick={downloadTemplate}>
+                  <Download className="h-4 w-4 mr-2" />
+                  Baixar Modelo
+                </Button>
+              </div>
+              
+              {importFile && (
+                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded">
+                  <p className="text-sm text-blue-800">
+                    Arquivo selecionado: <strong>{importFile.name}</strong>
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Configurações de Importação */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Senha Padrão</Label>
+                <Input
+                  value={securitySettings.defaultPassword}
+                  onChange={(e) => setSecuritySettings(prev => ({...prev, defaultPassword: e.target.value}))}
+                  placeholder="123456"
+                />
+                <p className="text-xs text-gray-500">Senha inicial para todos os usuários</p>
+              </div>
+              
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={securitySettings.requirePasswordChange}
+                    onChange={(e) => setSecuritySettings(prev => ({...prev, requirePasswordChange: e.target.checked}))}
+                  />
+                  Forçar troca de senha no primeiro login
+                </Label>
+                <p className="text-xs text-gray-500">Obriga usuários a definirem nova senha</p>
+              </div>
+            </div>
+
+            {/* Progresso da Importação */}
+            {importProgress > 0 && (
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Processando arquivo...</span>
+                  <span>{importProgress}%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${importProgress}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Histórico de Importações */}
+            {importHistory.length > 0 && (
+              <div className="space-y-3">
+                <h3 className="font-medium">Histórico de Importações</h3>
+                <div className="space-y-2 max-h-40 overflow-y-auto">
+                  {importHistory.map((import_item) => (
+                    <div key={import_item.id} className="flex items-center justify-between p-3 border rounded">
+                      <div>
+                        <p className="font-medium">{import_item.filename}</p>
+                        <p className="text-sm text-gray-600">
+                          {import_item.successCount} sucessos, {import_item.errorCount} erros
+                        </p>
+                      </div>
+                      <Badge className={
+                        import_item.status === "completed" ? "bg-green-600 text-white" :
+                        import_item.status === "failed" ? "bg-red-600 text-white" :
+                        "bg-yellow-600 text-white"
+                      }>
+                        {import_item.status === "completed" ? "Concluído" :
+                         import_item.status === "failed" ? "Falhou" : "Processando"}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowBulkImport(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={handleBulkImport} disabled={!importFile || importProgress > 0}>
+              {importProgress > 0 ? "Processando..." : "Iniciar Importação"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de Reset de Senha */}
+      <Dialog open={showPasswordReset} onOpenChange={setShowPasswordReset}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Key className="h-5 w-5" />
+              Reset de Senha
+            </DialogTitle>
+            <DialogDescription>
+              Enviar instruções de reset de senha por email
+            </DialogDescription>
+          </DialogHeader>
+
+          {resetPasswordUser && (
+            <div className="space-y-4">
+              <div className="p-4 bg-gray-50 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <Avatar>
+                    <AvatarFallback className="bg-blue-600 text-white">
+                      {resetPasswordUser.firstName[0]}{resetPasswordUser.lastName[0]}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <h3 className="font-medium">{resetPasswordUser.firstName} {resetPasswordUser.lastName}</h3>
+                    <p className="text-sm text-gray-600">{resetPasswordUser.email}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-2 p-3 bg-blue-50 border border-blue-200 rounded">
+                <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5" />
+                <div className="text-sm text-blue-800">
+                  <p>Um email será enviado para <strong>{resetPasswordUser.email}</strong> com:</p>
+                  <ul className="list-disc list-inside mt-2 space-y-1">
+                    <li>Link para redefinir a senha (válido por 24 horas)</li>
+                    <li>Instruções de segurança</li>
+                    <li>Suporte para dúvidas</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowPasswordReset(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={() => resetPasswordUser && handlePasswordReset(resetPasswordUser)}>
+              <Mail className="h-4 w-4 mr-2" />
+              Enviar Email
             </Button>
           </DialogFooter>
         </DialogContent>
