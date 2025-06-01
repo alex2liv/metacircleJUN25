@@ -71,7 +71,7 @@ export default function Sidebar() {
                 className={cn(
                   "group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors cursor-pointer",
                   isActive
-                    ? "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-200"
+                    ? "bg-blue-600 text-white dark:bg-blue-700 dark:text-white"
                     : "text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-gray-700"
                 )}
               >
@@ -79,7 +79,7 @@ export default function Sidebar() {
                   className={cn(
                     "mr-3 h-5 w-5",
                     isActive
-                      ? "text-primary"
+                      ? "text-white"
                       : "text-gray-400 group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-400"
                   )}
                 />
