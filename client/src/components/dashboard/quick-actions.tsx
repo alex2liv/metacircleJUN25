@@ -87,20 +87,28 @@ export default function QuickActions() {
         },
       });
       
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const data = await response.json();
+      console.log('QR Code response:', data); // Debug
       
       if (data.success && data.qrCode) {
         setQrCode(data.qrCode);
+        console.log('QR Code set successfully'); // Debug
         
         toast({
           title: "QR Code Gerado",
           description: "Escaneie com seu WhatsApp para conectar",
         });
       } else {
+        console.error('QR Code generation failed:', data); // Debug
         throw new Error(data.error || 'Falha ao gerar QR Code');
       }
       
     } catch (error) {
+      console.error('Error generating QR Code:', error); // Debug
       toast({
         title: "Erro",
         description: error instanceof Error ? error.message : "Falha ao gerar QR Code",
