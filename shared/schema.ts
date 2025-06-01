@@ -12,6 +12,14 @@ export const users = pgTable("users", {
   avatar: text("avatar"),
   role: text("role").notNull().default("member"), // admin, moderator, member
   isActive: boolean("is_active").notNull().default(true),
+  phone: text("phone"),
+  speciality: text("speciality"),
+  bio: text("bio"),
+  isTemporaryPassword: boolean("is_temporary_password").notNull().default(false),
+  passwordExpiresAt: timestamp("password_expires_at"),
+  lastPasswordChange: timestamp("last_password_change").defaultNow(),
+  resetToken: text("reset_token"),
+  resetTokenExpiresAt: timestamp("reset_token_expires_at"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -219,6 +227,19 @@ export const appointments = pgTable("appointments", {
   meetingLink: text("meeting_link"),
   whatsappSent: boolean("whatsapp_sent").default(false),
   createdAt: timestamp("created_at").defaultNow()
+});
+
+// Importações em lote
+export const bulkImports = pgTable("bulk_imports", {
+  id: serial("id").primaryKey(),
+  filename: text("filename").notNull(),
+  totalRecords: integer("total_records").notNull(),
+  successCount: integer("success_count").notNull().default(0),
+  errorCount: integer("error_count").notNull().default(0),
+  status: text("status").notNull().default("processing"), // processing, completed, failed
+  errors: jsonb("errors"), // Array de erros encontrados
+  createdBy: integer("created_by").notNull().references(() => users.id),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 export const insertUserSchema = createInsertSchema(users).omit({
