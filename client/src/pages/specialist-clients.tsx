@@ -224,12 +224,20 @@ export default function SpecialistClients() {
                   </div>
                   
                   <div className="flex gap-2">
-                    <Button variant="outline" size="sm">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setLocation('/specialist-messages')}
+                    >
                       <MessageSquare className="w-3 h-3 mr-1" />
                       Mensagem
                     </Button>
                     
-                    <Button variant="outline" size="sm">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setLocation('/specialist-agenda')}
+                    >
                       <Calendar className="w-3 h-3 mr-1" />
                       Agendar
                     </Button>
