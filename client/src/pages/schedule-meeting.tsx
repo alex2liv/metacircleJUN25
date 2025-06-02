@@ -240,21 +240,21 @@ export default function ScheduleMeeting() {
               </div>
             </div>
 
-            {/* Opção de convidar especialista */}
-            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
+            {/* Opção de convidar outros especialistas */}
+            <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-green-50 rounded-lg border border-blue-200">
               <div className="flex items-center gap-3">
                 <Avatar className="w-10 h-10">
-                  <AvatarFallback className="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
-                    CV
+                  <AvatarFallback className="bg-gradient-to-r from-blue-600 to-green-600 text-white">
+                    ES
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="font-medium text-gray-900">Convidar Clarissa Vaz</p>
-                  <p className="text-sm text-gray-600">Especialista em marketing digital</p>
+                  <p className="font-medium text-gray-900">Convidar Outros Especialistas</p>
+                  <p className="text-sm text-gray-600">Colaborar com outros profissionais da equipe</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <Star className="w-4 h-4 text-yellow-500" />
+                <Users className="w-4 h-4 text-blue-500" />
                 <Switch
                   checked={meetingData.withSpecialist}
                   onCheckedChange={(checked) => setMeetingData({...meetingData, withSpecialist: checked})}
@@ -360,48 +360,7 @@ export default function ScheduleMeeting() {
         </Card>
       </div>
 
-      {/* Recursos Premium */}
-      <Card className="bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-purple-900">
-            <Crown className="w-5 h-5" />
-            Recursos Exclusivos Premium
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center">
-                <Video className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <p className="font-medium text-purple-900">Videochamadas HD</p>
-                <p className="text-sm text-purple-700">Qualidade superior</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center">
-                <Star className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <p className="font-medium text-purple-900">Acesso à Clarissa</p>
-                <p className="text-sm text-purple-700">Mentoria especializada</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center">
-                <CheckCircle className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <p className="font-medium text-purple-900">Gravação das Sessões</p>
-                <p className="text-sm text-purple-700">Reveja quando quiser</p>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+
     </div>
   );
 }
