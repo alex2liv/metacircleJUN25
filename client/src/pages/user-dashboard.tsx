@@ -36,7 +36,16 @@ export default function UserDashboard() {
     courseCallToActionDescription: "Aprenda com a Dra. Clarissa Vaz e torne-se referência no mercado. Mais de 500 profissionais já transformaram suas práticas com nossos cursos.",
     courseSuccessCount: "500",
     sosServiceName: "SOS Clarissa",
-    sosServiceDescription: "Suporte especializado de urgência"
+    sosServiceDescription: "Teleconsulta de Urgência com Dra. Clarissa Vaz",
+    sosUrgentResponseTime: "30 minutos",
+    sosEmergencyResponseTime: "15 minutos",
+    sosLiveConsultPrice: "150",
+    sosLiveConsultDescription: "Envie vídeos do paciente em tempo real durante o atendimento. A Dra. Clarissa te orienta sobre procedimentos e diagnósticos.",
+    sosCaseDiscussionPrice: "80",
+    sosCaseDiscussionDescription: "Apresente casos complexos com fotos e histórico. Receba orientação detalhada sobre o melhor tratamento.",
+    sosPrivateLessonPrice: "300",
+    sosPrivateLessonDescription: "Uma hora completa com a Dra. Clarissa 100% focada em você. Tire todas as dúvidas, aprenda técnicas específicas ou discuta estratégias para sua clínica.",
+    sosPrivateLessonDuration: "60 minutos"
   });
 
   // Course promotions (configured by client admin)
@@ -465,7 +474,16 @@ export default function UserDashboard() {
                         <span>• 12 participantes</span>
                         <span>• Iniciou há 15 min</span>
                       </div>
-                      <Button className="w-full bg-green-600 hover:bg-green-700">
+                      <Button 
+                        className="w-full bg-green-600 hover:bg-green-700"
+                        onClick={() => {
+                          toast({
+                            title: "Entrando na sala...",
+                            description: "Redirecionando para a videoconferência",
+                          });
+                          // In real app: window.open('/video-room/casos-clinicos', '_blank');
+                        }}
+                      >
                         <Video className="w-4 h-4 mr-2" />
                         Entrar na Sala
                       </Button>
@@ -486,7 +504,16 @@ export default function UserDashboard() {
                         <span>• 8 participantes</span>
                         <span>• Iniciou há 32 min</span>
                       </div>
-                      <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                      <Button 
+                        className="w-full bg-blue-600 hover:bg-blue-700"
+                        onClick={() => {
+                          toast({
+                            title: "Entrando na sala...",
+                            description: "Conectando ao networking livre",
+                          });
+                          // In real app: window.open('/video-room/networking', '_blank');
+                        }}
+                      >
                         <Video className="w-4 h-4 mr-2" />
                         Entrar na Sala
                       </Button>
@@ -504,7 +531,16 @@ export default function UserDashboard() {
                         <span>• 0 participantes</span>
                         <span>• Inicia em 2h 30min</span>
                       </div>
-                      <Button variant="outline" className="w-full">
+                      <Button 
+                        variant="outline" 
+                        className="w-full"
+                        onClick={() => {
+                          toast({
+                            title: "Lembrete criado!",
+                            description: "Você será notificado 15 minutos antes da sala começar",
+                          });
+                        }}
+                      >
                         <Clock className="w-4 h-4 mr-2" />
                         Lembrar-me
                       </Button>
@@ -554,7 +590,18 @@ export default function UserDashboard() {
                       </div>
                     </div>
 
-                    <Button className="w-full" disabled={userPlan !== "premium"}>
+                    <Button 
+                      className="w-full" 
+                      disabled={userPlan !== "premium"}
+                      onClick={() => {
+                        if (userPlan === "premium") {
+                          toast({
+                            title: "Sala criada!",
+                            description: "Sua videoconferência está sendo configurada",
+                          });
+                        }
+                      }}
+                    >
                       <Video className="w-4 h-4 mr-2" />
                       {userPlan === "premium" ? "Criar Sala" : "Premium apenas"}
                     </Button>

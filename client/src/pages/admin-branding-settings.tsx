@@ -30,6 +30,19 @@ export default function AdminBrandingSettings() {
     // SOS Service
     sosServiceName: "SOS Clarissa",
     sosServiceDescription: "Suporte especializado de urgência",
+    sosUrgentResponseTime: "30 minutos",
+    sosEmergencyResponseTime: "15 minutos",
+    
+    // SOS Service Options
+    sosLiveConsultPrice: "150.00",
+    sosLiveConsultDescription: "Envie vídeos do paciente em tempo real durante o atendimento. A Dra. Clarissa te orienta sobre procedimentos e diagnósticos.",
+    
+    sosCaseDiscussionPrice: "80.00", 
+    sosCaseDiscussionDescription: "Apresente casos complexos com fotos e histórico. Receba orientação detalhada sobre o melhor tratamento.",
+    
+    sosPrivateLessonPrice: "300.00",
+    sosPrivateLessonDescription: "Uma hora completa com a Dra. Clarissa 100% focada em você. Tire todas as dúvidas, aprenda técnicas específicas ou discuta estratégias para sua clínica.",
+    sosPrivateLessonDuration: "60 minutos",
     
     // General Messaging
     welcomeMessage: "Bem-vindo à nossa comunidade exclusiva!",
@@ -219,32 +232,6 @@ export default function AdminBrandingSettings() {
                 </div>
 
                 <div>
-                  <Label htmlFor="sosServiceName">Nome do Serviço de Urgência</Label>
-                  <Input
-                    id="sosServiceName"
-                    value={brandingConfig.sosServiceName}
-                    onChange={(e) => setBrandingConfig(prev => ({ 
-                      ...prev, 
-                      sosServiceName: e.target.value 
-                    }))}
-                    placeholder="Ex: SOS Clarissa, Urgência Médica"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="sosServiceDescription">Descrição do Serviço SOS</Label>
-                  <Input
-                    id="sosServiceDescription"
-                    value={brandingConfig.sosServiceDescription}
-                    onChange={(e) => setBrandingConfig(prev => ({ 
-                      ...prev, 
-                      sosServiceDescription: e.target.value 
-                    }))}
-                    placeholder="Ex: Suporte especializado de urgência"
-                  />
-                </div>
-
-                <div>
                   <Label htmlFor="welcomeMessage">Mensagem de Boas-vindas</Label>
                   <Textarea
                     id="welcomeMessage"
@@ -270,6 +257,190 @@ export default function AdminBrandingSettings() {
                     placeholder="Mensagem para incentivar upgrades de plano"
                     rows={3}
                   />
+                </div>
+
+              </CardContent>
+            </Card>
+
+            {/* SOS Service Configuration */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Configuração do Serviço SOS</CardTitle>
+                <CardDescription>
+                  Configure preços, descrições e tempos de resposta do serviço de urgência
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="sosServiceName">Nome do Serviço de Urgência</Label>
+                    <Input
+                      id="sosServiceName"
+                      value={brandingConfig.sosServiceName}
+                      onChange={(e) => setBrandingConfig(prev => ({ 
+                        ...prev, 
+                        sosServiceName: e.target.value 
+                      }))}
+                      placeholder="Ex: SOS Maria, Urgência Dr. João"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="sosServiceDescription">Descrição do Serviço</Label>
+                    <Input
+                      id="sosServiceDescription"
+                      value={brandingConfig.sosServiceDescription}
+                      onChange={(e) => setBrandingConfig(prev => ({ 
+                        ...prev, 
+                        sosServiceDescription: e.target.value 
+                      }))}
+                      placeholder="Ex: Teleconsulta de Urgência com Dra. Maria"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="sosUrgentResponseTime">Tempo de Resposta Prioritário</Label>
+                    <Input
+                      id="sosUrgentResponseTime"
+                      value={brandingConfig.sosUrgentResponseTime}
+                      onChange={(e) => setBrandingConfig(prev => ({ 
+                        ...prev, 
+                        sosUrgentResponseTime: e.target.value 
+                      }))}
+                      placeholder="Ex: 30 minutos"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="sosEmergencyResponseTime">Tempo de Resposta Emergência</Label>
+                    <Input
+                      id="sosEmergencyResponseTime"
+                      value={brandingConfig.sosEmergencyResponseTime}
+                      onChange={(e) => setBrandingConfig(prev => ({ 
+                        ...prev, 
+                        sosEmergencyResponseTime: e.target.value 
+                      }))}
+                      placeholder="Ex: 15 minutos"
+                    />
+                  </div>
+                </div>
+
+                {/* Teleconsulta ao Vivo */}
+                <div className="bg-blue-50 p-4 rounded-lg space-y-4">
+                  <h4 className="font-semibold text-blue-900">📹 Teleconsulta ao Vivo</h4>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="sosLiveConsultPrice">Preço (R$)</Label>
+                      <Input
+                        id="sosLiveConsultPrice"
+                        value={brandingConfig.sosLiveConsultPrice}
+                        onChange={(e) => setBrandingConfig(prev => ({ 
+                          ...prev, 
+                          sosLiveConsultPrice: e.target.value 
+                        }))}
+                        placeholder="150.00"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="sosLiveConsultDescription">Descrição do Serviço</Label>
+                    <Textarea
+                      id="sosLiveConsultDescription"
+                      value={brandingConfig.sosLiveConsultDescription}
+                      onChange={(e) => setBrandingConfig(prev => ({ 
+                        ...prev, 
+                        sosLiveConsultDescription: e.target.value 
+                      }))}
+                      placeholder="Descreva como funciona a teleconsulta ao vivo"
+                      rows={3}
+                    />
+                  </div>
+                </div>
+
+                {/* Discussão de Casos */}
+                <div className="bg-green-50 p-4 rounded-lg space-y-4">
+                  <h4 className="font-semibold text-green-900">💬 Discussão de Casos</h4>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="sosCaseDiscussionPrice">Preço (R$)</Label>
+                      <Input
+                        id="sosCaseDiscussionPrice"
+                        value={brandingConfig.sosCaseDiscussionPrice}
+                        onChange={(e) => setBrandingConfig(prev => ({ 
+                          ...prev, 
+                          sosCaseDiscussionPrice: e.target.value 
+                        }))}
+                        placeholder="80.00"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="sosCaseDiscussionDescription">Descrição do Serviço</Label>
+                    <Textarea
+                      id="sosCaseDiscussionDescription"
+                      value={brandingConfig.sosCaseDiscussionDescription}
+                      onChange={(e) => setBrandingConfig(prev => ({ 
+                        ...prev, 
+                        sosCaseDiscussionDescription: e.target.value 
+                      }))}
+                      placeholder="Descreva como funciona a discussão de casos"
+                      rows={3}
+                    />
+                  </div>
+                </div>
+
+                {/* Aula Particular */}
+                <div className="bg-purple-50 p-4 rounded-lg space-y-4">
+                  <h4 className="font-semibold text-purple-900">🎯 Aula Particular 1:1</h4>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="sosPrivateLessonPrice">Preço (R$)</Label>
+                      <Input
+                        id="sosPrivateLessonPrice"
+                        value={brandingConfig.sosPrivateLessonPrice}
+                        onChange={(e) => setBrandingConfig(prev => ({ 
+                          ...prev, 
+                          sosPrivateLessonPrice: e.target.value 
+                        }))}
+                        placeholder="300.00"
+                      />
+                    </div>
+
+                    <div>
+                      <Label htmlFor="sosPrivateLessonDuration">Duração</Label>
+                      <Input
+                        id="sosPrivateLessonDuration"
+                        value={brandingConfig.sosPrivateLessonDuration}
+                        onChange={(e) => setBrandingConfig(prev => ({ 
+                          ...prev, 
+                          sosPrivateLessonDuration: e.target.value 
+                        }))}
+                        placeholder="60 minutos"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="sosPrivateLessonDescription">Descrição do Serviço</Label>
+                    <Textarea
+                      id="sosPrivateLessonDescription"
+                      value={brandingConfig.sosPrivateLessonDescription}
+                      onChange={(e) => setBrandingConfig(prev => ({ 
+                        ...prev, 
+                        sosPrivateLessonDescription: e.target.value 
+                      }))}
+                      placeholder="Descreva como funciona a aula particular"
+                      rows={3}
+                    />
+                  </div>
                 </div>
 
               </CardContent>
