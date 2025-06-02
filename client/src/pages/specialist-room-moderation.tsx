@@ -4,6 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { 
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { 
   Video, 
   Users, 
   MessageSquare, 
@@ -40,6 +49,41 @@ interface ChatMessage {
 
 export default function SpecialistRoomModeration() {
   const { toast } = useToast();
+  const [selectedUser, setSelectedUser] = useState<string | null>(null);
+  const [banDialogOpen, setBanDialogOpen] = useState(false);
+  const [moderationNote, setModerationNote] = useState("");
+
+  const handleBanUser = (username: string, duration: '15min' | '1hour' | 'permanent') => {
+    const banMessages = {
+      '15min': 'Você foi temporariamente impedido de enviar mensagens por 15 minutos devido a violação das regras de conduta da comunidade. Por favor, mantenha um ambiente respeitoso para todos.',
+      '1hour': 'Você foi temporariamente impedido de enviar mensagens por 1 hora devido a violação das regras de conduta da comunidade. Pedimos que revise nossos termos de uso.',
+      'permanent': 'Você foi permanentemente banido de enviar mensagens devido a violações graves das regras da comunidade. Para recursos, entre em contato com a administração.'
+    };
+
+    const durationText = {
+      '15min': '15 minutos',
+      '1hour': '1 hora',
+      'permanent': 'permanentemente'
+    };
+
+    // Aqui seria implementada a lógica real de banimento no backend
+    toast({
+      title: "Usuário banido",
+      description: `${username} foi banido por ${durationText[duration]}`,
+    });
+
+    // Simular notificação para o usuário banido
+    setTimeout(() => {
+      toast({
+        title: `Notificação enviada para ${username}`,
+        description: banMessages[duration],
+        variant: "default",
+      });
+    }, 1000);
+
+    setBanDialogOpen(false);
+    setSelectedUser(null);
+  };
   
   const [rooms] = useState<Room[]>([
     {
@@ -101,8 +145,6 @@ export default function SpecialistRoomModeration() {
     }
   ]);
 
-  const [moderationNote, setModerationNote] = useState("");
-
   const joinRoom = (roomId: string) => {
     window.open(`/video-room/${roomId}?moderator=true`, '_blank');
     toast({
@@ -126,11 +168,8 @@ export default function SpecialistRoomModeration() {
   };
 
   const banUser = (userName: string) => {
-    toast({
-      title: "Usuário banido",
-      description: `${userName} foi removido e banido temporariamente`,
-      variant: "destructive"
-    });
+    setSelectedUser(userName);
+    setBanDialogOpen(true);
   };
 
   return (
@@ -364,6 +403,59 @@ export default function SpecialistRoomModeration() {
         </div>
 
       </div>
+
+      {/* Diálogo de Confirmação de Banimento */}
+      <Dialog open={banDialogOpen} onOpenChange={setBanDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Confirmar Banimento</DialogTitle>
+            <DialogDescription>
+              Selecione o período de banimento para o usuário <strong>{selectedUser}</strong>:
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid gap-4 py-4">
+            <Button
+              variant="outline"
+              onClick={() => selectedUser && handleBanUser(selectedUser, '15min')}
+              className="justify-start text-left h-auto p-4"
+            >
+              <div>
+                <div className="font-medium">Banir por 15 minutos</div>
+                <div className="text-sm text-gray-500">Para infrações leves</div>
+              </div>
+            </Button>
+            
+            <Button
+              variant="outline"
+              onClick={() => selectedUser && handleBanUser(selectedUser, '1hour')}
+              className="justify-start text-left h-auto p-4"
+            >
+              <div>
+                <div className="font-medium">Banir por 1 hora</div>
+                <div className="text-sm text-gray-500">Para comportamento inadequado</div>
+              </div>
+            </Button>
+            
+            <Button
+              variant="destructive"
+              onClick={() => selectedUser && handleBanUser(selectedUser, 'permanent')}
+              className="justify-start text-left h-auto p-4"
+            >
+              <div>
+                <div className="font-medium">Banimento permanente</div>
+                <div className="text-sm text-white/80">Para violações graves</div>
+              </div>
+            </Button>
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setBanDialogOpen(false)}>
+              Cancelar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

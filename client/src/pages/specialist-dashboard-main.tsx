@@ -38,7 +38,9 @@ export default function SpecialistDashboardMain() {
   };
 
   const handleStartLive = () => {
-    setLocation("/video-room");
+    // Gerar ID único para a nova live
+    const roomId = `live-${Date.now()}`;
+    setLocation(`/video-room/${roomId}`);
   };
 
   const handleScheduleMeeting = () => {
