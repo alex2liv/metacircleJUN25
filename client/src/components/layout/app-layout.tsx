@@ -20,11 +20,17 @@ export default function AppLayout({ children }: AppLayoutProps) {
         <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 sm:px-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <img 
-                src="/attached_assets/icone_matasync.png" 
-                alt="MetaSync" 
-                className="w-8 h-8"
-              />
+              <svg width="32" height="32" viewBox="0 0 100 100" className="w-8 h-8">
+                <defs>
+                  <linearGradient id="metasyncGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style={{ stopColor: '#00bfff', stopOpacity: 1 }} />
+                    <stop offset="100%" style={{ stopColor: '#0080ff', stopOpacity: 1 }} />
+                  </linearGradient>
+                </defs>
+                <path d="M25 25 L75 25 L75 50 L50 75 L25 50 Z" fill="url(#metasyncGrad)" stroke="#0066cc" strokeWidth="2"/>
+                <path d="M35 35 L65 35 L65 45 L50 60 L35 45 Z" fill="none" stroke="#ffffff" strokeWidth="2"/>
+                <path d="M42 42 L58 42 L58 48 L50 56 L42 48 Z" fill="none" stroke="#ffffff" strokeWidth="1.5"/>
+              </svg>
               <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Dashboard</h1>
             </div>
             
