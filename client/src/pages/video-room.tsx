@@ -53,7 +53,7 @@ export default function VideoRoom() {
   const [hasHandRaised, setHasHandRaised] = useState(false);
   const [chatMessage, setChatMessage] = useState("");
   const [roomPin] = useState("1234");
-  const [showPin, setShowPin] = useState(true);
+  const [showPin, setShowPin] = useState(false);
   const [isModerator] = useState(() => {
     return window.location.search.includes('moderator=true');
   });
@@ -195,29 +195,7 @@ export default function VideoRoom() {
             <p className="text-sm text-gray-300">com {roomInfo.host} • {roomInfo.duration} • {roomInfo.participantCount} participantes</p>
           </div>
 
-          {/* PIN Display */}
-          {showPin && (
-            <div className="flex items-center gap-2 bg-blue-600 px-3 py-2 rounded-lg">
-              <Lock className="w-4 h-4" />
-              <span className="text-sm font-medium">PIN: {roomPin}</span>
-              <Button 
-                size="sm" 
-                variant="outline"
-                onClick={copyRoomPin}
-                className="text-xs h-6 px-2"
-              >
-                Copiar
-              </Button>
-              <Button 
-                size="sm" 
-                variant="ghost"
-                onClick={() => setShowPin(false)}
-                className="text-xs h-6 px-1"
-              >
-                ×
-              </Button>
-            </div>
-          )}
+
           
           <div className="flex items-center gap-2">
             {/* View Mode Toggle */}
@@ -313,80 +291,7 @@ export default function VideoRoom() {
           </div>
         </div>
 
-        {/* Chat Sidebar (Desktop only) */}
-        {viewMode === 'desktop' && showChat && (
-          <div className="w-80 bg-gray-800 border-l border-gray-700 flex flex-col">
-            <div className="p-4 border-b border-gray-700">
-              <h3 className="font-semibold">Chat da Sala</h3>
-              {isModerator && (
-                <p className="text-xs text-yellow-400 mt-1">
-                  <Shield className="w-3 h-3 inline mr-1" />
-                  Modo moderador ativo
-                </p>
-              )}
-            </div>
-            
-            {/* Chat Messages */}
-            <div className="flex-1 p-4 overflow-y-auto max-h-96">
-              <div className="space-y-3">
-                {chatMessages.map((msg) => (
-                  <div key={msg.id} className="text-sm">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <span className="font-medium text-blue-300">{msg.userName}:</span>
-                        <span className="ml-2 text-gray-300">{msg.message}</span>
-                      </div>
-                      {isModerator && (
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="h-4 w-4 p-0 text-red-400 hover:text-red-300"
-                          onClick={() => toast({
-                            title: "Mensagem removida",
-                            description: `Mensagem de ${msg.userName} foi excluída`,
-                          })}
-                        >
-                          ×
-                        </Button>
-                      )}
-                    </div>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {msg.timestamp.toLocaleTimeString('pt-BR')}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
 
-            {/* Chat Input */}
-            <div className="p-4 border-t border-gray-700">
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Digite sua mensagem..."
-                  value={chatMessage}
-                  onChange={(e) => setChatMessage(e.target.value)}
-                  onKeyPress={(e) => {
-                    if (e.key === 'Enter') {
-                      sendChatMessage();
-                    }
-                  }}
-                  className="flex-1 bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                />
-                <Button
-                  onClick={sendChatMessage}
-                  disabled={!chatMessage.trim()}
-                  size="sm"
-                  className="px-3"
-                >
-                  <Send className="w-4 h-4" />
-                </Button>
-              </div>
-              <p className="text-xs text-gray-500 mt-2">
-                Pressione Enter para enviar
-              </p>
-            </div>
-          </div>
-        )}
 
       </div>
 
@@ -439,23 +344,22 @@ export default function VideoRoom() {
             <Hand className="w-5 h-5" />
           </Button>
 
-          {viewMode === 'desktop' && (
-            <Button
-              size="sm"
-              variant={showChat ? "default" : "secondary"}
-              onClick={() => setShowChat(!showChat)}
-              className="rounded-full w-12 h-12 p-0"
-            >
-              <MessageSquare className="w-5 h-5" />
-            </Button>
-          )}
+          <Button
+            size="sm"
+            variant={showChat ? "default" : "secondary"}
+            onClick={() => setShowChat(!showChat)}
+            className="rounded-full w-12 h-12 p-0"
+          >
+            <MessageSquare className="w-5 h-5" />
+          </Button>
 
           <Button
             size="sm"
-            variant="secondary"
+            variant={showPin ? "default" : "secondary"}
+            onClick={() => setShowPin(!showPin)}
             className="rounded-full w-12 h-12 p-0"
           >
-            <Users className="w-5 h-5" />
+            <Lock className="w-5 h-5" />
           </Button>
 
           <Button
@@ -469,6 +373,123 @@ export default function VideoRoom() {
 
         </div>
       </div>
+
+      {/* PIN Modal */}
+      {showPin && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-gray-800 p-6 rounded-lg border border-gray-600 max-w-sm w-full mx-4">
+            <div className="text-center">
+              <Lock className="w-12 h-12 mx-auto mb-4 text-blue-400" />
+              <h3 className="text-lg font-semibold mb-2">PIN da Sala</h3>
+              <div className="text-3xl font-mono font-bold text-blue-400 mb-4 tracking-widest">
+                {roomPin}
+              </div>
+              <p className="text-sm text-gray-400 mb-4">
+                Compartilhe este PIN para outros participantes entrarem na sala
+              </p>
+              <div className="flex gap-2">
+                <Button 
+                  onClick={copyRoomPin}
+                  className="flex-1"
+                >
+                  <Lock className="w-4 h-4 mr-2" />
+                  Copiar PIN
+                </Button>
+                <Button 
+                  variant="outline"
+                  onClick={() => setShowPin(false)}
+                  className="flex-1"
+                >
+                  Fechar
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Chat Bottom Panel */}
+      {showChat && (
+        <div className="fixed bottom-20 right-4 w-80 h-96 bg-gray-800 border border-gray-600 rounded-lg shadow-xl flex flex-col">
+          <div className="p-3 border-b border-gray-700 flex items-center justify-between">
+            <h3 className="font-semibold text-sm">Chat da Sala</h3>
+            {isModerator && (
+              <Badge variant="outline" className="text-xs">
+                <Shield className="w-3 h-3 mr-1" />
+                Moderador
+              </Badge>
+            )}
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setShowChat(false)}
+              className="h-6 w-6 p-0"
+            >
+              ×
+            </Button>
+          </div>
+          
+          {/* Chat Messages */}
+          <div className="flex-1 p-3 overflow-y-auto">
+            <div className="space-y-3">
+              {chatMessages.map((msg) => (
+                <div key={msg.id} className="text-sm">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <span className="font-medium text-blue-300">{msg.userName}:</span>
+                      <span className="ml-2 text-gray-300">{msg.message}</span>
+                    </div>
+                    {isModerator && (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-4 w-4 p-0 text-red-400 hover:text-red-300"
+                        onClick={() => toast({
+                          title: "Mensagem removida",
+                          description: `Mensagem de ${msg.userName} foi excluída`,
+                        })}
+                      >
+                        ×
+                      </Button>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {msg.timestamp.toLocaleTimeString('pt-BR')}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Chat Input */}
+          <div className="p-3 border-t border-gray-700">
+            <div className="flex gap-2">
+              <Input
+                placeholder="Digite sua mensagem..."
+                value={chatMessage}
+                onChange={(e) => setChatMessage(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    sendChatMessage();
+                  }
+                }}
+                className="flex-1 bg-gray-700 border-gray-600 text-white placeholder-gray-400 h-8 text-sm"
+              />
+              <Button
+                onClick={sendChatMessage}
+                disabled={!chatMessage.trim()}
+                size="sm"
+                className="h-8 px-2"
+              >
+                <Send className="w-3 h-3" />
+              </Button>
+            </div>
+            <p className="text-xs text-gray-500 mt-1">
+              Pressione Enter para enviar
+            </p>
+          </div>
+        </div>
+      )}
 
     </div>
   );
