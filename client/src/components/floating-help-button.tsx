@@ -186,14 +186,18 @@ Digite uma palavra-chave ou sua dúvida específica!`;
   return (
     <>
       {/* Botão Flutuante */}
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed bottom-20 right-6 z-50">
         {!isOpen && (
           <Button
             onClick={() => setIsOpen(true)}
             className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-300"
             size="lg"
           >
-            <Bot className="w-6 h-6 text-white" />
+            <img 
+              src="/attached_assets/logo metasync fundo transparente.png" 
+              alt="MetaSync Help" 
+              className="w-6 h-6"
+            />
           </Button>
         )}
       </div>
@@ -300,7 +304,7 @@ Digite uma palavra-chave ou sua dúvida específica!`;
 
       {/* Badge de Notificação (opcional) */}
       {!isOpen && (
-        <div className="fixed bottom-16 right-4 z-40">
+        <div className="fixed bottom-32 right-4 z-40">
           <div className="bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-bounce">
             Precisa de ajuda? 👆
           </div>
