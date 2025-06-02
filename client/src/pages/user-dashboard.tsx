@@ -18,7 +18,13 @@ export default function UserDashboard() {
   const [messageText, setMessageText] = useState("");
   
   // User subscription status
-  const [userPlan] = useState("premium"); // basic, premium
+  const [userPlan] = useState("basic"); // basic, intermediate, premium
+  
+  // Upgrade links (normally configured by client admin)
+  const [upgradeLinks] = useState({
+    intermediate: "https://perfectpay.com.br/upgrade-intermediario-podologia",
+    premium: "https://perfectpay.com.br/upgrade-premium-podologia"
+  });
   
   // Notifications state
   const [notifications, setNotifications] = useState<any[]>([]);
@@ -130,12 +136,24 @@ export default function UserDashboard() {
                 SOS Clarissa
               </Button>
               
+              {/* Plan Badge */}
               {userPlan === "premium" && (
                 <Badge className="bg-yellow-500 text-white">
                   <Crown className="w-3 h-3 mr-1" />
                   Premium
                 </Badge>
               )}
+              {userPlan === "intermediate" && (
+                <Badge className="bg-purple-500 text-white">
+                  Intermediário
+                </Badge>
+              )}
+              {userPlan === "basic" && (
+                <Badge variant="outline" className="border-gray-400 text-gray-600">
+                  Básico
+                </Badge>
+              )}
+              
               <Button 
                 variant="outline" 
                 size="sm"
@@ -877,6 +895,210 @@ export default function UserDashboard() {
           {/* Settings Tab */}
           <TabsContent value="settings" className="space-y-6">
             
+            {/* Upgrade Section for Non-Premium Users */}
+            {userPlan !== "premium" && (
+              <Card className="bg-gradient-to-r from-yellow-50 to-orange-50 border-2 border-yellow-200">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Crown className="w-6 h-6 text-yellow-600" />
+                    Desbloqueie Todo o Potencial da Comunidade
+                  </CardTitle>
+                  <CardDescription className="text-lg">
+                    Veja o que você está perdendo e acelere seu crescimento profissional
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  
+                  {/* Plans Comparison */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    
+                    {/* Current Plan */}
+                    <div className={`p-6 rounded-xl border-2 ${userPlan === "basic" ? "border-gray-300 bg-gray-50" : "border-purple-300 bg-purple-50"}`}>
+                      <div className="text-center mb-4">
+                        <h3 className="font-bold text-lg">
+                          {userPlan === "basic" ? "Seu Plano Atual" : "Seu Plano Atual"}
+                        </h3>
+                        <div className="text-2xl font-bold mt-2">
+                          {userPlan === "basic" ? "Básico" : "Intermediário"}
+                        </div>
+                        <div className="text-lg font-semibold text-gray-600">
+                          {userPlan === "basic" ? "R$ 29,90/mês" : "R$ 59,90/mês"}
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2 text-sm">
+                        <div className="flex items-center gap-2">
+                          <span className="text-green-500">✅</span>
+                          <span>Acesso à comunidade</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-green-500">✅</span>
+                          <span>Visualizar discussões</span>
+                        </div>
+                        {userPlan === "intermediate" && (
+                          <>
+                            <div className="flex items-center gap-2">
+                              <span className="text-green-500">✅</span>
+                              <span>Participar de salas</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span className="text-green-500">✅</span>
+                              <span>Mensagens limitadas</span>
+                            </div>
+                          </>
+                        )}
+                        <div className="flex items-center gap-2">
+                          <span className="text-red-500">❌</span>
+                          <span className="text-gray-500">Mensagens diretas com Dra. Clarissa</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-red-500">❌</span>
+                          <span className="text-gray-500">Criar salas de vídeo</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-red-500">❌</span>
+                          <span className="text-gray-500">Upload de arquivos/vídeos</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-red-500">❌</span>
+                          <span className="text-gray-500">Networking premium</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Intermediate Plan (if user is basic) */}
+                    {userPlan === "basic" && (
+                      <div className="p-6 rounded-xl border-2 border-purple-300 bg-purple-50">
+                        <div className="text-center mb-4">
+                          <Badge className="bg-purple-600 text-white mb-2">Próximo Nível</Badge>
+                          <h3 className="font-bold text-lg text-purple-900">Intermediário</h3>
+                          <div className="text-2xl font-bold text-purple-600 mt-2">R$ 59,90</div>
+                          <div className="text-sm text-purple-700">/mês</div>
+                        </div>
+                        
+                        <div className="space-y-2 text-sm mb-6">
+                          <div className="flex items-center gap-2">
+                            <span className="text-green-500">✅</span>
+                            <span>Tudo do Básico</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-green-500">✅</span>
+                            <span className="font-semibold">Participar de salas ao vivo</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-green-500">✅</span>
+                            <span className="font-semibold">Mensagens entre membros</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-green-500">✅</span>
+                            <span className="font-semibold">Publicar perguntas</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-red-500">❌</span>
+                            <span className="text-gray-500">Acesso direto à especialista</span>
+                          </div>
+                        </div>
+                        
+                        <Button 
+                          className="w-full bg-purple-600 hover:bg-purple-700"
+                          onClick={() => {
+                            window.open(upgradeLinks.intermediate, '_blank');
+                            toast({
+                              title: "Redirecionando...",
+                              description: "Você será direcionado para o upgrade Intermediário",
+                            });
+                          }}
+                        >
+                          Fazer Upgrade
+                        </Button>
+                      </div>
+                    )}
+
+                    {/* Premium Plan */}
+                    <div className="p-6 rounded-xl border-4 border-yellow-400 bg-gradient-to-br from-yellow-50 to-orange-50 relative transform hover:scale-105 transition-transform">
+                      <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                        <Badge className="bg-gradient-to-r from-yellow-600 to-orange-600 text-white px-4 py-2 font-bold">
+                          🚀 RECOMENDADO
+                        </Badge>
+                      </div>
+                      
+                      <div className="text-center mb-4 mt-2">
+                        <h3 className="font-bold text-lg text-yellow-900">Premium VIP</h3>
+                        <div className="flex items-center justify-center gap-2 mt-2">
+                          <span className="text-lg text-gray-500 line-through">R$ 149,90</span>
+                          <div className="text-2xl font-bold text-yellow-600">R$ 99,90</div>
+                        </div>
+                        <div className="text-sm text-yellow-700">/mês</div>
+                      </div>
+                      
+                      <div className="space-y-2 text-sm mb-6">
+                        <div className="flex items-center gap-2">
+                          <span className="text-green-500">✅</span>
+                          <span>Tudo dos outros planos</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-green-500">✅</span>
+                          <span className="font-semibold">WhatsApp direto com Dra. Clarissa</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-green-500">✅</span>
+                          <span className="font-semibold">Criar salas de vídeo ilimitadas</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-green-500">✅</span>
+                          <span className="font-semibold">Upload de vídeos/arquivos</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-green-500">✅</span>
+                          <span className="font-semibold">Networking VIP exclusivo</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-green-500">✅</span>
+                          <span className="font-semibold">Certificados reconhecidos</span>
+                        </div>
+                      </div>
+                      
+                      <Button 
+                        className="w-full bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white font-bold"
+                        onClick={() => {
+                          window.open(upgradeLinks.premium, '_blank');
+                          toast({
+                            title: "Redirecionando...",
+                            description: "Você será direcionado para o upgrade Premium",
+                          });
+                        }}
+                      >
+                        🔥 QUERO SER PREMIUM
+                      </Button>
+                    </div>
+
+                  </div>
+
+                  {/* Success Stories */}
+                  <div className="bg-white p-6 rounded-xl border border-gray-200 mb-6">
+                    <h4 className="font-bold text-lg mb-4 text-center">
+                      Veja o que membros Premium estão conseguindo:
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                      <div className="text-center p-3 bg-green-50 rounded-lg">
+                        <div className="font-semibold text-green-900">"Aumentei minha receita em 200%"</div>
+                        <div className="text-green-700">- Dra. Maria, Premium há 4 meses</div>
+                      </div>
+                      <div className="text-center p-3 bg-blue-50 rounded-lg">
+                        <div className="font-semibold text-blue-900">"Resolvo casos complexos mais rápido"</div>
+                        <div className="text-blue-700">- Dr. João, Premium há 6 meses</div>
+                      </div>
+                      <div className="text-center p-3 bg-purple-50 rounded-lg">
+                        <div className="font-semibold text-purple-900">"Minha clínica virou referência"</div>
+                        <div className="text-purple-700">- Dra. Ana, Premium há 1 ano</div>
+                      </div>
+                    </div>
+                  </div>
+
+                </CardContent>
+              </Card>
+            )}
+            
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               
               {/* Password Settings */}
@@ -906,12 +1128,12 @@ export default function UserDashboard() {
                 </CardContent>
               </Card>
 
-              {/* Plan Information */}
+              {/* Current Plan Info */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Seu Plano</CardTitle>
+                  <CardTitle>Plano Atual</CardTitle>
                   <CardDescription>
-                    Informações sobre sua assinatura
+                    Informações da sua assinatura
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -921,30 +1143,47 @@ export default function UserDashboard() {
                       <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                         <div className="flex items-center gap-2 mb-2">
                           <Crown className="w-5 h-5 text-yellow-600" />
-                          <span className="font-semibold text-yellow-900">Plano Premium</span>
+                          <span className="font-semibold text-yellow-900">Plano Premium VIP</span>
                         </div>
                         <p className="text-sm text-yellow-800 mb-3">
-                          Você tem acesso completo a todos os recursos
+                          Você tem acesso completo a todos os recursos premium
                         </p>
                         <div className="text-sm text-yellow-700 space-y-1">
                           <p>• Mensagens diretas com especialista</p>
-                          <p>• Agendamentos prioritários</p>
-                          <p>• Comunicação com outros membros</p>
+                          <p>• Salas de vídeo ilimitadas</p>
+                          <p>• Networking premium</p>
                           <p>• Upload de arquivos e mídia</p>
                         </div>
                       </div>
+                    ) : userPlan === "intermediate" ? (
+                      <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Users className="w-5 h-5 text-purple-600" />
+                          <span className="font-semibold text-purple-900">Plano Intermediário</span>
+                        </div>
+                        <p className="text-sm text-purple-800 mb-3">
+                          Acesso às salas de vídeo e comunicação entre membros
+                        </p>
+                        <div className="text-sm text-purple-700 space-y-1">
+                          <p>• Participação em salas ao vivo</p>
+                          <p>• Mensagens entre membros</p>
+                          <p>• Publicar perguntas na comunidade</p>
+                        </div>
+                      </div>
                     ) : (
-                      <div className="bg-gray-50 border rounded-lg p-4">
+                      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                         <div className="flex items-center gap-2 mb-2">
                           <Users className="w-5 h-5 text-gray-600" />
-                          <span className="font-semibold">Plano Básico</span>
+                          <span className="font-semibold text-gray-900">Plano Básico</span>
                         </div>
                         <p className="text-sm text-gray-600 mb-3">
-                          Acesso aos cursos e agendamentos básicos
+                          Acesso básico à comunidade e visualização de conteúdos
                         </p>
-                        <Button className="w-full bg-yellow-600 hover:bg-yellow-700">
-                          Fazer Upgrade para Premium
-                        </Button>
+                        <div className="text-sm text-gray-600 space-y-1">
+                          <p>• Visualizar discussões</p>
+                          <p>• Acesso aos cursos</p>
+                          <p>• Participar como observador</p>
+                        </div>
                       </div>
                     )}
 
