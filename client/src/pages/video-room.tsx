@@ -408,42 +408,44 @@ export default function VideoRoom() {
         </div>
       )}
 
-      {/* Chat Bottom Panel */}
+      {/* Chat Extended Panel */}
       {showChat && (
-        <div className="fixed bottom-20 right-4 w-80 h-96 bg-gray-800 border border-gray-600 rounded-lg shadow-xl flex flex-col">
-          <div className="p-3 border-b border-gray-700 flex items-center justify-between">
-            <h3 className="font-semibold text-sm">Chat da Sala</h3>
-            {isModerator && (
-              <Badge variant="outline" className="text-xs">
-                <Shield className="w-3 h-3 mr-1" />
-                Moderador
-              </Badge>
-            )}
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => setShowChat(false)}
-              className="h-6 w-6 p-0"
-            >
-              ×
-            </Button>
+        <div className="fixed top-4 bottom-20 right-4 w-96 bg-gray-800 border border-gray-600 rounded-lg shadow-xl flex flex-col">
+          <div className="p-4 border-b border-gray-700 flex items-center justify-between">
+            <h3 className="font-semibold text-lg">Chat da Sala</h3>
+            <div className="flex items-center gap-2">
+              {isModerator && (
+                <Badge variant="outline" className="text-xs">
+                  <Shield className="w-3 h-3 mr-1" />
+                  Moderador
+                </Badge>
+              )}
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setShowChat(false)}
+                className="h-8 w-8 p-0 text-gray-400 hover:text-white"
+              >
+                ×
+              </Button>
+            </div>
           </div>
           
           {/* Chat Messages */}
-          <div className="flex-1 p-3 overflow-y-auto">
-            <div className="space-y-3">
+          <div className="flex-1 p-4 overflow-y-auto">
+            <div className="space-y-4">
               {chatMessages.map((msg) => (
-                <div key={msg.id} className="text-sm">
-                  <div className="flex items-start justify-between">
+                <div key={msg.id} className="bg-gray-700/50 rounded-lg p-3 hover:bg-gray-700/70 transition-colors">
+                  <div className="flex items-start justify-between mb-2">
                     <div className="flex-1">
-                      <span className="font-medium text-blue-300">{msg.userName}:</span>
-                      <span className="ml-2 text-gray-300">{msg.message}</span>
+                      <span className="font-medium text-blue-300 text-sm">{msg.userName}:</span>
+                      <p className="text-gray-300 mt-1 leading-relaxed">{msg.message}</p>
                     </div>
                     {isModerator && (
                       <Button
                         size="sm"
                         variant="ghost"
-                        className="h-4 w-4 p-0 text-red-400 hover:text-red-300"
+                        className="h-6 w-6 p-0 text-red-400 hover:text-red-300 hover:bg-red-900/20"
                         onClick={() => toast({
                           title: "Mensagem removida",
                           description: `Mensagem de ${msg.userName} foi excluída`,
@@ -453,7 +455,7 @@ export default function VideoRoom() {
                       </Button>
                     )}
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-500">
                     {msg.timestamp.toLocaleTimeString('pt-BR')}
                   </p>
                 </div>
@@ -462,8 +464,8 @@ export default function VideoRoom() {
           </div>
 
           {/* Chat Input */}
-          <div className="p-3 border-t border-gray-700">
-            <div className="flex gap-2">
+          <div className="p-4 border-t border-gray-700 bg-gray-800/80">
+            <div className="flex gap-3">
               <Input
                 placeholder="Digite sua mensagem..."
                 value={chatMessage}
@@ -473,18 +475,18 @@ export default function VideoRoom() {
                     sendChatMessage();
                   }
                 }}
-                className="flex-1 bg-gray-700 border-gray-600 text-white placeholder-gray-400 h-8 text-sm"
+                className="flex-1 bg-gray-700 border-gray-600 text-white placeholder-gray-400 h-10 text-sm rounded-lg"
               />
               <Button
                 onClick={sendChatMessage}
                 disabled={!chatMessage.trim()}
                 size="sm"
-                className="h-8 px-2"
+                className="h-10 px-4 bg-blue-600 hover:bg-blue-700"
               >
-                <Send className="w-3 h-3" />
+                <Send className="w-4 h-4" />
               </Button>
             </div>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-gray-500 mt-2">
               Pressione Enter para enviar
             </p>
           </div>
