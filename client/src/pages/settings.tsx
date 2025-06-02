@@ -12,8 +12,9 @@ import { useAuth } from "@/hooks/use-auth";
 import { useUserRole } from "@/hooks/use-user-role";
 import { useToast } from "@/hooks/use-toast";
 import { validateSecureUrl, hasAdminAccess, validateFormInput } from "@/lib/security";
-import { Settings2, Lock, ExternalLink, Save, Shield, Users, Upload, Camera } from "lucide-react";
+import { Settings2, Lock, ExternalLink, Save, Shield, Users, Upload, Camera, Smartphone, QrCode, CheckCircle, AlertCircle } from "lucide-react";
 import { CurrencyInput } from "@/components/currency-input";
+import { useQuery } from "@tanstack/react-query";
 
 const perfectPaySettingsSchema = z.object({
   defaultPassword: z.string().min(1, "Senha é obrigatória").max(50, "Senha muito longa"),
@@ -37,6 +38,169 @@ const specialistSettingsSchema = z.object({
 
 type PerfectPaySettings = z.infer<typeof perfectPaySettingsSchema>;
 type SpecialistSettings = z.infer<typeof specialistSettingsSchema>;
+
+// Componente para conexão WhatsApp do especialista
+function WhatsAppConnection() {
+  const { toast } = useToast();
+  const [isConnecting, setIsConnecting] = useState(false);
+
+  // Buscar status do WhatsApp
+  const { data: whatsappStatus, refetch: refetchStatus } = useQuery({
+    queryKey: ['/api/whatsapp/status'],
+    refetchInterval: 3000, // Atualizar a cada 3 segundos
+  });
+
+  const handleConnectWhatsApp = async () => {
+    setIsConnecting(true);
+    try {
+      const response = await fetch('/api/whatsapp/initialize', {
+        method: 'POST',
+      });
+      
+      if (response.ok) {
+        toast({
+          title: "Inicializando WhatsApp",
+          description: "Escaneie o QR code que aparecerá abaixo com seu WhatsApp.",
+        });
+        refetchStatus();
+      } else {
+        throw new Error('Erro ao inicializar WhatsApp');
+      }
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Não foi possível inicializar a conexão WhatsApp.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsConnecting(false);
+    }
+  };
+
+  const handleDisconnectWhatsApp = async () => {
+    try {
+      const response = await fetch('/api/whatsapp/disconnect', {
+        method: 'POST',
+      });
+      
+      if (response.ok) {
+        toast({
+          title: "WhatsApp Desconectado",
+          description: "Sua conta WhatsApp foi desconectada com sucesso.",
+        });
+        refetchStatus();
+      }
+    } catch (error) {
+      toast({
+        title: "Erro",
+        description: "Erro ao desconectar WhatsApp.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Status da Conexão */}
+      <div className="flex items-center justify-between p-4 border rounded-lg">
+        <div className="flex items-center gap-3">
+          <Smartphone className="w-6 h-6 text-green-600" />
+          <div>
+            <h3 className="font-medium">Status da Conexão</h3>
+            <p className="text-sm text-gray-600">
+              {whatsappStatus?.connected ? 'WhatsApp conectado e pronto' : 'WhatsApp não conectado'}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          {whatsappStatus?.connected ? (
+            <>
+              <CheckCircle className="w-5 h-5 text-green-600" />
+              <span className="text-sm font-medium text-green-600">Conectado</span>
+            </>
+          ) : (
+            <>
+              <AlertCircle className="w-5 h-5 text-amber-600" />
+              <span className="text-sm font-medium text-amber-600">Desconectado</span>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* QR Code ou Controles */}
+      {!whatsappStatus?.connected ? (
+        <div className="text-center space-y-4">
+          {whatsappStatus?.hasQrCode && whatsappStatus?.qr ? (
+            <div className="space-y-4">
+              <div className="flex justify-center">
+                <div className="p-4 bg-white border-2 border-gray-200 rounded-lg">
+                  <img 
+                    src={`data:image/png;base64,${whatsappStatus.qr}`} 
+                    alt="QR Code WhatsApp" 
+                    className="w-48 h-48"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <h3 className="font-medium text-gray-900">Escaneie o QR Code</h3>
+                <p className="text-sm text-gray-600">
+                  1. Abra o WhatsApp no seu celular<br/>
+                  2. Toque em Mais opções → WhatsApp Web<br/>
+                  3. Aponte seu celular para esta tela para escanear o código
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <QrCode className="w-16 h-16 text-gray-400 mx-auto" />
+              <div>
+                <h3 className="font-medium text-gray-900 mb-2">Conectar WhatsApp</h3>
+                <p className="text-sm text-gray-600 mb-4">
+                  Conecte seu WhatsApp pessoal para receber mensagens diretas de membros premium
+                </p>
+                <Button 
+                  onClick={handleConnectWhatsApp}
+                  disabled={isConnecting}
+                  className="bg-green-600 hover:bg-green-700"
+                >
+                  {isConnecting ? "Iniciando..." : "Gerar QR Code"}
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="text-center space-y-4">
+          <CheckCircle className="w-16 h-16 text-green-600 mx-auto" />
+          <div>
+            <h3 className="font-medium text-green-900 mb-2">WhatsApp Conectado!</h3>
+            <p className="text-sm text-green-700 mb-4">
+              Seu WhatsApp está conectado e pronto para receber mensagens de membros premium
+            </p>
+            <Button 
+              onClick={handleDisconnectWhatsApp}
+              variant="outline"
+              className="border-red-200 text-red-600 hover:bg-red-50"
+            >
+              Desconectar WhatsApp
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Informações importantes */}
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <h4 className="font-medium text-blue-900 mb-2">Como funciona:</h4>
+        <ul className="text-sm text-blue-800 space-y-1">
+          <li>• Apenas membros premium podem enviar mensagens diretas</li>
+          <li>• Você receberá notificações diretamente no seu WhatsApp</li>
+          <li>• Sua privacidade é protegida - apenas membros autorizados</li>
+          <li>• Você pode desconectar a qualquer momento</li>
+        </ul>
+      </div>
+    </div>
+  );
+}
 
 export default function Settings() {
   const { user } = useAuth();
@@ -494,6 +658,26 @@ export default function Settings() {
                   </Button>
                 </div>
               </form>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Configurações WhatsApp */}
+        <TabsContent value="whatsapp">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <svg className="w-5 h-5 text-green-600" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
+                </svg>
+                WhatsApp do Especialista
+              </CardTitle>
+              <CardDescription>
+                Conecte seu WhatsApp pessoal para comunicação direta com membros premium
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <WhatsAppConnection />
             </CardContent>
           </Card>
         </TabsContent>
