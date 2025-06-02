@@ -313,17 +313,35 @@ export default function CommunityMember() {
 
         </div>
 
-        {/* Plans Comparison */}
+        {/* Premium Conversion Section */}
         <div id="plans-comparison" className="mt-16">
-          <Card className="lg:col-span-3">
-            <CardHeader className="text-center">
-              <CardTitle className="text-3xl font-bold text-gray-900 mb-4">
-                Acelere Seu Crescimento Profissional
-              </CardTitle>
-              <CardDescription className="text-lg text-gray-600 max-w-3xl mx-auto">
-                Escolha o plano que melhor se adapta às suas necessidades e tenha acesso aos melhores recursos da nossa comunidade profissional
-              </CardDescription>
-            </CardHeader>
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-red-100 to-orange-100 text-red-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
+              <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+              Oferta Limitada: Apenas hoje
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Você está perdendo
+              <span className="block bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">
+                oportunidades valiosas
+              </span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-4xl mx-auto mb-8">
+              Enquanto você está no plano básico, outros profissionais estão tendo acesso direto à Dra. Clarissa Vaz, 
+              construindo uma rede de contatos premium e acelerando suas carreiras exponencialmente.
+            </p>
+            <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border-l-4 border-orange-400 p-6 max-w-3xl mx-auto rounded-lg">
+              <div className="flex items-center justify-center gap-4 text-orange-800">
+                <Crown className="w-8 h-8" />
+                <div className="text-left">
+                  <p className="font-semibold text-lg">Teste Premium GRÁTIS por 7 dias</p>
+                  <p className="text-sm">Sem cobrança, sem compromisso. Cancele quando quiser.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <Card className="lg:col-span-3 overflow-hidden shadow-2xl border-0">
             <CardContent>
               {/* Professional Comparison Table */}
               <div className="overflow-x-auto">
@@ -517,60 +535,148 @@ export default function CommunityMember() {
                 </div>
               </div>
 
-              {/* Special Premium Benefits */}
-              <div className="mt-12 p-8 bg-gradient-to-r from-gray-800 to-gray-900 rounded-xl text-white">
-                <div className="text-center mb-8">
-                  <Crown className="w-12 h-12 text-yellow-400 mx-auto mb-4" />
-                  <h3 className="text-2xl font-bold mb-2">Contato Direto com Especialistas</h3>
-                  <p className="text-gray-300 max-w-2xl mx-auto">
-                    Tenha acesso direto ao WhatsApp da nossa especialista para suporte personalizado
-                  </p>
-                </div>
+              {/* Social Proof & FOMO Section */}
+              <div className="mt-12 space-y-8">
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-                      <span>WhatsApp direto com especialista</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-                      <span>Respostas prioritárias</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-                      <span>Consultorias personalizadas</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-                      <span>Acesso a conteúdos exclusivos</span>
+                {/* Real Success Stories */}
+                <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+                  <div className="text-center mb-8">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">O que nossos membros Premium estão conquistando</h3>
+                    <p className="text-gray-600">Resultados reais de profissionais que fizeram o upgrade</p>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="bg-green-50 p-6 rounded-xl border border-green-200">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center text-white font-bold">
+                          CM
+                        </div>
+                        <div>
+                          <p className="font-semibold text-green-900">Dra. Carla Mendes</p>
+                          <p className="text-sm text-green-700">Premium há 3 meses</p>
+                        </div>
+                      </div>
+                      <p className="text-green-800 font-medium mb-2">"Aumentei minha receita em 180%"</p>
+                      <p className="text-sm text-green-700">
+                        "As consultorias com a Dra. Clarissa me ajudaram a reposicionar minha clínica e atrair clientes premium."
+                      </p>
                     </div>
                     
-                    <div className="mt-6 p-4 bg-yellow-600/20 rounded-lg border border-yellow-500/30">
-                      <p className="text-sm text-yellow-300 font-medium">
-                        ⚠️ Recursos Premium Incluem
+                    <div className="bg-blue-50 p-6 rounded-xl border border-blue-200">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
+                          RS
+                        </div>
+                        <div>
+                          <p className="font-semibold text-blue-900">Dr. Rafael Silva</p>
+                          <p className="text-sm text-blue-700">Premium há 6 meses</p>
+                        </div>
+                      </div>
+                      <p className="text-blue-800 font-medium mb-2">"Expandiu para 3 cidades"</p>
+                      <p className="text-sm text-blue-700">
+                        "O networking premium me conectou com investidores. Agora tenho clínicas em 3 cidades diferentes."
+                      </p>
+                    </div>
+                    
+                    <div className="bg-purple-50 p-6 rounded-xl border border-purple-200">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+                          AL
+                        </div>
+                        <div>
+                          <p className="font-semibold text-purple-900">Dra. Ana Lima</p>
+                          <p className="text-sm text-purple-700">Premium há 1 ano</p>
+                        </div>
+                      </div>
+                      <p className="text-purple-800 font-medium mb-2">"Virou referência nacional"</p>
+                      <p className="text-sm text-purple-700">
+                        "Com os certificados premium, me tornei palestrante em congressos nacionais da área."
                       </p>
                     </div>
                   </div>
-                  
+                </div>
+
+                {/* Urgency & Scarcity */}
+                <div className="bg-gradient-to-r from-red-600 to-orange-600 p-8 rounded-2xl text-white shadow-2xl">
                   <div className="text-center">
-                    <Button 
-                      size="lg"
-                      className="bg-yellow-600 hover:bg-yellow-700 text-black font-bold px-8 py-4 text-lg"
-                      onClick={() => {
-                        toast({
-                          title: "Teste Premium Ativado!",
-                          description: "Você terá 7 dias de acesso completo ao plano premium.",
-                        });
-                      }}
-                    >
-                      🚀 Fazer Upgrade - R$ 99,90/mês
-                    </Button>
-                    <p className="text-sm text-gray-400 mt-3">
-                      Cancele a qualquer momento
+                    <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
+                      <span className="w-2 h-2 bg-yellow-300 rounded-full animate-pulse"></span>
+                      <span className="font-semibold">ÚLTIMAS 24 HORAS</span>
+                    </div>
+                    
+                    <h3 className="text-3xl font-bold mb-4">
+                      Apenas 12 vagas Premium restantes este mês
+                    </h3>
+                    <p className="text-xl text-white/90 mb-6 max-w-2xl mx-auto">
+                      Para manter a qualidade do atendimento, limitamos o acesso Premium. 
+                      Garante sua vaga com 50% OFF hoje.
                     </p>
+                    
+                    <div className="flex justify-center items-center gap-8 mb-8">
+                      <div className="text-center">
+                        <div className="text-4xl font-bold text-yellow-300">12</div>
+                        <div className="text-sm text-white/80">Vagas restantes</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-4xl font-bold text-yellow-300">24h</div>
+                        <div className="text-sm text-white/80">Para expirar</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-4xl font-bold text-yellow-300">50%</div>
+                        <div className="text-sm text-white/80">De desconto</div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <Button 
+                        size="lg"
+                        className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-12 py-6 text-xl rounded-xl shadow-lg transform hover:scale-105 transition-all duration-200"
+                        onClick={() => {
+                          toast({
+                            title: "Teste Premium Ativado!",
+                            description: "Você terá 7 dias de acesso completo ao plano premium.",
+                          });
+                        }}
+                      >
+                        QUERO GARANTIR MINHA VAGA PREMIUM
+                      </Button>
+                      <p className="text-white/80 text-sm">
+                        Teste 7 dias GRÁTIS • Cancele quando quiser • Sem cobrança inicial
+                      </p>
+                    </div>
                   </div>
                 </div>
+
+                {/* Risk Reversal */}
+                <div className="bg-green-50 p-8 rounded-2xl border-2 border-green-200">
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <Check className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-green-900 mb-4">
+                      Garantia Total de Satisfação
+                    </h3>
+                    <p className="text-lg text-green-800 mb-6 max-w-2xl mx-auto">
+                      Se nos primeiros 30 dias você não ver resultados concretos na sua prática profissional, 
+                      devolvemos 100% do seu investimento. Sem perguntas, sem burocracia.
+                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-green-800">
+                      <div className="flex items-center justify-center gap-2">
+                        <Check className="w-5 h-5" />
+                        <span>30 dias de garantia</span>
+                      </div>
+                      <div className="flex items-center justify-center gap-2">
+                        <Check className="w-5 h-5" />
+                        <span>Reembolso total</span>
+                      </div>
+                      <div className="flex items-center justify-center gap-2">
+                        <Check className="w-5 h-5" />
+                        <span>Sem burocracia</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </div>
 
             </CardContent>
