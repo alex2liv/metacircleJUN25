@@ -21,23 +21,33 @@ export default function AppLayout({ children }: AppLayoutProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="w-8 h-8 flex items-center justify-center">
-                <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none">
+                <svg viewBox="0 0 32 32" className="w-8 h-8" fill="none">
                   <defs>
-                    <linearGradient id="metasync-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#00bfff" />
-                      <stop offset="100%" stopColor="#0080ff" />
+                    <linearGradient id="metasync-cube" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#00d4ff" />
+                      <stop offset="100%" stopColor="#0099ff" />
                     </linearGradient>
                   </defs>
-                  {/* Outer hexagon */}
-                  <path d="M12 2 L20 7 L20 17 L12 22 L4 17 L4 7 Z" stroke="url(#metasync-gradient)" strokeWidth="2" fill="none"/>
-                  {/* Middle hexagon */}
-                  <path d="M12 5 L17 8 L17 16 L12 19 L7 16 L7 8 Z" stroke="url(#metasync-gradient)" strokeWidth="1.5" fill="none"/>
-                  {/* Inner hexagon */}
-                  <path d="M12 8 L15 10 L15 14 L12 16 L9 14 L9 10 Z" stroke="url(#metasync-gradient)" strokeWidth="1" fill="none"/>
-                  {/* Connecting lines */}
-                  <line x1="12" y1="2" x2="12" y2="5" stroke="url(#metasync-gradient)" strokeWidth="0.8"/>
-                  <line x1="20" y1="7" x2="17" y2="8" stroke="url(#metasync-gradient)" strokeWidth="0.8"/>
-                  <line x1="4" y1="7" x2="7" y2="8" stroke="url(#metasync-gradient)" strokeWidth="0.8"/>
+                  {/* Outer cube frame */}
+                  <path d="M8 12 L16 8 L24 12 L24 20 L16 24 L8 20 Z" stroke="url(#metasync-cube)" strokeWidth="1.8" fill="none"/>
+                  {/* Top face of outer cube */}
+                  <path d="M8 12 L16 8 L24 12 L16 16 Z" stroke="url(#metasync-cube)" strokeWidth="1.8" fill="none"/>
+                  {/* Left face of outer cube */}
+                  <path d="M8 12 L8 20 L16 24 L16 16 Z" stroke="url(#metasync-cube)" strokeWidth="1.8" fill="none"/>
+                  
+                  {/* Middle cube frame */}
+                  <path d="M10 13 L16 10.5 L22 13 L22 19 L16 21.5 L10 19 Z" stroke="url(#metasync-cube)" strokeWidth="1.4" fill="none"/>
+                  {/* Top face of middle cube */}
+                  <path d="M10 13 L16 10.5 L22 13 L16 15.5 Z" stroke="url(#metasync-cube)" strokeWidth="1.4" fill="none"/>
+                  {/* Left face of middle cube */}
+                  <path d="M10 13 L10 19 L16 21.5 L16 15.5 Z" stroke="url(#metasync-cube)" strokeWidth="1.4" fill="none"/>
+                  
+                  {/* Inner cube frame */}
+                  <path d="M12 14 L16 12.5 L20 14 L20 18 L16 19.5 L12 18 Z" stroke="url(#metasync-cube)" strokeWidth="1" fill="none"/>
+                  {/* Top face of inner cube */}
+                  <path d="M12 14 L16 12.5 L20 14 L16 15.5 Z" stroke="url(#metasync-cube)" strokeWidth="1" fill="none"/>
+                  {/* Left face of inner cube */}
+                  <path d="M12 14 L12 18 L16 19.5 L16 15.5 Z" stroke="url(#metasync-cube)" strokeWidth="1" fill="none"/>
                 </svg>
               </div>
               <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Dashboard</h1>
