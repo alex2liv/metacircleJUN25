@@ -15,8 +15,13 @@ import {
   Smartphone,
   Volume2,
   VolumeX,
-  Share
+  Share,
+  Hand,
+  Send,
+  Shield,
+  Lock
 } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 
 interface Participant {
@@ -25,6 +30,15 @@ interface Participant {
   isVideoOn: boolean;
   isAudioOn: boolean;
   isPresenting: boolean;
+  hasHandRaised: boolean;
+}
+
+interface ChatMessage {
+  id: string;
+  userId: string;
+  userName: string;
+  message: string;
+  timestamp: Date;
 }
 
 export default function VideoRoom() {
@@ -36,6 +50,13 @@ export default function VideoRoom() {
   const [isScreenSharing, setIsScreenSharing] = useState(false);
   const [viewMode, setViewMode] = useState<'desktop' | 'mobile'>('desktop');
   const [showChat, setShowChat] = useState(false);
+  const [hasHandRaised, setHasHandRaised] = useState(false);
+  const [chatMessage, setChatMessage] = useState("");
+  const [roomPin] = useState("1234");
+  const [showPin, setShowPin] = useState(true);
+  const [isModerator] = useState(() => {
+    return window.location.search.includes('moderator=true');
+  });
   const [roomInfo] = useState({
     title: "Casos Clínicos Complexos",
     host: "Dra. Clarissa Vaz",
@@ -116,7 +137,10 @@ export default function VideoRoom() {
       <div className="bg-gray-800 p-4 border-b border-gray-700">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-semibold">{roomInfo.title}</h1>
+            <h1 className="text-lg font-semibold">
+              {roomInfo.title}
+              {isModerator && <span className="ml-2 text-yellow-400">[MODERADOR]</span>}
+            </h1>
             <p className="text-sm text-gray-300">com {roomInfo.host} • {roomInfo.duration} • {roomInfo.participantCount} participantes</p>
           </div>
           
