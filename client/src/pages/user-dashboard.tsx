@@ -1,15 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, BookOpen, MessageSquare, Settings, ExternalLink, Clock, Users, Video, FileText, Mic, PaperclipIcon, Send, Crown, LogOut } from "lucide-react";
+import { Calendar, BookOpen, MessageSquare, Settings, ExternalLink, Clock, Users, Video, FileText, Mic, PaperclipIcon, Send, Crown, LogOut, Heart } from "lucide-react";
 import metaSyncLogo from "@assets/MetaSync Logo Jun2025.png";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import NotificationPopup from "@/components/notification-popup";
 
 export default function UserDashboard() {
   const { toast } = useToast();
@@ -18,6 +19,60 @@ export default function UserDashboard() {
   
   // User subscription status
   const [userPlan] = useState("premium"); // basic, premium
+  
+  // Notifications state
+  const [notifications, setNotifications] = useState<any[]>([]);
+  
+  // Simulate real-time notifications from Dra. Clarissa
+  useEffect(() => {
+    const simulateNotifications = () => {
+      // Simulate live session notification
+      const liveNotification = {
+        id: `live_${Date.now()}`,
+        type: "live",
+        title: "Dra. Clarissa iniciou uma sessão ao vivo",
+        message: "Casos Clínicos Complexos - Entre agora para participar da discussão",
+        timestamp: new Date(),
+        action: {
+          text: "Entrar",
+          onClick: () => {
+            toast({
+              title: "Entrando na sessão...",
+              description: "Redirecionando para a sala ao vivo",
+            });
+          }
+        }
+      };
+
+      // Simulate schedule notification
+      const scheduleNotification = {
+        id: `schedule_${Date.now() + 1000}`,
+        type: "schedule",
+        title: "Nova sessão agendada",
+        message: "Workshop sobre Pé Diabético marcado para amanhã às 15:00",
+        timestamp: new Date(),
+        action: {
+          text: "Ver agenda",
+          onClick: () => {
+            toast({
+              title: "Agenda atualizada",
+              description: "Workshop adicionado à sua agenda",
+            });
+          }
+        }
+      };
+
+      setNotifications([liveNotification, scheduleNotification]);
+    };
+
+    // Simulate notification after 3 seconds
+    const timer = setTimeout(simulateNotifications, 3000);
+    return () => clearTimeout(timer);
+  }, [toast]);
+
+  const dismissNotification = (id: string) => {
+    setNotifications(prev => prev.filter(n => n.id !== id));
+  };
   
   const handleLogout = () => {
     localStorage.removeItem("userRole");
@@ -891,6 +946,12 @@ export default function UserDashboard() {
         </Tabs>
 
       </main>
+      
+      {/* Notification Popups */}
+      <NotificationPopup 
+        notifications={notifications}
+        onDismiss={dismissNotification}
+      />
     </div>
   );
 }
