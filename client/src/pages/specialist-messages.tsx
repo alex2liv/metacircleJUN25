@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Send, Users, User, MessageSquare } from "lucide-react";
+import { ArrowLeft, Send, Users, User, MessageSquare, Mic, Video, FileText, Paperclip } from "lucide-react";
 import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 
@@ -240,8 +240,70 @@ export default function SpecialistMessages() {
               </div>
             </div>
 
-            {/* Send Button */}
-            <div className="flex justify-end">
+            {/* Media and Send Buttons */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="flex items-center gap-2"
+                  onClick={() => {
+                    toast({
+                      title: "Recurso em desenvolvimento",
+                      description: "Envio de áudio será implementado em breve",
+                    });
+                  }}
+                >
+                  <Mic className="w-4 h-4" />
+                  Áudio
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="flex items-center gap-2"
+                  onClick={() => {
+                    toast({
+                      title: "Recurso em desenvolvimento",
+                      description: "Envio de vídeo será implementado em breve",
+                    });
+                  }}
+                >
+                  <Video className="w-4 h-4" />
+                  Vídeo
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="flex items-center gap-2"
+                  onClick={() => {
+                    toast({
+                      title: "Recurso em desenvolvimento",
+                      description: "Envio de documentos será implementado em breve",
+                    });
+                  }}
+                >
+                  <FileText className="w-4 h-4" />
+                  Documento
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="flex items-center gap-2"
+                  onClick={() => {
+                    toast({
+                      title: "Recurso em desenvolvimento",
+                      description: "Envio de anexos será implementado em breve",
+                    });
+                  }}
+                >
+                  <Paperclip className="w-4 h-4" />
+                  Anexar
+                </Button>
+              </div>
+              
               <Button 
                 onClick={handleSendMessage}
                 className="flex items-center gap-2"
