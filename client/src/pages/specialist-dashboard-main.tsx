@@ -153,7 +153,7 @@ export default function SpecialistDashboardMain() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               <Button 
                 onClick={handleStartLive}
                 className="h-20 flex flex-col gap-2 bg-red-600 hover:bg-red-700"
@@ -172,21 +172,41 @@ export default function SpecialistDashboardMain() {
               </Button>
               
               <Button 
-                onClick={handleScheduleMeeting}
-                variant="outline" 
-                className="h-20 flex flex-col gap-2"
-              >
-                <Calendar className="w-6 h-6" />
-                <span>Agendar Reunião</span>
-              </Button>
-              
-              <Button 
                 variant="outline" 
                 className="h-20 flex flex-col gap-2"
                 onClick={() => setLocation("/specialist-room-moderation")}
               >
                 <Users className="w-6 h-6" />
                 <span>Moderar Salas</span>
+              </Button>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+              <Button 
+                onClick={() => setLocation("/specialist-agenda")}
+                variant="outline" 
+                className="h-20 flex flex-col gap-2"
+              >
+                <Calendar className="w-6 h-6" />
+                <span>Gerenciar Agenda</span>
+              </Button>
+              
+              <Button 
+                onClick={() => setLocation("/specialist-clients")}
+                variant="outline" 
+                className="h-20 flex flex-col gap-2"
+              >
+                <Users className="w-6 h-6" />
+                <span>Meus Clientes</span>
+              </Button>
+              
+              <Button 
+                onClick={() => setLocation("/settings")}
+                variant="outline" 
+                className="h-20 flex flex-col gap-2"
+              >
+                <Settings className="w-6 h-6" />
+                <span>Configurações</span>
               </Button>
             </div>
           </CardContent>
