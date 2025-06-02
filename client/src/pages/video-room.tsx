@@ -65,11 +65,28 @@ export default function VideoRoom() {
   });
 
   const [participants] = useState<Participant[]>([
-    { id: '1', name: 'Dra. Clarissa Vaz', isVideoOn: true, isAudioOn: true, isPresenting: false },
-    { id: '2', name: 'Dr. João Silva', isVideoOn: true, isAudioOn: true, isPresenting: false },
-    { id: '3', name: 'Dra. Maria Santos', isVideoOn: false, isAudioOn: true, isPresenting: false },
-    { id: '4', name: 'Dr. Carlos Lima', isVideoOn: true, isAudioOn: false, isPresenting: false },
-    { id: '5', name: 'Dra. Ana Costa', isVideoOn: true, isAudioOn: true, isPresenting: false },
+    { id: '1', name: 'Dra. Clarissa Vaz', isVideoOn: true, isAudioOn: true, isPresenting: false, hasHandRaised: false },
+    { id: '2', name: 'Dr. João Silva', isVideoOn: true, isAudioOn: true, isPresenting: false, hasHandRaised: true },
+    { id: '3', name: 'Dra. Maria Santos', isVideoOn: false, isAudioOn: true, isPresenting: false, hasHandRaised: false },
+    { id: '4', name: 'Dr. Carlos Lima', isVideoOn: true, isAudioOn: false, isPresenting: false, hasHandRaised: false },
+    { id: '5', name: 'Dra. Ana Costa', isVideoOn: true, isAudioOn: true, isPresenting: false, hasHandRaised: true },
+  ]);
+
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
+    {
+      id: '1',
+      userId: '2',
+      userName: 'Dr. João Silva',
+      message: 'Excelente apresentação do caso!',
+      timestamp: new Date(Date.now() - 5 * 60000)
+    },
+    {
+      id: '2',
+      userId: '5',
+      userName: 'Dra. Ana Costa',
+      message: 'Tenho uma dúvida sobre o protocolo usado',
+      timestamp: new Date(Date.now() - 3 * 60000)
+    }
   ]);
 
   useEffect(() => {
@@ -119,6 +136,40 @@ export default function VideoRoom() {
     });
   };
 
+  const toggleHandRaise = () => {
+    setHasHandRaised(!hasHandRaised);
+    toast({
+      title: hasHandRaised ? "Mão abaixada" : "Mão levantada",
+      description: hasHandRaised ? "Você abaixou a mão" : "Você levantou a mão para falar",
+    });
+  };
+
+  const sendChatMessage = () => {
+    if (chatMessage.trim()) {
+      const newMessage: ChatMessage = {
+        id: Date.now().toString(),
+        userId: 'current-user',
+        userName: 'Você',
+        message: chatMessage.trim(),
+        timestamp: new Date()
+      };
+      setChatMessages([...chatMessages, newMessage]);
+      setChatMessage("");
+      toast({
+        title: "Mensagem enviada",
+        description: "Sua mensagem foi enviada no chat",
+      });
+    }
+  };
+
+  const copyRoomPin = () => {
+    navigator.clipboard.writeText(roomPin);
+    toast({
+      title: "PIN copiado",
+      description: `PIN da sala ${roomPin} copiado para área de transferência`,
+    });
+  };
+
   const leaveRoom = () => {
     toast({
       title: "Saindo da sala...",
@@ -143,6 +194,30 @@ export default function VideoRoom() {
             </h1>
             <p className="text-sm text-gray-300">com {roomInfo.host} • {roomInfo.duration} • {roomInfo.participantCount} participantes</p>
           </div>
+
+          {/* PIN Display */}
+          {showPin && (
+            <div className="flex items-center gap-2 bg-blue-600 px-3 py-2 rounded-lg">
+              <Lock className="w-4 h-4" />
+              <span className="text-sm font-medium">PIN: {roomPin}</span>
+              <Button 
+                size="sm" 
+                variant="outline"
+                onClick={copyRoomPin}
+                className="text-xs h-6 px-2"
+              >
+                Copiar
+              </Button>
+              <Button 
+                size="sm" 
+                variant="ghost"
+                onClick={() => setShowPin(false)}
+                className="text-xs h-6 px-1"
+              >
+                ×
+              </Button>
+            </div>
+          )}
           
           <div className="flex items-center gap-2">
             {/* View Mode Toggle */}
@@ -214,6 +289,13 @@ export default function VideoRoom() {
                     <VideoOff className="w-12 h-12 text-gray-400" />
                   </div>
                 )}
+                {/* Hand Raised Indicator */}
+                {participant.hasHandRaised && (
+                  <div className="absolute top-2 right-2 bg-yellow-500 text-black rounded-full p-1 animate-pulse z-10">
+                    <Hand className="w-4 h-4" />
+                  </div>
+                )}
+                
                 <div className="absolute bottom-2 left-2 bg-black/50 px-2 py-1 rounded text-sm flex items-center gap-1">
                   {participant.name}
                   {!participant.isAudioOn && <MicOff className="w-3 h-3" />}
@@ -229,18 +311,72 @@ export default function VideoRoom() {
           <div className="w-80 bg-gray-800 border-l border-gray-700 flex flex-col">
             <div className="p-4 border-b border-gray-700">
               <h3 className="font-semibold">Chat da Sala</h3>
+              {isModerator && (
+                <p className="text-xs text-yellow-400 mt-1">
+                  <Shield className="w-3 h-3 inline mr-1" />
+                  Modo moderador ativo
+                </p>
+              )}
             </div>
-            <div className="flex-1 p-4 overflow-y-auto">
+            
+            {/* Chat Messages */}
+            <div className="flex-1 p-4 overflow-y-auto max-h-96">
               <div className="space-y-3">
-                <div className="text-sm">
-                  <span className="font-medium text-blue-300">Dr. João:</span>
-                  <span className="ml-2">Ótimo caso apresentado!</span>
-                </div>
-                <div className="text-sm">
-                  <span className="font-medium text-green-300">Dra. Maria:</span>
-                  <span className="ml-2">Concordo, muito interessante</span>
-                </div>
+                {chatMessages.map((msg) => (
+                  <div key={msg.id} className="text-sm">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <span className="font-medium text-blue-300">{msg.userName}:</span>
+                        <span className="ml-2 text-gray-300">{msg.message}</span>
+                      </div>
+                      {isModerator && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-4 w-4 p-0 text-red-400 hover:text-red-300"
+                          onClick={() => toast({
+                            title: "Mensagem removida",
+                            description: `Mensagem de ${msg.userName} foi excluída`,
+                          })}
+                        >
+                          ×
+                        </Button>
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {msg.timestamp.toLocaleTimeString('pt-BR')}
+                    </p>
+                  </div>
+                ))}
               </div>
+            </div>
+
+            {/* Chat Input */}
+            <div className="p-4 border-t border-gray-700">
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Digite sua mensagem..."
+                  value={chatMessage}
+                  onChange={(e) => setChatMessage(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      sendChatMessage();
+                    }
+                  }}
+                  className="flex-1 bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                />
+                <Button
+                  onClick={sendChatMessage}
+                  disabled={!chatMessage.trim()}
+                  size="sm"
+                  className="px-3"
+                >
+                  <Send className="w-4 h-4" />
+                </Button>
+              </div>
+              <p className="text-xs text-gray-500 mt-2">
+                Pressione Enter para enviar
+              </p>
             </div>
           </div>
         )}
@@ -285,6 +421,15 @@ export default function VideoRoom() {
             className="rounded-full w-12 h-12 p-0"
           >
             <Share className="w-5 h-5" />
+          </Button>
+
+          <Button
+            size="sm"
+            variant={hasHandRaised ? "default" : "secondary"}
+            onClick={toggleHandRaise}
+            className={`rounded-full w-12 h-12 p-0 ${hasHandRaised ? 'bg-yellow-600 hover:bg-yellow-700' : ''}`}
+          >
+            <Hand className="w-5 h-5" />
           </Button>
 
           {viewMode === 'desktop' && (
