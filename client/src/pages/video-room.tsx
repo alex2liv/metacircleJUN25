@@ -54,6 +54,7 @@ export default function VideoRoom() {
   const [chatMessage, setChatMessage] = useState("");
   const [roomPin] = useState("1234");
   const [showPin, setShowPin] = useState(false);
+  const [hasUnreadMessages, setHasUnreadMessages] = useState(true);
   const [isModerator] = useState(() => {
     return window.location.search.includes('moderator=true');
   });
@@ -155,6 +156,22 @@ export default function VideoRoom() {
       };
       setChatMessages([...chatMessages, newMessage]);
       setChatMessage("");
+      
+      // Simulate receiving new messages to trigger notification
+      setTimeout(() => {
+        const simulatedMessage: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          userId: 'other-user',
+          userName: 'Dr. Carlos Lima',
+          message: 'Interessante ponto de vista!',
+          timestamp: new Date()
+        };
+        setChatMessages(prev => [...prev, simulatedMessage]);
+        if (!showChat) {
+          setHasUnreadMessages(true);
+        }
+      }, 3000);
+      
       toast({
         title: "Mensagem enviada",
         description: "Sua mensagem foi enviada no chat",
@@ -347,10 +364,20 @@ export default function VideoRoom() {
           <Button
             size="sm"
             variant={showChat ? "default" : "secondary"}
-            onClick={() => setShowChat(!showChat)}
-            className="rounded-full w-12 h-12 p-0"
+            onClick={() => {
+              setShowChat(!showChat);
+              if (!showChat) {
+                setHasUnreadMessages(false);
+              }
+            }}
+            className={`rounded-full w-12 h-12 p-0 relative ${
+              hasUnreadMessages && !showChat ? 'animate-pulse bg-blue-600 hover:bg-blue-700' : ''
+            }`}
           >
             <MessageSquare className="w-5 h-5" />
+            {hasUnreadMessages && !showChat && (
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping"></div>
+            )}
           </Button>
 
           <Button
