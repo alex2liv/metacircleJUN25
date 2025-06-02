@@ -181,7 +181,7 @@ export default function SpecialistDashboardMain() {
               </Button>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
               <Button 
                 onClick={() => setLocation("/specialist-agenda")}
                 variant="outline" 
@@ -198,6 +198,15 @@ export default function SpecialistDashboardMain() {
               >
                 <Users className="w-6 h-6" />
                 <span>Meus Clientes</span>
+              </Button>
+              
+              <Button 
+                onClick={() => setLocation("/specialist-messages")}
+                variant="outline" 
+                className="h-20 flex flex-col gap-2"
+              >
+                <MessageSquare className="w-6 h-6" />
+                <span>Enviar Mensagens</span>
               </Button>
               
               <Button 
