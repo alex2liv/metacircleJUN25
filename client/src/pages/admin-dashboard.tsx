@@ -378,7 +378,7 @@ export default function AdminDashboard() {
               <CardContent>
                 <p className="text-gray-600">Configure parâmetros gerais do sistema e especialistas.</p>
                 <Button 
-                  onClick={() => setLocation("/specialist-admin")}
+                  onClick={() => setLocation("/settings")}
                   className="mt-4"
                 >
                   Acessar Configurações

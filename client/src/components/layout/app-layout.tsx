@@ -1,50 +1,25 @@
 import { useState } from "react";
-import Sidebar from "./sidebar";
 import { FloatingHelpButton } from "@/components/floating-help-button";
 import { NotificationPanel } from "@/components/notification-panel";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ThemeSelector } from "@/components/theme-selector";
 import { CreateMenu } from "@/components/create-menu";
-import { Menu, Search } from "lucide-react";
+import { Search } from "lucide-react";
 
 interface AppLayoutProps {
   children: React.ReactNode;
 }
 
 export default function AppLayout({ children }: AppLayoutProps) {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-900">
-      {/* Desktop Sidebar */}
-      <div className="hidden lg:flex lg:flex-shrink-0">
-        <Sidebar />
-      </div>
-
-      {/* Mobile Sidebar Sheet */}
-      <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-        <SheetContent side="left" className="w-64 p-0">
-          <Sidebar />
-        </SheetContent>
-      </Sheet>
-
       {/* Main Content */}
       <div className="flex flex-col flex-1 overflow-hidden">
         {/* Top Navigation Bar */}
         <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 sm:px-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              {/* Mobile menu button */}
-              <Button
-                variant="ghost"
-                size="sm"
-                className="lg:hidden"
-                onClick={() => setIsMobileMenuOpen(true)}
-              >
-                <Menu className="w-6 h-6" />
-              </Button>
               <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Dashboard</h1>
             </div>
             
