@@ -216,7 +216,7 @@ export default function SpecialistDashboardMain() {
                       <p className="text-xs text-gray-500">{activity.time}</p>
                     </div>
                     {activity.viewers && (
-                      <Badge variant="secondary">{activity.viewers} viewers</Badge>
+                      <Badge variant="secondary" className="bg-blue-600 text-white hover:bg-blue-700">{activity.viewers} viewers</Badge>
                     )}
                   </div>
                 ))}
