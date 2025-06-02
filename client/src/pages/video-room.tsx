@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import VersionDisplay from "@/components/version-display";
 
 interface Participant {
   id: string;
@@ -215,6 +216,13 @@ export default function VideoRoom() {
 
           
           <div className="flex items-center gap-2">
+            {/* Version Display */}
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="text-xs">
+                v0.0.32
+              </Badge>
+            </div>
+            
             {/* View Mode Toggle */}
             <div className="flex border border-gray-600 rounded-lg overflow-hidden">
               <Button
