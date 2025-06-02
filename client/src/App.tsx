@@ -73,6 +73,7 @@ function Router() {
 
       <Route path="/specialist-dashboard" component={SpecialistDashboard} />
       <Route path="/specialist-main" component={SpecialistDashboardMain} />
+      <Route path="/specialist-room-moderation" component={SpecialistRoomModeration} />
       <Route path="/specialist-agenda" component={SpecialistAgenda} />
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/admin/users" component={AdminUsers} />
