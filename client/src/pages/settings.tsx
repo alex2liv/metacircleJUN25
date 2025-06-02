@@ -337,8 +337,11 @@ export default function Settings() {
     }
   };
 
-  // Só admins e owners podem acessar configurações
-  if (!isAdmin && !isOwner) {
+  // Verificar se é especialista para mostrar apenas a aba WhatsApp
+  const isSpecialist = user?.role === 'specialist';
+  
+  // Só admins, owners e especialistas podem acessar configurações
+  if (!isAdmin && !isOwner && !isSpecialist) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
@@ -363,13 +366,13 @@ export default function Settings() {
         </p>
       </div>
 
-      <Tabs defaultValue="perfectpay" className="space-y-6">
+      <Tabs defaultValue={isSpecialist ? "whatsapp" : "perfectpay"} className="space-y-6">
         <TabsList>
-          <TabsTrigger value="perfectpay">PerfectPay</TabsTrigger>
-          <TabsTrigger value="specialist">Especialista</TabsTrigger>
+          {!isSpecialist && <TabsTrigger value="perfectpay">PerfectPay</TabsTrigger>}
+          {!isSpecialist && <TabsTrigger value="specialist">Especialista</TabsTrigger>}
           <TabsTrigger value="whatsapp">WhatsApp</TabsTrigger>
-          <TabsTrigger value="community">Comunidade</TabsTrigger>
-          <TabsTrigger value="integrations">Integrações</TabsTrigger>
+          {!isSpecialist && <TabsTrigger value="community">Comunidade</TabsTrigger>}
+          {!isSpecialist && <TabsTrigger value="integrations">Integrações</TabsTrigger>}
         </TabsList>
 
         {/* Configurações PerfectPay */}
