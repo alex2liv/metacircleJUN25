@@ -93,7 +93,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         });
       }
 
-      // Simple test authentication for demo
+      // Test authentication for demo users
       if (email === "user@podologos.com.br" && password === "123456") {
         res.json({ 
           success: true, 
@@ -105,6 +105,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
             lastName: "Teste",
             role: "member",
             username: "usuario.podologos"
+          }
+        });
+        return;
+      }
+
+      // Specialist authentication
+      if (email === "clarissa@metasyncdigital.com.br" && password === "Clarissa2025!") {
+        res.json({ 
+          success: true, 
+          message: "Login realizado com sucesso",
+          user: {
+            id: 1001,
+            email: "clarissa@metasyncdigital.com.br",
+            firstName: "Clarissa",
+            lastName: "Vaz",
+            role: "specialist",
+            username: "clarissa.vaz"
           }
         });
         return;
