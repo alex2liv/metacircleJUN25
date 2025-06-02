@@ -23,7 +23,8 @@ import {
   AlertTriangle,
   Clock,
   UserX,
-  Lock
+  Lock,
+  ArrowLeft
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -178,12 +179,23 @@ export default function SpecialistRoomModeration() {
         
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Moderação de Salas
-          </h1>
-          <p className="text-gray-600">
-            Gerencie e modere todas as videoconferências ativas da comunidade
-          </p>
+          <div className="flex items-center gap-3 mb-4">
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => window.history.back()}
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Moderação de Salas
+              </h1>
+              <p className="text-gray-600">
+                Gerencie e modere todas as videoconferências ativas da comunidade
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Moderation Guidelines */}

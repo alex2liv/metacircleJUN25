@@ -19,7 +19,8 @@ import {
   Hand,
   Send,
   Shield,
-  Lock
+  Lock,
+  ArrowLeft
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
@@ -205,12 +206,22 @@ export default function VideoRoom() {
       {/* Header */}
       <div className="bg-gray-800 p-4 border-b border-gray-700">
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-lg font-semibold">
-              {roomInfo.title}
-              {isModerator && <span className="ml-2 text-yellow-400">[MODERADOR]</span>}
-            </h1>
-            <p className="text-sm text-gray-300">com {roomInfo.host} • {roomInfo.duration} • {roomInfo.participantCount} participantes</p>
+          <div className="flex items-center gap-3">
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => window.history.back()}
+              className="text-white hover:bg-gray-700"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+            <div>
+              <h1 className="text-lg font-semibold">
+                {roomInfo.title}
+                {isModerator && <span className="ml-2 text-yellow-400">[MODERADOR]</span>}
+              </h1>
+              <p className="text-sm text-gray-300">com {roomInfo.host} • {roomInfo.duration} • {roomInfo.participantCount} participantes</p>
+            </div>
           </div>
 
 
