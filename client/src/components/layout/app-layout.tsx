@@ -20,36 +20,11 @@ export default function AppLayout({ children }: AppLayoutProps) {
         <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 sm:px-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="w-8 h-8 flex items-center justify-center">
-                <svg viewBox="0 0 32 32" className="w-8 h-8" fill="none">
-                  <defs>
-                    <linearGradient id="metasync-cube" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#00d4ff" />
-                      <stop offset="100%" stopColor="#0099ff" />
-                    </linearGradient>
-                  </defs>
-                  {/* Outer cube frame */}
-                  <path d="M8 12 L16 8 L24 12 L24 20 L16 24 L8 20 Z" stroke="url(#metasync-cube)" strokeWidth="1.8" fill="none"/>
-                  {/* Top face of outer cube */}
-                  <path d="M8 12 L16 8 L24 12 L16 16 Z" stroke="url(#metasync-cube)" strokeWidth="1.8" fill="none"/>
-                  {/* Left face of outer cube */}
-                  <path d="M8 12 L8 20 L16 24 L16 16 Z" stroke="url(#metasync-cube)" strokeWidth="1.8" fill="none"/>
-                  
-                  {/* Middle cube frame */}
-                  <path d="M10 13 L16 10.5 L22 13 L22 19 L16 21.5 L10 19 Z" stroke="url(#metasync-cube)" strokeWidth="1.4" fill="none"/>
-                  {/* Top face of middle cube */}
-                  <path d="M10 13 L16 10.5 L22 13 L16 15.5 Z" stroke="url(#metasync-cube)" strokeWidth="1.4" fill="none"/>
-                  {/* Left face of middle cube */}
-                  <path d="M10 13 L10 19 L16 21.5 L16 15.5 Z" stroke="url(#metasync-cube)" strokeWidth="1.4" fill="none"/>
-                  
-                  {/* Inner cube frame */}
-                  <path d="M12 14 L16 12.5 L20 14 L20 18 L16 19.5 L12 18 Z" stroke="url(#metasync-cube)" strokeWidth="1" fill="none"/>
-                  {/* Top face of inner cube */}
-                  <path d="M12 14 L16 12.5 L20 14 L16 15.5 Z" stroke="url(#metasync-cube)" strokeWidth="1" fill="none"/>
-                  {/* Left face of inner cube */}
-                  <path d="M12 14 L12 18 L16 19.5 L16 15.5 Z" stroke="url(#metasync-cube)" strokeWidth="1" fill="none"/>
-                </svg>
-              </div>
+              <img 
+                src="/icone_matasync.png" 
+                alt="MetaSync" 
+                className="w-8 h-8"
+              />
               <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Dashboard</h1>
             </div>
             
