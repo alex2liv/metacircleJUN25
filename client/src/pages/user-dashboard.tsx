@@ -26,6 +26,69 @@ export default function UserDashboard() {
     premium: "https://perfectpay.com.br/upgrade-premium-podologia"
   });
   
+  // Course promotions (configured by client admin)
+  const [coursePromotions] = useState([
+    {
+      id: 1,
+      title: "🔥 LANÇAMENTO: Curso Completo de Podologia Clínica 2025",
+      subtitle: "Seja um especialista reconhecido no mercado",
+      description: "Aprenda as técnicas mais modernas e eficazes da podologia com a Dra. Clarissa Vaz. Mais de 100 horas de conteúdo prático, casos reais e certificação reconhecida pelo mercado.",
+      image: null, // Will be configured by admin
+      price: "R$ 897,00",
+      installments: "12x R$ 74,75",
+      highlights: [
+        "✅ 100+ horas de vídeo aulas",
+        "✅ 50 casos clínicos reais",
+        "✅ Certificado reconhecido",
+        "✅ Grupo VIP no WhatsApp",
+        "✅ Acesso vitalício",
+        "✅ Garantia de 30 dias"
+      ],
+      badge: "NOVO",
+      badgeColor: "bg-red-500",
+      link: "https://perfectpay.com.br/curso-podologia-clinica-2025",
+      featured: true
+    },
+    {
+      id: 2,
+      title: "Especialização em Pé Diabético",
+      subtitle: "Torne-se referência em cuidados com pacientes diabéticos",
+      description: "Protocolo completo para avaliação, prevenção e tratamento de complicações em pés diabéticos. Aprenda a salvar membros e transformar vidas.",
+      image: null,
+      price: "R$ 697,00",
+      installments: "12x R$ 58,08",
+      highlights: [
+        "✅ 60 horas de conteúdo",
+        "✅ Protocolos atualizados",
+        "✅ Casos práticos",
+        "✅ Mentoria inclusa"
+      ],
+      badge: "POPULAR",
+      badgeColor: "bg-blue-500",
+      link: "https://perfectpay.com.br/especializacao-pe-diabetico",
+      featured: false
+    },
+    {
+      id: 3,
+      title: "Workshop: Técnicas Avançadas de Onicocriptose",
+      subtitle: "Domine os procedimentos mais eficazes",
+      description: "Técnicas cirúrgicas e conservadoras para tratamento definitivo de unhas encravadas. Aumente sua receita com procedimentos especializados.",
+      image: null,
+      price: "R$ 297,00",
+      installments: "6x R$ 49,50",
+      highlights: [
+        "✅ 20 horas de conteúdo",
+        "✅ Técnicas cirúrgicas",
+        "✅ Material didático",
+        "✅ Suporte direto"
+      ],
+      badge: "LIMITADO",
+      badgeColor: "bg-purple-500",
+      link: "https://perfectpay.com.br/workshop-onicocriptose",
+      featured: false
+    }
+  ]);
+  
   // Notifications state
   const [notifications, setNotifications] = useState<any[]>([]);
   
@@ -500,104 +563,144 @@ export default function UserDashboard() {
           {/* Courses Tab */}
           <TabsContent value="courses" className="space-y-6">
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Course Promotions */}
+            <div className="space-y-8">
               
               {/* Featured Course */}
-              <Card className="lg:col-span-2 bg-gradient-to-r from-purple-500 to-blue-600 text-white">
-                <CardContent className="p-8">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <Badge className="bg-white/20 text-white mb-4">
-                        Mais Popular
-                      </Badge>
-                      <h3 className="text-2xl font-bold mb-2">Curso Completo de Podologia Clínica</h3>
-                      <p className="text-purple-100 mb-4">
-                        Do básico ao avançado: anatomia, patologias, tratamentos e casos práticos
-                      </p>
-                      <div className="flex items-center gap-6 text-sm text-purple-100 mb-6">
-                        <span>• 80 horas de conteúdo</span>
-                        <span>• Certificado reconhecido</span>
-                        <span>• Suporte da especialista</span>
+              {coursePromotions.filter(course => course.featured).map(course => (
+                <Card key={course.id} className="bg-gradient-to-r from-red-500 to-orange-600 text-white shadow-2xl border-0">
+                  <CardContent className="p-8">
+                    <div className="flex items-start justify-between mb-6">
+                      <div className="flex-1">
+                        <Badge className={`${course.badgeColor} text-white mb-4 animate-pulse`}>
+                          {course.badge}
+                        </Badge>
+                        <h2 className="text-3xl font-bold mb-3">{course.title}</h2>
+                        <h3 className="text-xl text-red-100 mb-4">{course.subtitle}</h3>
+                        <p className="text-red-100 mb-6 leading-relaxed">
+                          {course.description}
+                        </p>
+                      </div>
+                      <div className="text-right ml-6">
+                        <div className="text-4xl font-bold mb-2">{course.price}</div>
+                        <div className="text-red-200 text-lg">ou {course.installments}</div>
+                        <div className="text-red-200 text-sm">sem juros</div>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <div className="text-3xl font-bold">R$ 897</div>
-                      <div className="text-purple-200 text-sm">ou 12x R$ 74,75</div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                      <div className="space-y-2">
+                        {course.highlights.slice(0, 3).map((highlight, index) => (
+                          <div key={index} className="text-white flex items-center gap-2">
+                            <span className="text-lg">{highlight}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="space-y-2">
+                        {course.highlights.slice(3).map((highlight, index) => (
+                          <div key={index} className="text-white flex items-center gap-2">
+                            <span className="text-lg">{highlight}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                  <Button 
-                    size="lg"
-                    className="bg-white text-purple-600 hover:bg-gray-100 font-semibold"
-                    onClick={() => {
-                      window.open('https://perfectpay.com.br/curso-podologia-completo', '_blank');
-                    }}
-                  >
-                    <ExternalLink className="w-4 h-4 mr-2" />
-                    Acessar Curso
-                  </Button>
-                </CardContent>
-              </Card>
+                    
+                    <div className="flex flex-col sm:flex-row gap-4">
+                      <Button 
+                        size="lg"
+                        className="flex-1 bg-white text-red-600 hover:bg-gray-100 font-bold py-4 text-lg shadow-lg"
+                        onClick={() => {
+                          window.open(course.link, '_blank');
+                          toast({
+                            title: "Redirecionando...",
+                            description: `Você será direcionado para ${course.title}`,
+                          });
+                        }}
+                      >
+                        <ExternalLink className="w-5 h-5 mr-2" />
+                        QUERO ESTE CURSO
+                      </Button>
+                      <div className="text-center text-white/90 text-sm pt-2">
+                        ⭐ Garantia de 30 dias • Acesso vitalício
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
 
-              {/* Course 1 */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Técnicas Avançadas de Podologia</CardTitle>
-                  <CardDescription>
-                    Procedimentos especializados para casos complexos
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="text-2xl font-bold text-blue-600">R$ 497</div>
-                      <Badge variant="outline">40h de conteúdo</Badge>
-                    </div>
-                    <div className="text-sm text-gray-600 space-y-1">
-                      <p>• Cirurgias de unhas encravadas</p>
-                      <p>• Tratamento de verrugas plantares</p>
-                      <p>• Órteses digitais personalizadas</p>
-                    </div>
-                    <Button 
-                      className="w-full"
-                      onClick={() => {
-                        window.open('https://perfectpay.com.br/tecnicas-avancadas-podologia', '_blank');
-                      }}
-                    >
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Ver Curso
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+              {/* Other Courses */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {coursePromotions.filter(course => !course.featured).map(course => (
+                  <Card key={course.id} className="hover:shadow-xl transition-shadow">
+                    <CardHeader>
+                      <div className="flex items-center justify-between mb-2">
+                        <Badge className={`${course.badgeColor} text-white`}>
+                          {course.badge}
+                        </Badge>
+                        <div className="text-right">
+                          <div className="text-2xl font-bold text-gray-900">{course.price}</div>
+                          <div className="text-sm text-gray-600">ou {course.installments}</div>
+                        </div>
+                      </div>
+                      <CardTitle className="text-xl">{course.title}</CardTitle>
+                      <CardDescription className="text-lg font-medium text-gray-700">
+                        {course.subtitle}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-gray-600 mb-4 leading-relaxed">
+                        {course.description}
+                      </p>
+                      
+                      <div className="space-y-2 mb-6">
+                        {course.highlights.map((highlight, index) => (
+                          <div key={index} className="text-sm text-gray-700">
+                            {highlight}
+                          </div>
+                        ))}
+                      </div>
+                      
+                      <Button 
+                        className="w-full font-semibold"
+                        onClick={() => {
+                          window.open(course.link, '_blank');
+                          toast({
+                            title: "Redirecionando...",
+                            description: `Você será direcionado para ${course.title}`,
+                          });
+                        }}
+                      >
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        Ver Curso Completo
+                      </Button>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
 
-              {/* Course 2 */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Pé Diabético: Protocolo Completo</CardTitle>
-                  <CardDescription>
-                    Cuidados especializados para pacientes diabéticos
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="text-2xl font-bold text-green-600">R$ 697</div>
-                      <Badge variant="outline">60h de conteúdo</Badge>
+              {/* Call to Action */}
+              <Card className="bg-gradient-to-r from-gray-800 to-gray-900 text-white">
+                <CardContent className="p-8 text-center">
+                  <h3 className="text-2xl font-bold mb-4">
+                    Transforme sua Carreira em Podologia
+                  </h3>
+                  <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
+                    Aprenda com a Dra. Clarissa Vaz e torne-se referência no mercado. 
+                    Mais de 500 profissionais já transformaram suas práticas com nossos cursos.
+                  </p>
+                  <div className="flex items-center justify-center gap-8 text-sm text-gray-300">
+                    <div className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-green-400" />
+                      <span>Certificação reconhecida</span>
                     </div>
-                    <div className="text-sm text-gray-600 space-y-1">
-                      <p>• Avaliação e classificação de riscos</p>
-                      <p>• Protocolos de prevenção</p>
-                      <p>• Tratamento de úlceras</p>
+                    <div className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-green-400" />
+                      <span>Suporte especializado</span>
                     </div>
-                    <Button 
-                      className="w-full"
-                      onClick={() => {
-                        window.open('https://perfectpay.com.br/pe-diabetico-protocolo', '_blank');
-                      }}
-                    >
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Ver Curso
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-green-400" />
+                      <span>Acesso vitalício</span>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
