@@ -113,6 +113,32 @@ export class MemStorage implements IStorage {
     };
 
     this.users.set(metaSyncAdmin.id, metaSyncAdmin);
+
+    // Adicionar especialista para teste
+    const specialist: User = {
+      id: this.currentId++,
+      username: "clarissa.vaz",
+      email: "clarissa@metasyncdigital.com.br",
+      password: "hashed_password", // Clarissa2025!
+      firstName: "Clarissa",
+      lastName: "Vaz",
+      avatar: null,
+      role: "specialist",
+      isActive: true,
+      phone: null,
+      speciality: "Podologia",
+      bio: "Especialista em podologia com mais de 10 anos de experiência",
+      companyId: null,
+      plan: "premium",
+      subscriptionStartDate: new Date(),
+      subscriptionEndDate: null,
+      isSubscriptionActive: true,
+      resetToken: null,
+      resetTokenExpiresAt: null,
+      createdAt: new Date(),
+    };
+
+    this.users.set(specialist.id, specialist);
   }
 
   private initializeSampleData() {

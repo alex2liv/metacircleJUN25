@@ -340,6 +340,9 @@ export default function Settings() {
   // Verificar se é especialista para mostrar apenas a aba WhatsApp
   const isSpecialist = user?.role === 'specialist';
   
+  // Debug: verificar qual role está sendo recebido
+  console.log('User role:', user?.role, 'isSpecialist:', isSpecialist, 'isAdmin:', isAdmin, 'isOwner:', isOwner);
+  
   // Só admins, owners e especialistas podem acessar configurações
   if (!isAdmin && !isOwner && !isSpecialist) {
     return (

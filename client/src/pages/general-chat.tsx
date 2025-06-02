@@ -224,7 +224,7 @@ export default function GeneralChat() {
           variant="ghost" 
           size="sm" 
           className="text-white hover:bg-white/20 p-2"
-          onClick={() => setLocation('/spaces')}
+          onClick={() => setLocation('/specialist-dashboard')}
         >
           <ArrowLeft className="w-5 h-5" />
         </Button>
