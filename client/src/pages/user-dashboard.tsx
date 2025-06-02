@@ -26,6 +26,19 @@ export default function UserDashboard() {
     premium: "https://perfectpay.com.br/upgrade-premium-podologia"
   });
   
+  // Branding configuration (would be loaded from client admin settings)
+  const [brandingConfig] = useState({
+    specialistName: "Dra. Clarissa Vaz",
+    specialistArea: "Podologia",
+    communityName: "Comunidade de Podologia",
+    communityTagline: "com Dra. Clarissa Vaz",
+    courseCallToActionTitle: "Transforme sua Carreira em Podologia",
+    courseCallToActionDescription: "Aprenda com a Dra. Clarissa Vaz e torne-se referência no mercado. Mais de 500 profissionais já transformaram suas práticas com nossos cursos.",
+    courseSuccessCount: "500",
+    sosServiceName: "SOS Clarissa",
+    sosServiceDescription: "Suporte especializado de urgência"
+  });
+
   // Course promotions (configured by client admin)
   const [coursePromotions] = useState([
     {
@@ -184,9 +197,9 @@ export default function UserDashboard() {
               <img src={metaSyncIcon} alt="MetaSync" className="h-16 w-16" />
               <div>
                 <h1 className="text-lg font-semibold text-gray-900">
-                  Comunidade de Podologia
+                  {brandingConfig.communityName}
                 </h1>
-                <p className="text-sm text-gray-500">com Dra. Clarissa Vaz</p>
+                <p className="text-sm text-gray-500">{brandingConfig.communityTagline}</p>
               </div>
             </div>
             <div className="flex items-center gap-4">
@@ -196,7 +209,7 @@ export default function UserDashboard() {
                 onClick={() => setShowSOSPopup(true)}
               >
                 <AlertTriangle className="w-4 h-4 mr-2" />
-                SOS Clarissa
+                {brandingConfig.sosServiceName}
               </Button>
               
               {/* Plan Badge */}
@@ -682,11 +695,10 @@ export default function UserDashboard() {
               <Card className="bg-gradient-to-r from-gray-800 to-gray-900 text-white">
                 <CardContent className="p-8 text-center">
                   <h3 className="text-2xl font-bold mb-4">
-                    Transforme sua Carreira em Podologia
+                    {brandingConfig.courseCallToActionTitle}
                   </h3>
                   <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
-                    Aprenda com a Dra. Clarissa Vaz e torne-se referência no mercado. 
-                    Mais de 500 profissionais já transformaram suas práticas com nossos cursos.
+                    {brandingConfig.courseCallToActionDescription}
                   </p>
                   <div className="flex items-center justify-center gap-8 text-sm text-gray-300">
                     <div className="flex items-center gap-2">
