@@ -339,12 +339,13 @@ export default function Settings() {
 
   // Verificar se é especialista para mostrar apenas a aba WhatsApp
   const isSpecialist = user?.role === 'specialist';
+  const isMetaSyncAdmin = user?.role === 'metasync_admin';
   
   // Debug: verificar qual role está sendo recebido
-  console.log('User role:', user?.role, 'isSpecialist:', isSpecialist, 'isAdmin:', isAdmin, 'isOwner:', isOwner);
+  console.log('User role:', user?.role, 'isSpecialist:', isSpecialist, 'isAdmin:', isAdmin, 'isOwner:', isOwner, 'isMetaSyncAdmin:', isMetaSyncAdmin);
   
-  // Só admins, owners e especialistas podem acessar configurações
-  if (!isAdmin && !isOwner && !isSpecialist) {
+  // Só admins, owners, especialistas e metasync_admin podem acessar configurações
+  if (!isAdmin && !isOwner && !isSpecialist && !isMetaSyncAdmin) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
