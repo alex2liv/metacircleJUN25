@@ -247,8 +247,8 @@ export default function SpecialistDashboard() {
         </div>
 
         {/* Action Buttons */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card className="cursor-pointer hover:shadow-md transition-shadow">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setLocation("/specialist-agenda")}>
             <CardContent className="flex items-center space-x-4 p-6">
               <Calendar className="w-8 h-8 text-primary" />
               <div>
@@ -258,7 +258,7 @@ export default function SpecialistDashboard() {
             </CardContent>
           </Card>
 
-          <Card className="cursor-pointer hover:shadow-md transition-shadow">
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setLocation("/specialist-clients")}>
             <CardContent className="flex items-center space-x-4 p-6">
               <Users className="w-8 h-8 text-primary" />
               <div>
@@ -268,12 +268,22 @@ export default function SpecialistDashboard() {
             </CardContent>
           </Card>
 
-          <Card className="cursor-pointer hover:shadow-md transition-shadow">
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setLocation("/specialist-messages")}>
             <CardContent className="flex items-center space-x-4 p-6">
-              <FileText className="w-8 h-8 text-primary" />
+              <MessageCircle className="w-8 h-8 text-primary" />
               <div>
-                <h3 className="font-medium">Relatórios</h3>
-                <p className="text-sm text-gray-600">Acompanhe métricas e progresso</p>
+                <h3 className="font-medium">Enviar Mensagens</h3>
+                <p className="text-sm text-gray-600">Comunicar com salas e usuários</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => setLocation("/settings")}>
+            <CardContent className="flex items-center space-x-4 p-6">
+              <Settings className="w-8 h-8 text-primary" />
+              <div>
+                <h3 className="font-medium">Configurações</h3>
+                <p className="text-sm text-gray-600">WhatsApp e outras configurações</p>
               </div>
             </CardContent>
           </Card>
