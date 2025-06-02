@@ -5,11 +5,12 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, Mail, ArrowLeft } from "lucide-react";
+import { Eye, EyeOff, Mail, ArrowLeft, Users } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { apiRequest } from "@/lib/queryClient";
 import metaSyncIcon from "@assets/icone_matasync.png";
@@ -55,6 +56,32 @@ export default function Login() {
   const [forgotPasswordOpen, setForgotPasswordOpen] = useState(false);
   const [resetStep, setResetStep] = useState<"email" | "code">("email");
   const [resetEmail, setResetEmail] = useState("");
+  const [selectedSpecialist, setSelectedSpecialist] = useState<string>("");
+
+  // Lista de especialistas disponíveis (normalmente viria do backend)
+  const availableSpecialists = [
+    {
+      id: "clarissa-vaz",
+      name: "Dra. Clarissa Vaz",
+      email: "clarissa@metasyncdigital.com.br",
+      specialty: "Podologia",
+      active: true
+    },
+    {
+      id: "maria-silva",
+      name: "Dra. Maria Silva",
+      email: "maria@metasyncdigital.com.br", 
+      specialty: "Dermatologia",
+      active: true
+    },
+    {
+      id: "joao-santos",
+      name: "Dr. João Santos",
+      email: "joao@metasyncdigital.com.br",
+      specialty: "Ortopedia", 
+      active: false
+    }
+  ];
 
   // Formulários
   const loginForm = useForm<LoginForm>({
@@ -294,21 +321,15 @@ export default function Login() {
             />
           </div>
           <h1 className="text-xl font-bold text-gray-900 mb-2">
-            Seja bem-vindo à Comunidade de Podólogos
+            Seja bem-vindo
           </h1>
           <p className="text-gray-600 text-sm">
-            Administrada pela especialista Clarissa Vaz
+            Especialistas
           </p>
         </CardHeader>
 
         <CardContent>
           <form onSubmit={loginForm.handleSubmit(handleUserLogin)} className="space-y-4">
-            <Alert>
-              <Mail className="w-4 h-4" />
-              <AlertDescription>
-                Acesso liberado apenas para emails na lista de membros importada pelo administrador.
-              </AlertDescription>
-            </Alert>
 
             <div className="space-y-2">
               <Label htmlFor="user-email">Email</Label>
