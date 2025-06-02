@@ -172,7 +172,7 @@ export default function Login() {
             title: "Login realizado!",
             description: "Bem-vindo ao painel do especialista.",
           });
-          setLocation("/specialist-admin");
+          setLocation("/specialist-main");
         } else {
           toast({
             title: "Login realizado!",

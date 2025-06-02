@@ -23,7 +23,7 @@ import VideoCall from "@/pages/video-call";
 import ScheduleMeeting from "@/pages/schedule-meeting";
 import ScheduleClarissa from "@/pages/schedule-clarissa";
 import ClarissaChat from "@/pages/clarissa-chat";
-import SpecialistAdmin from "@/pages/specialist-admin";
+
 import SpecialistLogin from "@/pages/specialist-login";
 import SpecialistDashboard from "@/pages/specialist-dashboard";
 import SpecialistAgenda from "@/pages/specialist-agenda";
@@ -48,6 +48,7 @@ import UserDashboard from "@/pages/user-dashboard";
 import WhatsAppSettings from "@/pages/whatsapp-settings";
 import VideoRoom from "@/pages/video-room";
 import SpecialistRoomModeration from "@/pages/specialist-room-moderation";
+import SpecialistDashboardMain from "@/pages/specialist-dashboard-main";
 
 function Router() {
   return (
@@ -69,8 +70,9 @@ function Router() {
       <Route path="/schedule-meeting" component={ScheduleMeeting} />
       <Route path="/schedule-clarissa" component={ScheduleClarissa} />
       <Route path="/clarissa-chat" component={ClarissaChat} />
-      <Route path="/specialist-admin" component={SpecialistAdmin} />
+
       <Route path="/specialist-dashboard" component={SpecialistDashboard} />
+      <Route path="/specialist-main" component={SpecialistDashboardMain} />
       <Route path="/specialist-agenda" component={SpecialistAgenda} />
       <Route path="/admin" component={AdminDashboard} />
       <Route path="/admin/users" component={AdminUsers} />
