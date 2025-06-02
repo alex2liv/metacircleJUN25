@@ -203,6 +203,7 @@ export default function Settings() {
         <TabsList>
           <TabsTrigger value="perfectpay">PerfectPay</TabsTrigger>
           <TabsTrigger value="specialist">Especialista</TabsTrigger>
+          <TabsTrigger value="whatsapp">WhatsApp</TabsTrigger>
           <TabsTrigger value="community">Comunidade</TabsTrigger>
           <TabsTrigger value="integrations">Integrações</TabsTrigger>
         </TabsList>
