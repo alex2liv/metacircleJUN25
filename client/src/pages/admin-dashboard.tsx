@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { 
   Users, 
@@ -208,91 +209,184 @@ export default function AdminDashboard() {
           </Card>
         </div>
 
-        {/* Menu de administração */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Settings className="h-5 w-5" />
-              Administração do Sistema
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {menuItems.map((item, index) => (
-                <div
-                  key={index}
-                  className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors cursor-pointer"
-                  onClick={() => setLocation(item.path)}
-                >
-                  <div className="flex items-center gap-3 mb-2">
-                    <item.icon className="h-6 w-6 text-blue-600" />
-                    <h3 className="font-medium text-gray-900">{item.label}</h3>
-                  </div>
-                  <p className="text-sm text-gray-600">{item.description}</p>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+        {/* Tabs de administração */}
+        <Tabs defaultValue="overview" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-5">
+            <TabsTrigger value="overview" className="flex items-center gap-2">
+              <BarChart3 className="w-4 h-4" />
+              Visão Geral
+            </TabsTrigger>
+            <TabsTrigger value="users" className="flex items-center gap-2">
+              <Users className="w-4 h-4" />
+              Usuários
+            </TabsTrigger>
+            <TabsTrigger value="communities" className="flex items-center gap-2">
+              <MessageSquare className="w-4 h-4" />
+              Comunidades
+            </TabsTrigger>
+            <TabsTrigger value="events" className="flex items-center gap-2">
+              <Calendar className="w-4 h-4" />
+              Eventos
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="flex items-center gap-2">
+              <Settings className="w-4 h-4" />
+              Configurações
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Usuários recentes */}
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5" />
-                Usuários Recentes
-              </CardTitle>
-              <Button
-                onClick={() => setLocation("/admin/users")}
-                className="flex items-center gap-2"
-              >
-                <Plus className="h-4 w-4" />
-                Adicionar Usuário
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {users.map((user) => (
-                <div key={user.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <Avatar>
-                      <AvatarImage src={user.avatar} />
-                      <AvatarFallback>
-                        {user.name.split(' ').map(n => n[0]).join('')}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="font-medium text-gray-900">{user.name}</p>
-                      <p className="text-sm text-gray-600">{user.email}</p>
-                      <p className="text-xs text-gray-500">Último login: {user.lastLogin}</p>
+          {/* Overview Tab */}
+          <TabsContent value="overview" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5" />
+                  Resumo do Sistema
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {menuItems.map((item, index) => (
+                    <div
+                      key={index}
+                      className="p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors cursor-pointer"
+                      onClick={() => setLocation(item.path)}
+                    >
+                      <div className="flex items-center gap-3 mb-2">
+                        <item.icon className="h-6 w-6 text-blue-600" />
+                        <h3 className="font-medium text-gray-900">{item.label}</h3>
+                      </div>
+                      <p className="text-sm text-gray-600">{item.description}</p>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Badge variant={user.role === "Especialista" ? "default" : "secondary"}>
-                      {user.role}
-                    </Badge>
-                    <Badge variant={user.isActive ? "default" : "secondary"}>
-                      {user.isActive ? "Ativo" : "Inativo"}
-                    </Badge>
-                    <div className="flex gap-1">
-                      <Button variant="outline" size="sm">
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button variant="outline" size="sm" className="text-red-600">
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Users Tab */}
+          <TabsContent value="users" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <Users className="h-5 w-5" />
+                    Usuários do Sistema
+                  </CardTitle>
+                  <Button
+                    onClick={() => setLocation("/admin/users")}
+                    className="flex items-center gap-2"
+                  >
+                    <Plus className="h-4 w-4" />
+                    Adicionar Usuário
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {users.map((user) => (
+                    <div key={user.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <Avatar>
+                          <AvatarImage src={user.avatar} />
+                          <AvatarFallback>
+                            {user.name.split(' ').map(n => n[0]).join('')}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="font-medium text-gray-900">{user.name}</p>
+                          <p className="text-sm text-gray-600">{user.email}</p>
+                          <p className="text-xs text-gray-500">Último login: {user.lastLogin}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Badge variant={user.role === "Especialista" ? "default" : "secondary"}>
+                          {user.role}
+                        </Badge>
+                        <Badge variant={user.isActive ? "default" : "secondary"}>
+                          {user.isActive ? "Ativo" : "Inativo"}
+                        </Badge>
+                        <div className="flex gap-1">
+                          <Button variant="outline" size="sm">
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button variant="outline" size="sm">
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button variant="outline" size="sm" className="text-red-600">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Communities Tab */}
+          <TabsContent value="communities" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MessageSquare className="h-5 w-5" />
+                  Comunidades Ativas
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">Gerencie todas as comunidades da plataforma.</p>
+                <Button 
+                  onClick={() => setLocation("/admin/communities")}
+                  className="mt-4"
+                >
+                  Acessar Gerenciador de Comunidades
+                </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Events Tab */}
+          <TabsContent value="events" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Calendar className="h-5 w-5" />
+                  Eventos e Agendamentos
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">Supervisione todos os eventos e agendamentos do sistema.</p>
+                <Button 
+                  onClick={() => setLocation("/admin/events")}
+                  className="mt-4"
+                >
+                  Acessar Gerenciador de Eventos
+                </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Settings Tab */}
+          <TabsContent value="settings" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Settings className="h-5 w-5" />
+                  Configurações do Sistema
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">Configure parâmetros gerais do sistema e especialistas.</p>
+                <Button 
+                  onClick={() => setLocation("/specialist-admin")}
+                  className="mt-4"
+                >
+                  Acessar Configurações
+                </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

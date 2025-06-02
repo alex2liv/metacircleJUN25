@@ -76,6 +76,7 @@ function Router() {
       <Route path="/specialist-room-moderation" component={SpecialistRoomModeration} />
       <Route path="/specialist-agenda" component={SpecialistAgenda} />
       <Route path="/admin" component={AdminDashboard} />
+      <Route path="/admin-dashboard" component={AdminDashboard} />
       <Route path="/admin/users" component={AdminUsers} />
       <Route path="/metasync-admin" component={MetaSyncAdmin} />
       <Route path="/email-verification" component={EmailVerification} />
