@@ -85,7 +85,7 @@ export default function SpecialistAgenda() {
             </div>
           </div>
           
-          <Button className="flex items-center gap-2">
+          <Button className="flex items-center gap-2" onClick={() => alert('Funcionalidade de novo agendamento será implementada em breve')}>
             <Plus className="w-4 h-4" />
             Novo Agendamento
           </Button>
@@ -130,10 +130,10 @@ export default function SpecialistAgenda() {
                         </Badge>
                         
                         <div className="flex gap-1">
-                          <Button variant="ghost" size="sm">
+                          <Button variant="ghost" size="sm" onClick={() => alert(`Editando: ${appointment.title}`)}>
                             <Edit className="w-3 h-3" />
                           </Button>
-                          <Button variant="ghost" size="sm">
+                          <Button variant="ghost" size="sm" onClick={() => alert(`Excluindo: ${appointment.title}`)}>
                             <Trash2 className="w-3 h-3" />
                           </Button>
                         </div>
@@ -174,17 +174,17 @@ export default function SpecialistAgenda() {
                 <CardTitle className="text-lg">Ações Rápidas</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                <Button variant="outline" className="w-full justify-start">
+                <Button variant="outline" className="w-full justify-start" onClick={() => alert('Abrindo formulário para agendar consultoria...')}>
                   <Plus className="w-4 h-4 mr-2" />
                   Agendar Consultoria
                 </Button>
                 
-                <Button variant="outline" className="w-full justify-start">
+                <Button variant="outline" className="w-full justify-start" onClick={() => alert('Abrindo programação de live...')}>
                   <Calendar className="w-4 h-4 mr-2" />
                   Programar Live
                 </Button>
                 
-                <Button variant="outline" className="w-full justify-start">
+                <Button variant="outline" className="w-full justify-start" onClick={() => alert('Exibindo histórico de agendamentos...')}>
                   <Clock className="w-4 h-4 mr-2" />
                   Ver Histórico
                 </Button>
