@@ -267,8 +267,15 @@ export default function VideoRoom() {
                 className="w-full h-full object-cover"
                 style={{ transform: 'scaleX(-1)' }}
               />
+              {/* Your Hand Raised Indicator */}
+              {hasHandRaised && (
+                <div className="absolute top-2 right-2 bg-yellow-500 text-black rounded-full p-1 animate-pulse z-10">
+                  <Hand className="w-4 h-4" />
+                </div>
+              )}
+              
               <div className="absolute bottom-2 left-2 bg-black/50 px-2 py-1 rounded text-sm">
-                Você {!isVideoOn && '(câmera off)'}
+                Você {!isVideoOn && '(câmera off)'} {!isAudioOn && '(mic off)'}
               </div>
               {!isVideoOn && (
                 <div className="absolute inset-0 bg-gray-700 flex items-center justify-center">
