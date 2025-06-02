@@ -168,7 +168,7 @@ export default function SpecialistDashboard() {
                     14:00 - 15:00
                   </div>
                 </div>
-                <Button size="sm">
+                <Button size="sm" onClick={() => alert('Iniciando sessão de vídeo...')}>
                   <Video className="w-3 h-3 mr-1" />
                   Iniciar
                 </Button>
@@ -186,7 +186,7 @@ export default function SpecialistDashboard() {
                     15:30 - 16:30
                   </div>
                 </div>
-                <Button variant="outline" size="sm">Ver Perfil</Button>
+                <Button variant="outline" size="sm" onClick={() => setLocation("/specialist-clients")}>Ver Perfil</Button>
               </div>
 
               <div className="flex items-center space-x-4 p-3 border rounded-lg">
@@ -201,7 +201,7 @@ export default function SpecialistDashboard() {
                     17:00 - 18:00
                   </div>
                 </div>
-                <Button variant="outline" size="sm">Preparar</Button>
+                <Button variant="outline" size="sm" onClick={() => setLocation("/specialist-agenda")}>Preparar</Button>
               </div>
             </CardContent>
           </Card>
