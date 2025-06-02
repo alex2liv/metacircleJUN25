@@ -46,6 +46,7 @@ import NotFound from "@/pages/not-found";
 import CompanyAdminDashboard from "@/pages/company-admin-dashboard";
 import UserDashboard from "@/pages/user-dashboard";
 import WhatsAppSettings from "@/pages/whatsapp-settings";
+import VideoRoom from "@/pages/video-room";
 
 function Router() {
   return (
@@ -114,6 +115,7 @@ function App() {
             <Route path="/company-admin/:slug" component={CompanyAdminDashboard} />
             <Route path="/specialist/:slug" component={SpecialistDashboard} />
             <Route path="/user-dashboard/:slug" component={UserDashboard} />
+            <Route path="/video-room/:roomId" component={VideoRoom} />
             <Route path="/specialist-login" component={SpecialistLogin} />
             <Route component={() => 
               <AppLayout>

@@ -494,11 +494,7 @@ export default function UserDashboard() {
                       <Button 
                         className="w-full bg-green-600 hover:bg-green-700"
                         onClick={() => {
-                          toast({
-                            title: "Entrando na sala...",
-                            description: "Redirecionando para a videoconferência",
-                          });
-                          // In real app: window.open('/video-room/casos-clinicos', '_blank');
+                          window.open('/video-room/casos-clinicos', '_blank');
                         }}
                       >
                         <Video className="w-4 h-4 mr-2" />
@@ -524,11 +520,7 @@ export default function UserDashboard() {
                       <Button 
                         className="w-full bg-blue-600 hover:bg-blue-700"
                         onClick={() => {
-                          toast({
-                            title: "Entrando na sala...",
-                            description: "Conectando ao networking livre",
-                          });
-                          // In real app: window.open('/video-room/networking', '_blank');
+                          window.open('/video-room/networking', '_blank');
                         }}
                       >
                         <Video className="w-4 h-4 mr-2" />
@@ -612,10 +604,10 @@ export default function UserDashboard() {
                       disabled={userPlan !== "premium"}
                       onClick={() => {
                         if (userPlan === "premium") {
-                          toast({
-                            title: "Sala criada!",
-                            description: "Sua videoconferência está sendo configurada",
-                          });
+                          // Get form data
+                          const roomName = document.querySelector<HTMLInputElement>('input[placeholder*="Dúvidas sobre Onicomicose"]')?.value || 'Nova Sala';
+                          const roomId = 'sala-' + Date.now();
+                          window.open(`/video-room/${roomId}?name=${encodeURIComponent(roomName)}`, '_blank');
                         }
                       }}
                     >
