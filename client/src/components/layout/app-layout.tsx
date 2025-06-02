@@ -21,7 +21,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <img 
-                src="/attached_assets/logo metasync fundo transparente.png" 
+                src="/attached_assets/icone_matasync.png" 
                 alt="MetaSync" 
                 className="w-8 h-8"
               />

@@ -64,11 +64,6 @@ export default function SpecialistDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
-              <img 
-                src="/attached_assets/logo metasync fundo transparente.png" 
-                alt="MetaSync" 
-                className="w-8 h-8"
-              />
               <h1 className="text-xl font-semibold text-gray-900">{company.name}</h1>
               <Badge variant="secondary">Especialista</Badge>
               {!company.hasWhiteLabel && (
