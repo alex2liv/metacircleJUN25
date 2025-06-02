@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, BookOpen, MessageSquare, Settings, ExternalLink, Clock, Users, Video, FileText, Mic, PaperclipIcon, Send, Crown, LogOut, Heart, AlertTriangle, Phone, Zap, X, Check } from "lucide-react";
-import metaSyncLogo from "@assets/MetaSync Logo Jun2025.png";
+import metaSyncIcon from "@assets/icone_matasync.png";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 import { Input } from "@/components/ui/input";
@@ -118,7 +118,7 @@ export default function UserDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
-              <img src={metaSyncLogo} alt="MetaSync" className="h-8 w-8" />
+              <img src={metaSyncIcon} alt="MetaSync" className="h-16 w-16" />
               <div>
                 <h1 className="text-lg font-semibold text-gray-900">
                   Comunidade de Podologia
