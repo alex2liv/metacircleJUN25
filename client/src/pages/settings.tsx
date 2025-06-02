@@ -366,7 +366,7 @@ export default function Settings() {
           Configurações
         </h1>
         <p className="text-gray-600 mt-2">
-          Gerencie as configurações da comunidade e integrações
+          {isSpecialist ? 'Configure suas preferências e integrações pessoais' : 'Gerencie as configurações da comunidade e integrações'}
         </p>
       </div>
 
