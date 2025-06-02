@@ -166,11 +166,20 @@ export default function Login() {
         localStorage.setItem("userEmail", result.user.email);
         localStorage.setItem("userName", result.user.firstName + " " + result.user.lastName);
         
-        toast({
-          title: "Login realizado!",
-          description: "Bem-vindo à Comunidade de Podólogos.",
-        });
-        setLocation("/community-member");
+        // Redirecionar baseado no tipo de usuário
+        if (result.user.role === "specialist") {
+          toast({
+            title: "Login realizado!",
+            description: "Bem-vindo ao painel do especialista.",
+          });
+          setLocation("/specialist-dashboard");
+        } else {
+          toast({
+            title: "Login realizado!",
+            description: "Bem-vindo à comunidade.",
+          });
+          setLocation("/community-member");
+        }
       } else {
         const error = await response.json();
         throw new Error(error.message || "Credenciais inválidas");
@@ -332,12 +341,47 @@ export default function Login() {
           <form onSubmit={loginForm.handleSubmit(handleUserLogin)} className="space-y-4">
 
             <div className="space-y-2">
+              <Label htmlFor="specialist-select">Selecionar Especialista</Label>
+              <Select 
+                value={selectedSpecialist} 
+                onValueChange={(value) => {
+                  setSelectedSpecialist(value);
+                  const specialist = availableSpecialists.find(s => s.id === value);
+                  if (specialist) {
+                    loginForm.setValue("email", specialist.email);
+                  }
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Escolha seu perfil de especialista" />
+                </SelectTrigger>
+                <SelectContent>
+                  {availableSpecialists
+                    .filter(specialist => specialist.active)
+                    .map((specialist) => (
+                    <SelectItem key={specialist.id} value={specialist.id}>
+                      <div className="flex items-center gap-2">
+                        <Users className="w-4 h-4" />
+                        <div>
+                          <div className="font-medium">{specialist.name}</div>
+                          <div className="text-xs text-gray-500">{specialist.specialty}</div>
+                        </div>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
               <Label htmlFor="user-email">Email</Label>
               <Input
                 id="user-email"
                 type="email"
-                placeholder="seu.email@exemplo.com"
+                placeholder="Selecione um especialista acima"
                 {...loginForm.register("email")}
+                readOnly={!!selectedSpecialist}
+                className={selectedSpecialist ? "bg-gray-50" : ""}
               />
               {loginForm.formState.errors.email && (
                 <p className="text-sm text-red-500">{loginForm.formState.errors.email.message}</p>

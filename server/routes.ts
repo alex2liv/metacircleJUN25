@@ -127,6 +127,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return;
       }
 
+      if (email === "maria@metasyncdigital.com.br" && password === "Maria2025!") {
+        res.json({ 
+          success: true, 
+          message: "Login realizado com sucesso",
+          user: {
+            id: 1002,
+            email: "maria@metasyncdigital.com.br",
+            firstName: "Maria",
+            lastName: "Silva",
+            role: "specialist",
+            username: "maria.silva"
+          }
+        });
+        return;
+      }
+
       res.status(401).json({ 
         success: false, 
         message: "Credenciais inválidas" 
