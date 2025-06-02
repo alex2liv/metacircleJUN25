@@ -1,6 +1,6 @@
 import { useAuth } from "./use-auth";
 
-export type UserRole = "owner" | "admin" | "moderator" | "member";
+export type UserRole = "owner" | "admin" | "moderator" | "specialist" | "member";
 
 export interface UserPermissions {
   canCreateCommunity: boolean;
@@ -76,6 +76,24 @@ const rolePermissions: Record<UserRole, UserPermissions> = {
     canModerateContent: true,
     canAccessSettings: false,
   },
+  specialist: {
+    canCreateCommunity: false,
+    canEditCommunity: false,
+    canDeleteCommunity: false,
+    canCreateSpace: false,
+    canEditSpace: false,
+    canDeleteSpace: false,
+    canCreatePost: true,
+    canEditAnyPost: false,
+    canDeleteAnyPost: false,
+    canCreateEvent: true,
+    canEditAnyEvent: true,
+    canDeleteAnyEvent: true,
+    canManageMembers: false,
+    canViewAnalytics: false,
+    canModerateContent: true,
+    canAccessSettings: true, // Specialist pode acessar configurações (WhatsApp)
+  },
   member: {
     canCreateCommunity: false,
     canEditCommunity: false,
@@ -112,9 +130,10 @@ export function useUserRole() {
   const canAccess = (requiredRole: UserRole): boolean => {
     const roleHierarchy: Record<UserRole, number> = {
       member: 1,
-      moderator: 2,
-      admin: 3,
-      owner: 4,
+      specialist: 2,
+      moderator: 3,
+      admin: 4,
+      owner: 5,
     };
     
     return roleHierarchy[currentRole] >= roleHierarchy[requiredRole];
@@ -128,6 +147,7 @@ export function useUserRole() {
     isOwner: currentRole === "owner",
     isAdmin: currentRole === "admin" || currentRole === "owner",
     isModerator: currentRole === "moderator" || currentRole === "admin" || currentRole === "owner",
+    isSpecialist: currentRole === "specialist",
     isMember: true,
   };
 }
