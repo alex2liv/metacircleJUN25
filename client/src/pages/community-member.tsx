@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Users, MessageSquare, Calendar, BookOpen, Heart, Eye, Play, Check, DollarSign, ExternalLink, Phone, MessageCircle, Crown, LogOut } from "lucide-react";
+import { Users, MessageSquare, Calendar, BookOpen, Heart, Eye, Play, Check, DollarSign, ExternalLink, Phone, MessageCircle, Crown, LogOut, Video, Award } from "lucide-react";
 import metaSyncLogo from "@assets/MetaSync Logo Jun2025.png";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
@@ -10,6 +10,48 @@ import { useLocation } from "wouter";
 export default function CommunityMember() {
   const { toast } = useToast();
   const [, setLocation] = useLocation();
+  
+  // Dynamic content configuration - normally loaded from admin settings
+  const [contentSettings] = useState({
+    guaranteeSection: {
+      enabled: true,
+      guaranteeDays: 30,
+      description: "Se nos primeiros 30 dias você não ver melhorias significativas na sua prática podológica, devolvemos 100% do seu investimento. Sem perguntas, sem burocracia."
+    },
+    benefitsSection: {
+      enabled: true,
+      title: "Veja o que acontece quando você vira Premium",
+      benefits: [
+        {
+          enabled: true,
+          title: "Fala direto com a Dra. Clarissa",
+          description: "WhatsApp direto para tirar suas dúvidas na hora"
+        },
+        {
+          enabled: true,
+          title: "Videochamadas quando quiser", 
+          description: "Consultas personalizadas para seus casos"
+        },
+        {
+          enabled: true,
+          title: "Certificados que valem",
+          description: "Reconhecidos no mercado para valorizar seu currículo"
+        }
+      ]
+    },
+    ctaSection: {
+      enabled: true,
+      title: "Que tal testar sem pagar nada?",
+      subtitle: "7 dias completos no Premium. Se não gostar, é só cancelar.",
+      buttonText: "SIM, QUERO TESTAR GRÁTIS!",
+      disclaimer: "Sem cartão de crédito • Cancele quando quiser"
+    },
+    professionalArea: {
+      name: "Podologia",
+      specialist: "Dra. Clarissa Vaz",
+      focus: "pés"
+    }
+  });
   
   const handleLogout = () => {
     localStorage.removeItem("userRole");
@@ -463,42 +505,48 @@ export default function CommunityMember() {
                   </div>
                 </div>
 
-                {/* Simple Call to Action */}
-                <div className="bg-gradient-to-r from-yellow-400 to-orange-500 p-8 rounded-2xl text-center text-white shadow-xl">
-                  <h3 className="text-3xl font-bold mb-4">
-                    Que tal testar sem pagar nada?
-                  </h3>
-                  <p className="text-xl mb-8 text-white/90">
-                    7 dias completos no Premium. Se não gostar, é só cancelar.
-                  </p>
-                  
-                  <Button 
-                    size="lg"
-                    className="bg-white text-orange-600 hover:bg-gray-100 font-bold px-12 py-6 text-xl rounded-xl shadow-lg transform hover:scale-105 transition-all"
-                    onClick={() => {
-                      toast({
-                        title: "Teste Premium Ativado!",
-                        description: "Você terá 7 dias de acesso completo ao plano premium.",
-                      });
-                    }}
-                  >
-                    SIM, QUERO TESTAR GRÁTIS!
-                  </Button>
-                  <p className="text-white/80 text-sm mt-4">
-                    Sem cartão de crédito • Cancele quando quiser
-                  </p>
-                </div>
-
-                {/* Simple Guarantee */}
-                <div className="bg-green-50 p-6 rounded-xl border-2 border-green-200 text-center">
-                  <div className="flex items-center justify-center gap-3 mb-3">
-                    <Check className="w-6 h-6 text-green-600" />
-                    <span className="font-bold text-green-900 text-lg">Garantia de 30 dias</span>
+                {/* Dynamic Call to Action */}
+                {contentSettings.ctaSection.enabled && (
+                  <div className="bg-gradient-to-r from-yellow-400 to-orange-500 p-8 rounded-2xl text-center text-white shadow-xl">
+                    <h3 className="text-3xl font-bold mb-4">
+                      {contentSettings.ctaSection.title}
+                    </h3>
+                    <p className="text-xl mb-8 text-white/90">
+                      {contentSettings.ctaSection.subtitle}
+                    </p>
+                    
+                    <Button 
+                      size="lg"
+                      className="bg-white text-orange-600 hover:bg-gray-100 font-bold px-12 py-6 text-xl rounded-xl shadow-lg transform hover:scale-105 transition-all"
+                      onClick={() => {
+                        toast({
+                          title: "Teste Premium Ativado!",
+                          description: "Você terá 7 dias de acesso completo ao plano premium.",
+                        });
+                      }}
+                    >
+                      {contentSettings.ctaSection.buttonText}
+                    </Button>
+                    <p className="text-white/80 text-sm mt-4">
+                      {contentSettings.ctaSection.disclaimer}
+                    </p>
                   </div>
-                  <p className="text-green-800">
-                    Não gostou? Devolvemos seu dinheiro sem perguntas
-                  </p>
-                </div>
+                )}
+
+                {/* Dynamic Guarantee Section */}
+                {contentSettings.guaranteeSection.enabled && (
+                  <div className="bg-green-50 p-6 rounded-xl border-2 border-green-200 text-center">
+                    <div className="flex items-center justify-center gap-3 mb-3">
+                      <Check className="w-6 h-6 text-green-600" />
+                      <span className="font-bold text-green-900 text-lg">
+                        Garantia de {contentSettings.guaranteeSection.guaranteeDays} dias
+                      </span>
+                    </div>
+                    <p className="text-green-800">
+                      {contentSettings.guaranteeSection.description}
+                    </p>
+                  </div>
+                )}
 
               </div>
 
