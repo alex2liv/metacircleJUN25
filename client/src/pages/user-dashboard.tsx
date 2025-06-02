@@ -214,7 +214,7 @@ export default function UserDashboard() {
             <div className="flex items-center gap-4">
               {/* SOS Clarissa Button */}
               <Button 
-                className="bg-red-600 hover:bg-red-700 text-white font-bold animate-pulse"
+                className="bg-red-600 hover:bg-red-700 text-white font-bold"
                 onClick={() => setShowSOSPopup(true)}
               >
                 <AlertTriangle className="w-4 h-4 mr-2" />
