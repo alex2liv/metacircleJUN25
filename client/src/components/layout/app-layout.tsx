@@ -20,6 +20,11 @@ export default function AppLayout({ children }: AppLayoutProps) {
         <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 sm:px-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
+              <img 
+                src="/attached_assets/logo metasync fundo transparente.png" 
+                alt="MetaSync" 
+                className="w-8 h-8"
+              />
               <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Dashboard</h1>
             </div>
             
