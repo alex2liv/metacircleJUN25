@@ -317,138 +317,204 @@ export default function CommunityMember() {
         <div id="plans-comparison" className="mt-16">
           <Card className="lg:col-span-3">
             <CardHeader className="text-center">
-              <CardTitle className="text-2xl">🚀 Acelere Seu Crescimento Profissional</CardTitle>
-              <CardDescription>
-                Desbloqueie todo o potencial da nossa comunidade e tenha acesso exclusivo aos melhores especialistas
+              <CardTitle className="text-3xl font-bold text-gray-900 mb-4">
+                Acelere Seu Crescimento Profissional
+              </CardTitle>
+              <CardDescription className="text-lg text-gray-600 max-w-3xl mx-auto">
+                Escolha o plano que melhor se adapta às suas necessidades e tenha acesso aos melhores recursos da nossa comunidade profissional
               </CardDescription>
-              <div className="mt-4 p-4 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-lg border border-yellow-300">
-                <p className="text-sm font-medium text-yellow-800">
-                  🔥 <strong>Oferta Especial:</strong> Teste o Plano Premium GRÁTIS por 7 dias e veja a diferença!
-                </p>
-              </div>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                
-                {/* Features Column */}
-                <div className="space-y-4">
-                  <div className="h-20 flex items-center">
-                    <h3 className="font-semibold text-lg">Recursos</h3>
-                  </div>
-                  <div className="space-y-6 text-sm">
-                    <div className="py-4 border-b">Acesso à Comunidade Exclusiva</div>
-                    <div className="py-4 border-b">WhatsApp direto com especialista</div>
-                    <div className="py-4 border-b">Consultorias personalizadas</div>
-                    <div className="py-4 border-b">Acesso a conteúdos exclusivos</div>
-                    <div className="py-4 border-b">Videochamadas 1:1 ilimitadas</div>
-                    <div className="py-4 border-b">Participação em Lives VIP</div>
-                    <div className="py-4 border-b">Material didático premium</div>
-                    <div className="py-4 border-b">Certificados reconhecidos</div>
-                    <div className="py-4 border-b">Suporte prioritário 24h</div>
-                    <div className="py-4 border-b">Grupo exclusivo de networking</div>
-                  </div>
-                </div>
+              {/* Professional Comparison Table */}
+              <div className="overflow-x-auto">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="border-b-2 border-gray-200">
+                      <th className="text-left py-6 px-4 font-semibold text-gray-900 w-1/4">
+                        Recursos
+                      </th>
+                      <th className="text-center py-6 px-4 w-1/4">
+                        <div className="space-y-2">
+                          <h3 className="font-bold text-lg text-gray-700">Básico</h3>
+                          <div className="text-2xl font-bold text-blue-600">R$ 29,90</div>
+                          <div className="text-sm text-gray-500">/mês</div>
+                          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                            Seu Plano Atual
+                          </Badge>
+                        </div>
+                      </th>
+                      <th className="text-center py-6 px-4 w-1/4">
+                        <div className="space-y-2">
+                          <h3 className="font-bold text-lg text-purple-700">Intermediário</h3>
+                          <div className="text-2xl font-bold text-purple-600">R$ 59,90</div>
+                          <div className="text-sm text-gray-500">/mês</div>
+                          <Badge className="bg-purple-600 text-white">
+                            Mais Popular
+                          </Badge>
+                        </div>
+                      </th>
+                      <th className="text-center py-6 px-4 w-1/4">
+                        <div className="space-y-2">
+                          <h3 className="font-bold text-lg text-yellow-700">Premium</h3>
+                          <div className="flex items-center justify-center gap-2">
+                            <span className="text-sm text-gray-400 line-through">R$ 149,90</span>
+                            <div className="text-2xl font-bold text-yellow-600">R$ 99,90</div>
+                          </div>
+                          <div className="text-sm text-gray-500">/mês</div>
+                          <Badge className="bg-gradient-to-r from-yellow-600 to-orange-600 text-white">
+                            Recomendado
+                          </Badge>
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    <tr className="hover:bg-gray-50">
+                      <td className="py-4 px-4 font-medium text-gray-700">Acesso à Comunidade</td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="text-green-600 text-xl">✅</span>
+                      </td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="text-green-600 text-xl">✅</span>
+                      </td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="text-green-600 text-xl">✅</span>
+                      </td>
+                    </tr>
+                    <tr className="hover:bg-gray-50">
+                      <td className="py-4 px-4 font-medium text-gray-700">WhatsApp com Especialista</td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="text-red-500 text-xl">❌</span>
+                      </td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="text-yellow-500 text-sm">Limitado</span>
+                      </td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="text-green-600 text-xl">✅</span>
+                        <div className="text-xs text-green-600 mt-1">Ilimitado</div>
+                      </td>
+                    </tr>
+                    <tr className="hover:bg-gray-50">
+                      <td className="py-4 px-4 font-medium text-gray-700">Videochamadas 1:1</td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="text-red-500 text-xl">❌</span>
+                      </td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="text-yellow-500 text-sm">2/mês</span>
+                      </td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="text-green-600 text-xl">✅</span>
+                        <div className="text-xs text-green-600 mt-1">Ilimitadas</div>
+                      </td>
+                    </tr>
+                    <tr className="hover:bg-gray-50">
+                      <td className="py-4 px-4 font-medium text-gray-700">Conteúdos Exclusivos</td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="text-yellow-500 text-sm">Básico</span>
+                      </td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="text-green-600 text-xl">✅</span>
+                      </td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="text-green-600 text-xl">✅</span>
+                        <div className="text-xs text-green-600 mt-1">Premium</div>
+                      </td>
+                    </tr>
+                    <tr className="hover:bg-gray-50">
+                      <td className="py-4 px-4 font-medium text-gray-700">Lives Exclusivas VIP</td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="text-red-500 text-xl">❌</span>
+                      </td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="text-green-600 text-xl">✅</span>
+                      </td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="text-green-600 text-xl">✅</span>
+                        <div className="text-xs text-green-600 mt-1">Acesso total</div>
+                      </td>
+                    </tr>
+                    <tr className="hover:bg-gray-50">
+                      <td className="py-4 px-4 font-medium text-gray-700">Suporte Prioritário</td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="text-red-500 text-xl">❌</span>
+                      </td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="text-yellow-500 text-sm">24-48h</span>
+                      </td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="text-green-600 text-xl">✅</span>
+                        <div className="text-xs text-green-600 mt-1">Imediato</div>
+                      </td>
+                    </tr>
+                    <tr className="hover:bg-gray-50">
+                      <td className="py-4 px-4 font-medium text-gray-700">Certificados de Participação</td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="text-red-500 text-xl">❌</span>
+                      </td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="text-red-500 text-xl">❌</span>
+                      </td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="text-green-600 text-xl">✅</span>
+                        <div className="text-xs text-green-600 mt-1">Reconhecidos</div>
+                      </td>
+                    </tr>
+                    <tr className="hover:bg-gray-50">
+                      <td className="py-4 px-4 font-medium text-gray-700">Grupo Exclusivo de Networking</td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="text-red-500 text-xl">❌</span>
+                      </td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="text-red-500 text-xl">❌</span>
+                      </td>
+                      <td className="py-4 px-4 text-center">
+                        <span className="text-green-600 text-xl">✅</span>
+                        <div className="text-xs text-green-600 mt-1">VIP</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
 
-                {/* Basic Plan */}
-                <div className="relative border-2 border-gray-200 rounded-lg p-6">
-                  <div className="text-center space-y-2 h-20 flex flex-col justify-center">
-                    <h3 className="font-semibold text-lg">Básico</h3>
-                    <p className="text-2xl font-bold text-blue-600">R$ 29,90</p>
-                    <p className="text-sm text-gray-600">/mês</p>
-                  </div>
-                  <div className="space-y-6 text-center">
-                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
-                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
-                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
-                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
-                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
-                    <div className="py-4 border-b">-</div>
-                    <div className="py-4 border-b">-</div>
-                    <div className="py-4 border-b">-</div>
-                    <div className="py-4 border-b">-</div>
-                    <div className="py-4 border-b">-</div>
-                  </div>
-                  <Button className="w-full mt-6 bg-blue-600 hover:bg-blue-700">
-                    Plano Atual
+              {/* Action Buttons */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                <div className="text-center">
+                  <Button 
+                    variant="outline" 
+                    className="w-full"
+                    disabled
+                  >
+                    Seu Plano Atual
                   </Button>
                 </div>
-
-                {/* Intermediate Plan */}
-                <div className="relative border-2 border-purple-300 rounded-lg p-6 bg-purple-50">
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-purple-600 text-white">Mais Popular</Badge>
-                  </div>
-                  <div className="text-center space-y-2 h-20 flex flex-col justify-center">
-                    <h3 className="font-semibold text-lg">Intermediário</h3>
-                    <p className="text-2xl font-bold text-purple-600">R$ 59,90</p>
-                    <p className="text-sm text-gray-600">/mês</p>
-                  </div>
-                  <div className="space-y-6 text-center">
-                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
-                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
-                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
-                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
-                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
-                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
-                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
-                    <div className="py-4 border-b">-</div>
-                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
-                    <div className="py-4 border-b">-</div>
-                  </div>
-                  <Button className="w-full mt-6 bg-purple-600 hover:bg-purple-700">
+                <div className="text-center">
+                  <Button 
+                    className="w-full bg-purple-600 hover:bg-purple-700"
+                  >
                     Fazer Upgrade
                   </Button>
+                  <p className="text-xs text-gray-500 mt-2">Sem compromisso</p>
                 </div>
-
-                {/* Premium Plan */}
-                <div className="relative border-2 border-yellow-300 rounded-lg p-6 bg-gradient-to-br from-yellow-50 to-orange-50 transform hover:scale-105 transition-transform duration-300">
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-gradient-to-r from-yellow-600 to-orange-600 text-white flex items-center gap-1 animate-pulse">
-                      <Crown className="w-3 h-3" />
-                      VIP PREMIUM
-                    </Badge>
-                  </div>
-                  <div className="text-center space-y-2 h-20 flex flex-col justify-center">
-                    <h3 className="font-semibold text-lg text-yellow-800">Premium VIP</h3>
-                    <div className="flex items-center justify-center gap-2">
-                      <span className="text-lg text-gray-500 line-through">R$ 149,90</span>
-                      <p className="text-2xl font-bold text-yellow-600">R$ 99,90</p>
-                    </div>
-                    <p className="text-sm text-gray-600">/mês</p>
-                  </div>
-                  <div className="space-y-6 text-center">
-                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
-                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
-                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
-                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
-                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
-                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
-                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
-                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
-                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
-                    <div className="py-4 border-b"><Check className="w-5 h-5 text-green-500 mx-auto" /></div>
-                  </div>
-                  <div className="space-y-3 mt-6">
-                    <Button 
-                      className="w-full bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white font-semibold"
-                      onClick={() => {
-                        toast({
-                          title: "Teste Premium Ativado!",
-                          description: "Você terá 7 dias de acesso completo ao plano premium.",
-                        });
-                      }}
-                    >
-                      🚀 Testar 7 Dias GRÁTIS
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      className="w-full border-yellow-600 text-yellow-700 hover:bg-yellow-50"
-                    >
-                      Fazer Upgrade
-                    </Button>
-                  </div>
+                <div className="text-center space-y-2">
+                  <Button 
+                    className="w-full bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white font-semibold"
+                    onClick={() => {
+                      toast({
+                        title: "Teste Premium Ativado!",
+                        description: "Você terá 7 dias de acesso completo ao plano premium.",
+                      });
+                    }}
+                  >
+                    Testar 7 Dias GRÁTIS
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    className="w-full border-yellow-600 text-yellow-700 hover:bg-yellow-50"
+                  >
+                    Fazer Upgrade
+                  </Button>
+                  <p className="text-xs text-gray-500">Cancele quando quiser</p>
                 </div>
-
               </div>
 
               {/* Special Premium Benefits */}
