@@ -18,7 +18,7 @@ export default function UserDashboard() {
   const [messageText, setMessageText] = useState("");
   
   // User subscription status
-  const [userPlan] = useState("basic"); // basic, intermediate, premium
+  const [userPlan, setUserPlan] = useState("basic"); // basic, intermediate, premium
   
   // Upgrade links (normally configured by client admin)
   const [upgradeLinks] = useState({
@@ -238,6 +238,23 @@ export default function UserDashboard() {
                   Básico
                 </Badge>
               )}
+              
+              {/* Test Premium View Link */}
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => {
+                  const newPlan = userPlan === 'premium' ? 'basic' : 'premium';
+                  setUserPlan(newPlan);
+                  toast({
+                    title: `Visualizando como ${newPlan === 'premium' ? 'Premium' : 'Básico'}`,
+                    description: "A interface foi atualizada para mostrar as funcionalidades do plano",
+                  });
+                }}
+                className="text-xs"
+              >
+                {userPlan === 'premium' ? 'Ver como Básico' : 'Ver como Premium'}
+              </Button>
               
               <Button 
                 variant="outline" 
