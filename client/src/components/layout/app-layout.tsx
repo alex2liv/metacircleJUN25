@@ -23,13 +23,20 @@ export default function AppLayout({ children }: AppLayoutProps) {
               <svg width="32" height="32" viewBox="0 0 100 100" className="w-8 h-8">
                 <defs>
                   <linearGradient id="metasyncGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style={{ stopColor: '#00bfff', stopOpacity: 1 }} />
-                    <stop offset="100%" style={{ stopColor: '#0080ff', stopOpacity: 1 }} />
+                    <stop offset="0%" style={{ stopColor: '#00d4ff', stopOpacity: 1 }} />
+                    <stop offset="100%" style={{ stopColor: '#0099ff', stopOpacity: 1 }} />
                   </linearGradient>
                 </defs>
-                <path d="M25 25 L75 25 L75 50 L50 75 L25 50 Z" fill="url(#metasyncGrad)" stroke="#0066cc" strokeWidth="2"/>
-                <path d="M35 35 L65 35 L65 45 L50 60 L35 45 Z" fill="none" stroke="#ffffff" strokeWidth="2"/>
-                <path d="M42 42 L58 42 L58 48 L50 56 L42 48 Z" fill="none" stroke="#ffffff" strokeWidth="1.5"/>
+                {/* Outer cube outline */}
+                <path d="M20 35 L50 20 L80 35 L80 65 L50 80 L20 65 Z" fill="none" stroke="url(#metasyncGrad)" strokeWidth="3"/>
+                {/* Middle cube outline */}
+                <path d="M30 40 L50 30 L70 40 L70 60 L50 70 L30 60 Z" fill="none" stroke="url(#metasyncGrad)" strokeWidth="2"/>
+                {/* Inner cube outline */}
+                <path d="M40 45 L50 40 L60 45 L60 55 L50 60 L40 55 Z" fill="none" stroke="url(#metasyncGrad)" strokeWidth="1.5"/>
+                {/* Connecting lines for 3D effect */}
+                <line x1="20" y1="35" x2="30" y2="40" stroke="url(#metasyncGrad)" strokeWidth="1"/>
+                <line x1="50" y1="20" x2="50" y2="30" stroke="url(#metasyncGrad)" strokeWidth="1"/>
+                <line x1="80" y1="35" x2="70" y2="40" stroke="url(#metasyncGrad)" strokeWidth="1"/>
               </svg>
               <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Dashboard</h1>
             </div>
