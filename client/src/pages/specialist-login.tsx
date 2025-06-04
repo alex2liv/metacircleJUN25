@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, UserCheck, MessageCircle, Calendar, Video, Users } from "lucide-react";
-import metaSyncLogo from "@assets/MetaSync Logo Jun2025.png";
+import metaSyncLogo from "@assets/logo metasync fundo transparente.png";
 import { useLocation } from "wouter";
 
 export default function SpecialistLogin() {
@@ -60,141 +60,166 @@ export default function SpecialistLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-800 to-purple-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        {/* Logo e Título */}
-        <div className="text-center mb-8">
-          <img 
-            src={metaSyncLogo} 
-            alt="MetaSync" 
-            className="h-32 mx-auto mb-4"
-          />
-          <h1 className="text-2xl font-bold text-white mb-2">
-            🔒 Área do Especialista
-          </h1>
-          <p className="text-blue-200">
-            Acesso exclusivo para profissionais
-          </p>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center p-4">
+      <div className="w-full max-w-4xl">
+        <div className="grid lg:grid-cols-2 gap-8 items-center">
+          
+          {/* Lado Esquerdo - Logo e Funcionalidades */}
+          <div className="text-center lg:text-left">
+            <div className="mb-8">
+              <img 
+                src={metaSyncLogo} 
+                alt="MetaSync Digital" 
+                className="h-24 mx-auto lg:mx-0 mb-6"
+              />
+              <h1 className="text-3xl font-bold text-white mb-3">
+                Área do Especialista
+              </h1>
+              <p className="text-blue-200 text-lg">
+                Plataforma completa para profissionais
+              </p>
+            </div>
 
-        {/* Funcionalidades do Especialista */}
-        <div className="grid grid-cols-2 gap-3 mb-6">
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 text-center">
-            <MessageCircle className="w-6 h-6 text-blue-300 mx-auto mb-1" />
-            <span className="text-xs text-white">Chat Groups</span>
-          </div>
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 text-center">
-            <Calendar className="w-6 h-6 text-green-300 mx-auto mb-1" />
-            <span className="text-xs text-white">Agendas</span>
-          </div>
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 text-center">
-            <Video className="w-6 h-6 text-purple-300 mx-auto mb-1" />
-            <span className="text-xs text-white">Lives</span>
-          </div>
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 text-center">
-            <Users className="w-6 h-6 text-orange-300 mx-auto mb-1" />
-            <span className="text-xs text-white">Moderation</span>
-          </div>
-        </div>
+            {/* Cards de Funcionalidades */}
+            <div className="grid grid-cols-2 gap-4 mb-8">
+              <Card className="bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/20 transition-all duration-300">
+                <CardContent className="p-4 text-center">
+                  <MessageCircle className="w-8 h-8 text-blue-400 mx-auto mb-2" />
+                  <h3 className="font-semibold text-white text-sm">Chat Groups</h3>
+                  <p className="text-blue-200 text-xs">Conversas organizadas</p>
+                </CardContent>
+              </Card>
 
-        {/* Formulário de Login */}
-        <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-2xl">
-          <CardHeader className="text-center">
-            <CardTitle className="flex items-center justify-center gap-2">
-              <UserCheck className="w-5 h-5 text-blue-600" />
-              Login Especialista
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div>
-                <Label htmlFor="username">👤 Usuário</Label>
-                <Input
-                  id="username"
-                  type="text"
-                  value={loginData.username}
-                  onChange={(e) => setLoginData({...loginData, username: e.target.value})}
-                  placeholder="Digite seu usuário"
-                  disabled={isLoading}
-                />
-              </div>
+              <Card className="bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/20 transition-all duration-300">
+                <CardContent className="p-4 text-center">
+                  <Calendar className="w-8 h-8 text-green-400 mx-auto mb-2" />
+                  <h3 className="font-semibold text-white text-sm">Agendas</h3>
+                  <p className="text-blue-200 text-xs">Gestão de horários</p>
+                </CardContent>
+              </Card>
 
-              <div>
-                <Label htmlFor="password">🔑 Senha</Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    value={loginData.password}
-                    onChange={(e) => setLoginData({...loginData, password: e.target.value})}
-                    placeholder="Digite sua senha"
-                    disabled={isLoading}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0"
-                    onClick={() => setShowPassword(!showPassword)}
+              <Card className="bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/20 transition-all duration-300">
+                <CardContent className="p-4 text-center">
+                  <Video className="w-8 h-8 text-purple-400 mx-auto mb-2" />
+                  <h3 className="font-semibold text-white text-sm">Lives</h3>
+                  <p className="text-blue-200 text-xs">Transmissões ao vivo</p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/20 transition-all duration-300">
+                <CardContent className="p-4 text-center">
+                  <Users className="w-8 h-8 text-orange-400 mx-auto mb-2" />
+                  <h3 className="font-semibold text-white text-sm">Moderation</h3>
+                  <p className="text-blue-200 text-xs">Controle de comunidade</p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
+          {/* Lado Direito - Formulário de Login */}
+          <div>
+            <Card className="bg-white/95 backdrop-blur-md border-white/20 shadow-2xl">
+              <CardHeader className="text-center pb-4">
+                <CardTitle className="flex items-center justify-center gap-2 text-xl">
+                  <UserCheck className="w-6 h-6 text-blue-600" />
+                  Login Especialista
+                </CardTitle>
+                <p className="text-gray-600 text-sm">Acesse sua área profissional</p>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleLogin} className="space-y-5">
+                  <div>
+                    <Label htmlFor="username" className="text-gray-700 font-medium">Usuário</Label>
+                    <Input
+                      id="username"
+                      type="text"
+                      value={loginData.username}
+                      onChange={(e) => setLoginData({...loginData, username: e.target.value})}
+                      placeholder="Digite seu usuário"
+                      disabled={isLoading}
+                      className="mt-1 h-11"
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="password" className="text-gray-700 font-medium">Senha</Label>
+                    <div className="relative mt-1">
+                      <Input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        value={loginData.password}
+                        onChange={(e) => setLoginData({...loginData, password: e.target.value})}
+                        placeholder="Digite sua senha"
+                        disabled={isLoading}
+                        className="h-11 pr-10"
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0"
+                        onClick={() => setShowPassword(!showPassword)}
+                        disabled={isLoading}
+                      >
+                        {showPassword ? 
+                          <EyeOff className="w-4 h-4" /> : 
+                          <Eye className="w-4 h-4" />
+                        }
+                      </Button>
+                    </div>
+                  </div>
+
+                  <Button 
+                    type="submit" 
+                    className="w-full h-11 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium"
                     disabled={isLoading}
                   >
-                    {showPassword ? 
-                      <EyeOff className="w-4 h-4" /> : 
-                      <Eye className="w-4 h-4" />
-                    }
+                    {isLoading ? (
+                      <>
+                        <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2" />
+                        Entrando...
+                      </>
+                    ) : (
+                      <>
+                        <UserCheck className="w-4 h-4 mr-2" />
+                        Entrar na Área Especialista
+                      </>
+                    )}
+                  </Button>
+                </form>
+
+                {/* Credenciais de demonstração */}
+                <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg">
+                  <h4 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
+                    <UserCheck className="w-4 h-4" />
+                    Credenciais de Teste
+                  </h4>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-blue-800">Usuário:</span>
+                      <Badge variant="secondary" className="bg-blue-100 text-blue-800">clarissa</Badge>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-blue-800">Senha:</span>
+                      <Badge variant="secondary" className="bg-blue-100 text-blue-800">specialist123</Badge>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Link de ajuda */}
+                <div className="mt-4 text-center">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-gray-600 hover:text-gray-800"
+                    onClick={() => setLocation("/")}
+                  >
+                    ← Voltar ao MetaCircle
                   </Button>
                 </div>
-              </div>
-
-              <Button 
-                type="submit" 
-                className="w-full bg-blue-600 hover:bg-blue-700"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <>
-                    <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2" />
-                    Entrando...
-                  </>
-                ) : (
-                  <>
-                    <UserCheck className="w-4 h-4 mr-2" />
-                    Entrar na Área Especialista
-                  </>
-                )}
-              </Button>
-            </form>
-
-            {/* Credenciais de demonstração */}
-            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              <h4 className="font-medium text-blue-900 mb-2">🔐 Credenciais de Teste:</h4>
-              <div className="text-sm text-blue-800 space-y-1">
-                <div className="flex items-center justify-between">
-                  <span>Usuário:</span>
-                  <Badge variant="outline">clarissa</Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>Senha:</span>
-                  <Badge variant="outline">specialist123</Badge>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Informações Adicionais */}
-        <div className="mt-6 text-center">
-          <p className="text-blue-200 text-sm">
-            Precisa de ajuda? Entre em contato com o administrador
-          </p>
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="text-blue-300 hover:text-white mt-2"
-            onClick={() => setLocation("/")}
-          >
-            ← Voltar ao MetaCircle
-          </Button>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
     </div>
