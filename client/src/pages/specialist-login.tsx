@@ -60,7 +60,7 @@ export default function SpecialistLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-800 to-purple-900 flex items-center justify-center p-4">
       <div className="w-full max-w-4xl">
         <div className="grid lg:grid-cols-2 gap-8 items-center">
           
@@ -70,7 +70,7 @@ export default function SpecialistLogin() {
               <img 
                 src={metaSyncLogo} 
                 alt="MetaSync Digital" 
-                className="h-24 mx-auto lg:mx-0 mb-6"
+                className="h-48 mx-auto lg:mx-0 mb-6"
               />
               <h1 className="text-3xl font-bold text-white mb-3">
                 Área do Especialista
