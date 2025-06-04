@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Send, Users, User, MessageSquare, Mic, Video, FileText, Paperclip, Square, Play } from "lucide-react";
+import { ArrowLeft, Send, Users, User, MessageSquare, Mic, Video, FileText, Paperclip, Square, Play, X } from "lucide-react";
 import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 
@@ -35,8 +35,12 @@ export default function SpecialistMessages() {
   const [isRecordingVideo, setIsRecordingVideo] = useState(false);
   const [recordedAudio, setRecordedAudio] = useState<string | null>(null);
   const [recordedVideo, setRecordedVideo] = useState<string | null>(null);
+  const [showVideoPreview, setShowVideoPreview] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const videoPreviewRef = useRef<HTMLVideoElement | null>(null);
+  const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const rooms: Room[] = [
     { id: 1, name: "Sala Geral", memberCount: 234, type: "general" },
@@ -155,6 +159,18 @@ export default function SpecialistMessages() {
         if (stream.getVideoTracks().length === 0) {
           throw new Error('Não foi possível obter acesso à câmera');
         }
+
+        // Mostrar preview da câmera
+        setShowVideoPreview(true);
+        setRecordingTime(0);
+
+        // Aguardar um pouco para o DOM atualizar
+        setTimeout(() => {
+          if (videoPreviewRef.current) {
+            videoPreviewRef.current.srcObject = stream;
+            videoPreviewRef.current.play();
+          }
+        }, 100);
         
         // Usar codec padrão do Chrome
         const mimeType = 'video/webm';
@@ -175,10 +191,20 @@ export default function SpecialistMessages() {
           const blob = new Blob(chunks, { type: mimeType });
           const videoUrl = URL.createObjectURL(blob);
           setRecordedVideo(videoUrl);
+          setShowVideoPreview(false);
+          setRecordingTime(0);
+          
+          // Parar contador
+          if (recordingIntervalRef.current) {
+            clearInterval(recordingIntervalRef.current);
+            recordingIntervalRef.current = null;
+          }
+          
           toast({
             title: "Vídeo gravado com sucesso",
-            description: `Arquivo criado: ${(blob.size / 1024 / 1024).toFixed(1)}MB - Clique em "Assistir" para reproduzir`,
+            description: `Arquivo criado: ${(blob.size / 1024 / 1024).toFixed(1)}MB`,
           });
+          
           // Limpar stream
           if (streamRef.current) {
             streamRef.current.getTracks().forEach(track => {
@@ -191,6 +217,11 @@ export default function SpecialistMessages() {
         
         mediaRecorder.start(1000);
         setIsRecordingVideo(true);
+        
+        // Iniciar contador de tempo
+        recordingIntervalRef.current = setInterval(() => {
+          setRecordingTime(prev => prev + 1);
+        }, 1000);
         
         toast({
           title: "Câmera ativada!",
@@ -230,6 +261,7 @@ export default function SpecialistMessages() {
           description: errorMessage,
           variant: "destructive"
         });
+        setShowVideoPreview(false);
       }
     } else {
       // Parar gravação
@@ -452,22 +484,40 @@ export default function SpecialistMessages() {
                 </Button>
                 
                 {recordedAudio && (
-                  <Button 
-                    variant="secondary"
-                    size="sm"
-                    className="flex items-center gap-2"
-                    onClick={() => {
-                      const audio = new Audio(recordedAudio);
-                      audio.play();
-                      toast({
-                        title: "Reproduzindo áudio",
-                        description: "Áudio gravado está sendo reproduzido",
-                      });
-                    }}
-                  >
-                    <Play className="w-4 h-4" />
-                    Ouvir
-                  </Button>
+                  <>
+                    <Button 
+                      variant="secondary"
+                      size="sm"
+                      className="flex items-center gap-2"
+                      onClick={() => {
+                        const audio = new Audio(recordedAudio);
+                        audio.play();
+                        toast({
+                          title: "Reproduzindo áudio",
+                          description: "Áudio gravado está sendo reproduzido",
+                        });
+                      }}
+                    >
+                      <Play className="w-4 h-4" />
+                      Ouvir
+                    </Button>
+                    
+                    <Button 
+                      variant="default"
+                      size="sm"
+                      className="flex items-center gap-2"
+                      onClick={() => {
+                        toast({
+                          title: "Áudio enviado",
+                          description: "Áudio anexado à mensagem",
+                        });
+                        setRecordedAudio(null);
+                      }}
+                    >
+                      <Send className="w-4 h-4" />
+                      Enviar
+                    </Button>
+                  </>
                 )}
                 
                 <Button 
@@ -481,68 +531,86 @@ export default function SpecialistMessages() {
                 </Button>
                 
                 {recordedVideo && (
-                  <Button 
-                    variant="secondary"
-                    size="sm"
-                    className="flex items-center gap-2"
-                    onClick={() => {
-                      const video = document.createElement('video');
-                      video.src = recordedVideo;
-                      video.controls = true;
-                      video.style.maxWidth = '100%';
-                      video.style.maxHeight = '400px';
-                      
-                      const dialog = document.createElement('div');
-                      dialog.style.position = 'fixed';
-                      dialog.style.top = '0';
-                      dialog.style.left = '0';
-                      dialog.style.width = '100%';
-                      dialog.style.height = '100%';
-                      dialog.style.backgroundColor = 'rgba(0,0,0,0.8)';
-                      dialog.style.display = 'flex';
-                      dialog.style.alignItems = 'center';
-                      dialog.style.justifyContent = 'center';
-                      dialog.style.zIndex = '9999';
-                      
-                      const container = document.createElement('div');
-                      container.style.position = 'relative';
-                      container.style.backgroundColor = 'white';
-                      container.style.padding = '20px';
-                      container.style.borderRadius = '8px';
-                      
-                      const closeBtn = document.createElement('button');
-                      closeBtn.innerHTML = '×';
-                      closeBtn.style.position = 'absolute';
-                      closeBtn.style.top = '10px';
-                      closeBtn.style.right = '10px';
-                      closeBtn.style.border = 'none';
-                      closeBtn.style.background = 'none';
-                      closeBtn.style.fontSize = '24px';
-                      closeBtn.style.cursor = 'pointer';
-                      closeBtn.onclick = () => {
-                        document.body.removeChild(dialog);
-                      };
-                      
-                      container.appendChild(closeBtn);
-                      container.appendChild(video);
-                      dialog.appendChild(container);
-                      document.body.appendChild(dialog);
-                      
-                      dialog.onclick = (e) => {
-                        if (e.target === dialog) {
+                  <>
+                    <Button 
+                      variant="secondary"
+                      size="sm"
+                      className="flex items-center gap-2"
+                      onClick={() => {
+                        const video = document.createElement('video');
+                        video.src = recordedVideo;
+                        video.controls = true;
+                        video.style.maxWidth = '100%';
+                        video.style.maxHeight = '400px';
+                        
+                        const dialog = document.createElement('div');
+                        dialog.style.position = 'fixed';
+                        dialog.style.top = '0';
+                        dialog.style.left = '0';
+                        dialog.style.width = '100%';
+                        dialog.style.height = '100%';
+                        dialog.style.backgroundColor = 'rgba(0,0,0,0.8)';
+                        dialog.style.display = 'flex';
+                        dialog.style.alignItems = 'center';
+                        dialog.style.justifyContent = 'center';
+                        dialog.style.zIndex = '9999';
+                        
+                        const container = document.createElement('div');
+                        container.style.position = 'relative';
+                        container.style.backgroundColor = 'white';
+                        container.style.padding = '20px';
+                        container.style.borderRadius = '8px';
+                        
+                        const closeBtn = document.createElement('button');
+                        closeBtn.innerHTML = '×';
+                        closeBtn.style.position = 'absolute';
+                        closeBtn.style.top = '10px';
+                        closeBtn.style.right = '10px';
+                        closeBtn.style.border = 'none';
+                        closeBtn.style.background = 'none';
+                        closeBtn.style.fontSize = '24px';
+                        closeBtn.style.cursor = 'pointer';
+                        closeBtn.onclick = () => {
                           document.body.removeChild(dialog);
-                        }
-                      };
-                      
-                      toast({
-                        title: "Reproduzindo vídeo",
-                        description: "Vídeo gravado está sendo exibido",
-                      });
-                    }}
-                  >
-                    <Play className="w-4 h-4" />
-                    Assistir
-                  </Button>
+                        };
+                        
+                        container.appendChild(closeBtn);
+                        container.appendChild(video);
+                        dialog.appendChild(container);
+                        document.body.appendChild(dialog);
+                        
+                        dialog.onclick = (e) => {
+                          if (e.target === dialog) {
+                            document.body.removeChild(dialog);
+                          }
+                        };
+                        
+                        toast({
+                          title: "Reproduzindo vídeo",
+                          description: "Vídeo gravado está sendo exibido",
+                        });
+                      }}
+                    >
+                      <Play className="w-4 h-4" />
+                      Assistir
+                    </Button>
+                    
+                    <Button 
+                      variant="default"
+                      size="sm"
+                      className="flex items-center gap-2"
+                      onClick={() => {
+                        toast({
+                          title: "Vídeo enviado",
+                          description: "Vídeo anexado à mensagem",
+                        });
+                        setRecordedVideo(null);
+                      }}
+                    >
+                      <Send className="w-4 h-4" />
+                      Enviar
+                    </Button>
+                  </>
                 )}
                 
                 <Button 
@@ -616,6 +684,82 @@ export default function SpecialistMessages() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Modal de Preview da Câmera */}
+      {showVideoPreview && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold">Gravando Vídeo</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  if (isRecordingVideo) {
+                    handleVideoRecording();
+                  } else {
+                    setShowVideoPreview(false);
+                  }
+                }}
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+            
+            <div className="relative">
+              <video
+                ref={videoPreviewRef}
+                className="w-full h-80 bg-black rounded-lg object-cover"
+                muted
+                autoPlay
+                playsInline
+              />
+              
+              {/* Indicador de tempo */}
+              <div className="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full flex items-center gap-2">
+                <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                <span className="font-mono text-sm">
+                  {Math.floor(recordingTime / 60).toString().padStart(2, '0')}:
+                  {(recordingTime % 60).toString().padStart(2, '0')}
+                </span>
+              </div>
+              
+              {/* Barra de progresso */}
+              <div className="absolute bottom-4 left-4 right-4">
+                <div className="bg-black/50 rounded-full h-2">
+                  <div 
+                    className="bg-red-600 h-2 rounded-full transition-all duration-1000"
+                    style={{ width: `${(recordingTime / 60) * 100}%` }}
+                  ></div>
+                </div>
+                <div className="text-white text-xs mt-1 text-center">
+                  {60 - recordingTime} segundos restantes
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex justify-center gap-4 mt-4">
+              <Button
+                variant={isRecordingVideo ? "destructive" : "default"}
+                onClick={handleVideoRecording}
+                className="flex items-center gap-2"
+              >
+                {isRecordingVideo ? (
+                  <>
+                    <Square className="w-4 h-4" />
+                    Parar Gravação
+                  </>
+                ) : (
+                  <>
+                    <Video className="w-4 h-4" />
+                    Iniciar Gravação
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
