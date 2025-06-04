@@ -52,18 +52,25 @@ export default function SpecialistMessages() {
   const handleAudioRecording = async () => {
     if (!isRecordingAudio) {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ 
-          audio: {
-            echoCancellation: true,
-            noiseSuppression: true,
-            sampleRate: 44100
-          } 
-        });
+        // Verificar se getUserMedia está disponível
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          throw new Error('getUserMedia não suportado');
+        }
+
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         streamRef.current = stream;
         
-        const mediaRecorder = new MediaRecorder(stream, {
-          mimeType: 'audio/webm;codecs=opus'
-        });
+        // Verificar tipos MIME suportados para Mac/Safari
+        let mimeType = 'audio/webm';
+        if (!MediaRecorder.isTypeSupported('audio/webm')) {
+          if (MediaRecorder.isTypeSupported('audio/mp4')) {
+            mimeType = 'audio/mp4';
+          } else if (MediaRecorder.isTypeSupported('audio/ogg')) {
+            mimeType = 'audio/ogg';
+          }
+        }
+        
+        const mediaRecorder = new MediaRecorder(stream, { mimeType });
         mediaRecorderRef.current = mediaRecorder;
         
         const chunks: BlobPart[] = [];
@@ -74,10 +81,10 @@ export default function SpecialistMessages() {
         };
         
         mediaRecorder.onstop = () => {
-          const blob = new Blob(chunks, { type: 'audio/webm' });
+          const blob = new Blob(chunks, { type: mimeType });
           toast({
-            title: "Áudio gravado",
-            description: `Arquivo de áudio criado (${(blob.size / 1024).toFixed(1)}KB)`,
+            title: "Áudio gravado com sucesso",
+            description: `Arquivo criado: ${(blob.size / 1024).toFixed(1)}KB (${mimeType})`,
           });
           // Limpar stream
           if (streamRef.current) {
@@ -86,18 +93,18 @@ export default function SpecialistMessages() {
           }
         };
         
-        mediaRecorder.start(1000);
+        mediaRecorder.start();
         setIsRecordingAudio(true);
         
         toast({
-          title: "Microfone ativado",
-          description: "Gravando áudio - clique para parar",
+          title: "Gravação iniciada",
+          description: "Microfone ativo - fale agora",
         });
       } catch (error) {
-        console.error('Erro ao acessar microfone:', error);
+        console.error('Erro detalhado:', error);
         toast({
-          title: "Erro",
-          description: "Não foi possível acessar o microfone. Verifique as permissões.",
+          title: "Erro de permissão",
+          description: "Permita acesso ao microfone nas configurações do navegador",
           variant: "destructive"
         });
       }
@@ -112,15 +119,28 @@ export default function SpecialistMessages() {
   const handleVideoRecording = async () => {
     if (!isRecordingVideo) {
       try {
+        // Verificar se getUserMedia está disponível
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          throw new Error('getUserMedia não suportado');
+        }
+
         const stream = await navigator.mediaDevices.getUserMedia({ 
-          video: { width: 640, height: 480 }, 
+          video: true, 
           audio: true 
         });
         streamRef.current = stream;
         
-        const mediaRecorder = new MediaRecorder(stream, {
-          mimeType: 'video/webm;codecs=vp8,opus'
-        });
+        // Verificar tipos MIME suportados para Mac/Safari
+        let mimeType = 'video/webm';
+        if (!MediaRecorder.isTypeSupported('video/webm')) {
+          if (MediaRecorder.isTypeSupported('video/mp4')) {
+            mimeType = 'video/mp4';
+          } else if (MediaRecorder.isTypeSupported('video/quicktime')) {
+            mimeType = 'video/quicktime';
+          }
+        }
+        
+        const mediaRecorder = new MediaRecorder(stream, { mimeType });
         mediaRecorderRef.current = mediaRecorder;
         
         const chunks: BlobPart[] = [];
@@ -131,10 +151,10 @@ export default function SpecialistMessages() {
         };
         
         mediaRecorder.onstop = () => {
-          const blob = new Blob(chunks, { type: 'video/webm' });
+          const blob = new Blob(chunks, { type: mimeType });
           toast({
-            title: "Vídeo gravado",
-            description: `Arquivo de vídeo criado (${(blob.size / 1024 / 1024).toFixed(1)}MB)`,
+            title: "Vídeo gravado com sucesso",
+            description: `Arquivo criado: ${(blob.size / 1024 / 1024).toFixed(1)}MB (${mimeType})`,
           });
           // Limpar stream
           if (streamRef.current) {
@@ -143,12 +163,12 @@ export default function SpecialistMessages() {
           }
         };
         
-        mediaRecorder.start(1000); // Capturar dados a cada 1 segundo
+        mediaRecorder.start();
         setIsRecordingVideo(true);
         
         toast({
-          title: "Câmera ativada",
-          description: "Gravando vídeo - máximo 1 minuto",
+          title: "Gravação iniciada",
+          description: "Câmera ativa - máximo 1 minuto",
         });
         
         // Parar automaticamente após 1 minuto
@@ -167,10 +187,10 @@ export default function SpecialistMessages() {
         (mediaRecorder as any).timeoutId = timeoutId;
         
       } catch (error) {
-        console.error('Erro ao acessar câmera:', error);
+        console.error('Erro detalhado:', error);
         toast({
-          title: "Erro",
-          description: "Não foi possível acessar a câmera. Verifique as permissões.",
+          title: "Erro de permissão",
+          description: "Permita acesso à câmera nas configurações do navegador",
           variant: "destructive"
         });
       }
