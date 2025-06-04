@@ -248,10 +248,19 @@ export default function SpecialistMessages() {
                   size="sm"
                   className="flex items-center gap-2"
                   onClick={() => {
-                    toast({
-                      title: "Recurso em desenvolvimento",
-                      description: "Envio de áudio será implementado em breve",
-                    });
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = 'audio/*';
+                    input.onchange = (e) => {
+                      const file = (e.target as HTMLInputElement).files?.[0];
+                      if (file) {
+                        toast({
+                          title: "Áudio selecionado",
+                          description: `Arquivo: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`,
+                        });
+                      }
+                    };
+                    input.click();
                   }}
                 >
                   <Mic className="w-4 h-4" />
@@ -263,10 +272,19 @@ export default function SpecialistMessages() {
                   size="sm"
                   className="flex items-center gap-2"
                   onClick={() => {
-                    toast({
-                      title: "Recurso em desenvolvimento",
-                      description: "Envio de vídeo será implementado em breve",
-                    });
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = 'video/*';
+                    input.onchange = (e) => {
+                      const file = (e.target as HTMLInputElement).files?.[0];
+                      if (file) {
+                        toast({
+                          title: "Vídeo selecionado",
+                          description: `Arquivo: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`,
+                        });
+                      }
+                    };
+                    input.click();
                   }}
                 >
                   <Video className="w-4 h-4" />
@@ -278,10 +296,19 @@ export default function SpecialistMessages() {
                   size="sm"
                   className="flex items-center gap-2"
                   onClick={() => {
-                    toast({
-                      title: "Recurso em desenvolvimento",
-                      description: "Envio de documentos será implementado em breve",
-                    });
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = '.pdf,.doc,.docx,.txt,.xlsx,.ppt,.pptx';
+                    input.onchange = (e) => {
+                      const file = (e.target as HTMLInputElement).files?.[0];
+                      if (file) {
+                        toast({
+                          title: "Documento selecionado",
+                          description: `Arquivo: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`,
+                        });
+                      }
+                    };
+                    input.click();
                   }}
                 >
                   <FileText className="w-4 h-4" />
@@ -293,10 +320,20 @@ export default function SpecialistMessages() {
                   size="sm"
                   className="flex items-center gap-2"
                   onClick={() => {
-                    toast({
-                      title: "Recurso em desenvolvimento",
-                      description: "Envio de anexos será implementado em breve",
-                    });
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.multiple = true;
+                    input.onchange = (e) => {
+                      const files = Array.from((e.target as HTMLInputElement).files || []);
+                      if (files.length > 0) {
+                        const totalSize = files.reduce((sum, file) => sum + file.size, 0);
+                        toast({
+                          title: `${files.length} arquivo(s) selecionado(s)`,
+                          description: `Total: ${(totalSize / 1024 / 1024).toFixed(2)}MB`,
+                        });
+                      }
+                    };
+                    input.click();
                   }}
                 >
                   <Paperclip className="w-4 h-4" />
