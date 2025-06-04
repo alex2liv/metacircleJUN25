@@ -28,7 +28,8 @@ import {
   Key,
   FileText,
   AlertCircle,
-  Clock
+  Clock,
+  ArrowLeft
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
@@ -503,6 +504,14 @@ Pedro,Oliveira,pedro.oliveira@email.com,+55 11 77777-7777,member,`;
       <div className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => setLocation('/metasync-admin')}
+              className="mr-2"
+            >
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
             <img 
               src={metaSyncIcon} 
               alt="MetaSync" 
