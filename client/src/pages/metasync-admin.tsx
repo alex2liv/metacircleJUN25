@@ -497,10 +497,19 @@ export default function MetaSyncAdmin() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Empresas Cliente</CardTitle>
-              <Button onClick={() => setIsAddingCompany(true)}>
-                <UserPlus className="h-4 w-4 mr-2" />
-                Nova Empresa
-              </Button>
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline"
+                  onClick={() => setLocation('/company-management')}
+                >
+                  <Building2 className="w-4 h-4 mr-2" />
+                  Gerenciar BD
+                </Button>
+                <Button onClick={() => setIsAddingCompany(true)}>
+                  <UserPlus className="h-4 w-4 mr-2" />
+                  Nova Empresa
+                </Button>
+              </div>
             </div>
           </CardHeader>
           <CardContent>
