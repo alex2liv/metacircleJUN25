@@ -70,7 +70,10 @@ export default function SpecialistLogin() {
               <img 
                 src={metaSyncLogo} 
                 alt="MetaSync Digital" 
-                className="h-48 mx-auto lg:mx-0 mb-6"
+                className="h-48 mx-auto lg:mx-0 mb-6 brightness-200 contrast-150"
+                style={{
+                  filter: 'brightness(1.5) contrast(1.2) saturate(0.8)'
+                }}
               />
               <h1 className="text-3xl font-bold text-white mb-3">
                 Área do Especialista
