@@ -7,8 +7,34 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Users, UserPlus, Settings, LogOut, Bell, Search, Filter, MoreVertical, Edit, Trash2, Building2, Plus, MessageSquare, User, Calendar, Clock, Eye, EyeOff } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { 
+  Users, 
+  UserPlus, 
+  Settings, 
+  LogOut, 
+  Bell, 
+  Search, 
+  Filter, 
+  MoreVertical, 
+  Edit, 
+  Trash2, 
+  Building2, 
+  Plus, 
+  MessageSquare, 
+  User, 
+  Calendar, 
+  Clock,
+  Shield,
+  Phone,
+  Mail,
+  CheckCircle,
+  XCircle,
+  AlertCircle
+} from "lucide-react";
 import { useParams, useLocation } from "wouter";
+import { useToast } from "@/hooks/use-toast";
 
 interface UserData {
   id: number;
@@ -32,33 +58,39 @@ interface TeamMember {
   status: "active" | "inactive";
   joinDate: string;
   lastActivity: string;
+  phone?: string;
+  speciality?: string;
+  permissions?: string[];
+}
+
+interface NewUserForm {
+  name: string;
+  email: string;
+  role: "specialist" | "user";
+  phone: string;
+  speciality: string;
 }
 
 export default function CompanyAdminDashboard() {
   const params = useParams();
   const [, setLocation] = useLocation();
+  const { toast } = useToast();
   const [user, setUser] = useState<UserData | null>(null);
   const [company, setCompany] = useState<Company | null>(null);
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [isAddUserOpen, setIsAddUserOpen] = useState(false);
-  const [eventStartTime, setEventStartTime] = useState("");
-  const [eventEndTime, setEventEndTime] = useState("");
-  const [showEndTime, setShowEndTime] = useState(false);
+  const [isAddSpecialistOpen, setIsAddSpecialistOpen] = useState(false);
+  const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterRole, setFilterRole] = useState<"all" | "specialist" | "user">("all");
+  const [newUserForm, setNewUserForm] = useState<NewUserForm>({
+    name: "",
+    email: "",
+    role: "user",
+    phone: "",
+    speciality: ""
+  });
 
-  // Função para calcular hora final automaticamente (1 hora depois)
-  const calculateEndTime = (startTime: string) => {
-    if (!startTime) return "";
-    const [hours, minutes] = startTime.split(':');
-    const startHour = parseInt(hours);
-    const endHour = (startHour + 1) % 24;
-    return `${endHour.toString().padStart(2, '0')}:${minutes}`;
-  };
-
-  const handleStartTimeChange = (value: string) => {
-    setEventStartTime(value);
-    setEventEndTime(calculateEndTime(value));
-  };
-  
   const companySlug = params.slug;
 
   useEffect(() => {
@@ -81,42 +113,133 @@ export default function CompanyAdminDashboard() {
     setTeamMembers([
       {
         id: 1,
-        name: "Dr. Silva",
-        email: "dr.silva@clarissavargas.com",
+        name: "Dra. Clarissa Vargas",
+        email: "clarissa@clarissavargas.com",
         role: "specialist",
         status: "active",
         joinDate: "2024-01-15",
-        lastActivity: "2 horas atrás"
+        lastActivity: "2 horas atrás",
+        phone: "+55 11 99999-1111",
+        speciality: "Podologia",
+        permissions: ["create_posts", "manage_events", "moderate_chat"]
       },
       {
         id: 2,
-        name: "João Cliente",
-        email: "joao@email.com",
-        role: "user",
+        name: "Dr. Rafael Santos",
+        email: "rafael@clarissavargas.com",
+        role: "specialist",
         status: "active",
-        joinDate: "2024-02-20",
-        lastActivity: "1 dia atrás"
+        joinDate: "2024-02-10",
+        lastActivity: "1 hora atrás",
+        phone: "+55 11 99999-2222",
+        speciality: "Fisioterapia",
+        permissions: ["create_posts", "manage_events"]
       },
       {
         id: 3,
-        name: "Maria Santos",
-        email: "maria@email.com",
+        name: "Ana Silva",
+        email: "ana.silva@email.com",
+        role: "user",
+        status: "active",
+        joinDate: "2024-02-20",
+        lastActivity: "1 dia atrás",
+        phone: "+55 11 98888-3333"
+      },
+      {
+        id: 4,
+        name: "João Santos",
+        email: "joao.santos@email.com",
         role: "user",
         status: "active",
         joinDate: "2024-03-10",
-        lastActivity: "3 horas atrás"
+        lastActivity: "3 horas atrás",
+        phone: "+55 11 97777-4444"
+      },
+      {
+        id: 5,
+        name: "Maria Oliveira",
+        email: "maria.oliveira@email.com",
+        role: "user",
+        status: "inactive",
+        joinDate: "2024-01-05",
+        lastActivity: "1 semana atrás",
+        phone: "+55 11 96666-5555"
       }
     ]);
   }, [companySlug]);
+
+  const handleAddUser = () => {
+    if (!newUserForm.name || !newUserForm.email) return;
+    
+    const newMember: TeamMember = {
+      id: Date.now(),
+      name: newUserForm.name,
+      email: newUserForm.email,
+      role: newUserForm.role,
+      status: "active",
+      joinDate: new Date().toISOString().split('T')[0],
+      lastActivity: "Agora",
+      phone: newUserForm.phone,
+      speciality: newUserForm.role === "specialist" ? newUserForm.speciality : undefined,
+      permissions: newUserForm.role === "specialist" ? ["create_posts"] : undefined
+    };
+    
+    setTeamMembers([...teamMembers, newMember]);
+    setNewUserForm({
+      name: "",
+      email: "",
+      role: "user",
+      phone: "",
+      speciality: ""
+    });
+    setIsAddUserOpen(false);
+    setIsAddSpecialistOpen(false);
+
+    toast({
+      title: newUserForm.role === "specialist" ? "Especialista adicionado" : "Usuário adicionado",
+      description: `${newUserForm.name} foi adicionado à equipe com sucesso`,
+    });
+  };
+
+  const handleToggleStatus = (memberId: number) => {
+    setTeamMembers(teamMembers.map(member => 
+      member.id === memberId 
+        ? { ...member, status: member.status === "active" ? "inactive" : "active" }
+        : member
+    ));
+
+    const member = teamMembers.find(m => m.id === memberId);
+    if (member) {
+      toast({
+        title: "Status atualizado",
+        description: `${member.name} foi ${member.status === "active" ? "desativado" : "ativado"}`,
+      });
+    }
+  };
+
+  const handleDeleteMember = (memberId: number) => {
+    const member = teamMembers.find(m => m.id === memberId);
+    setTeamMembers(teamMembers.filter(member => member.id !== memberId));
+    
+    if (member) {
+      toast({
+        title: "Membro removido",
+        description: `${member.name} foi removido da equipe`,
+        variant: "destructive"
+      });
+    }
+  };
 
   const handleLogout = () => {
     setLocation(`/company/${companySlug}`);
   };
 
-  const handleAddUser = () => {
-    // In real app, would add user to database
-    setIsAddUserOpen(false);
-  };
+  const filteredMembers = teamMembers.filter(member => {
+    const matchesSearch = member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         member.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesRole = filterRole === "all" || member.role === filterRole;
+    return matchesSearch && matchesRole;
+  });
 
   if (!user || !company) {
     return (
@@ -126,8 +249,10 @@ export default function CompanyAdminDashboard() {
     );
   }
 
-  const specialists = teamMembers.filter(member => member.role === "specialist");
-  const users = teamMembers.filter(member => member.role === "user");
+  const specialists = filteredMembers.filter(member => member.role === "specialist");
+  const users = filteredMembers.filter(member => member.role === "user");
+  const activeMembers = teamMembers.filter(member => member.status === "active").length;
+  const totalMembers = teamMembers.length;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -161,338 +286,316 @@ export default function CompanyAdminDashboard() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <div className="flex justify-between items-start">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Users className="w-6 h-6 text-blue-600" />
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center">
+                <div className="p-2 bg-blue-100 rounded-lg">
+                  <Users className="w-6 h-6 text-blue-600" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-600">Total de Membros</p>
+                  <p className="text-2xl font-bold text-gray-900">{totalMembers}</p>
+                </div>
               </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center">
+                <div className="p-2 bg-green-100 rounded-lg">
+                  <CheckCircle className="w-6 h-6 text-green-600" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-600">Membros Ativos</p>
+                  <p className="text-2xl font-bold text-gray-900">{activeMembers}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center">
+                <div className="p-2 bg-purple-100 rounded-lg">
+                  <Shield className="w-6 h-6 text-purple-600" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-600">Especialistas</p>
+                  <p className="text-2xl font-bold text-gray-900">{specialists.length}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center">
+                <div className="p-2 bg-orange-100 rounded-lg">
+                  <User className="w-6 h-6 text-orange-600" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm font-medium text-gray-600">Usuários</p>
+                  <p className="text-2xl font-bold text-gray-900">{users.length}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Main Panel */}
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between items-center">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">Gerenciamento de Usuários</h2>
-                <p className="text-gray-600">Administração de Especialistas e Membros</p>
+                <CardTitle className="text-xl">Gerenciamento de Equipe</CardTitle>
+                <CardDescription>
+                  Administre especialistas e usuários da sua empresa
+                </CardDescription>
               </div>
-            </div>
-            <div className="flex flex-col gap-2">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button className="bg-green-600 hover:bg-green-700">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Novo Post
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>Criar Novo Post</DialogTitle>
-                    <DialogDescription>
-                      Escolha onde publicar seu post
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="community-select">Selecionar Comunidade</Label>
-                      <Select>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Escolha uma comunidade" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="all">🌐 Todas as Comunidades</SelectItem>
-                          <SelectItem value="community-1">📚 Discussões Gerais</SelectItem>
-                          <SelectItem value="community-2">💡 Ideias e Sugestões</SelectItem>
-                          <SelectItem value="community-3">🎯 Metas e Objetivos</SelectItem>
-                          <SelectItem value="community-4">🤝 Networking</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="post-title">Título do Post</Label>
-                      <Input id="post-title" placeholder="Digite o título..." />
-                    </div>
-                    <div>
-                      <Label htmlFor="post-content">Conteúdo</Label>
-                      <textarea 
-                        id="post-content"
-                        className="w-full min-h-[100px] p-3 border rounded-md resize-none"
-                        placeholder="Escreva seu post..."
-                      />
-                    </div>
-                    <div className="flex justify-end space-x-2">
-                      <Button variant="outline">
-                        Cancelar
-                      </Button>
-                      <Button className="bg-green-600 hover:bg-green-700">
-                        <MessageSquare className="w-4 h-4 mr-2" />
-                        Publicar Post
-                      </Button>
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button className="bg-indigo-600 hover:bg-indigo-700">
-                    <MessageSquare className="w-4 h-4 mr-2" />
-                    Iniciar Conversa
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>Iniciar Nova Conversa</DialogTitle>
-                    <DialogDescription>
-                      Comece uma conversa com sua equipe
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="conversation-community">Selecionar Comunidade</Label>
-                      <Select>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Escolha uma comunidade" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="community-1">📚 Discussões Gerais</SelectItem>
-                          <SelectItem value="community-2">💡 Ideias e Sugestões</SelectItem>
-                          <SelectItem value="community-3">🎯 Metas e Objetivos</SelectItem>
-                          <SelectItem value="community-4">🤝 Networking</SelectItem>
-                          <SelectItem value="community-5">🏢 Gestão da Empresa</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="conversation-subject">Assunto</Label>
-                      <Input id="conversation-subject" placeholder="Sobre o que vamos conversar?" />
-                    </div>
-                    <div>
-                      <Label htmlFor="conversation-message">Mensagem</Label>
-                      <textarea 
-                        id="conversation-message"
-                        className="w-full min-h-[100px] p-3 border rounded-md resize-none"
-                        placeholder="Digite sua mensagem..."
-                      />
-                    </div>
-                    <div className="flex justify-end space-x-2">
-                      <Button variant="outline">
-                        Cancelar
-                      </Button>
-                      <Button className="bg-indigo-600 hover:bg-indigo-700">
-                        <MessageSquare className="w-4 h-4 mr-2" />
-                        Iniciar Conversa
-                      </Button>
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button className="bg-blue-600 hover:bg-blue-700">
-                    <Calendar className="w-4 h-4 mr-2" />
-                    Novo Evento
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>Criar Novo Evento</DialogTitle>
-                    <DialogDescription>
-                      Configure um evento para sua comunidade
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="event-community-select">Selecionar Comunidade</Label>
-                      <Select>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Escolha uma comunidade" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="all">🌐 Todas as Comunidades</SelectItem>
-                          <SelectItem value="community-1">📚 Discussões Gerais</SelectItem>
-                          <SelectItem value="community-2">💡 Ideias e Sugestões</SelectItem>
-                          <SelectItem value="community-3">🎯 Metas e Objetivos</SelectItem>
-                          <SelectItem value="community-4">🤝 Networking</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="event-title">Título do Evento</Label>
-                      <Input id="event-title" placeholder="Digite o título..." />
-                    </div>
-                    <div>
-                      <Label htmlFor="event-description">Descrição</Label>
-                      <textarea 
-                        id="event-description"
-                        className="w-full min-h-[80px] p-3 border rounded-md resize-none"
-                        placeholder="Descreva o evento..."
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-3">
+              <div className="flex gap-2">
+                <Dialog open={isAddSpecialistOpen} onOpenChange={setIsAddSpecialistOpen}>
+                  <DialogTrigger asChild>
+                    <Button onClick={() => setNewUserForm({...newUserForm, role: "specialist"})}>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Especialista
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Adicionar Especialista</DialogTitle>
+                      <DialogDescription>
+                        Adicione um novo especialista à sua equipe
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
                       <div>
-                        <Label htmlFor="event-date">Data</Label>
-                        <Input id="event-date" type="date" />
-                      </div>
-                      <div>
-                        <Label htmlFor="event-start-time">Horário de Início</Label>
-                        <Input 
-                          id="event-start-time" 
-                          type="time" 
-                          value={eventStartTime}
-                          onChange={(e) => handleStartTimeChange(e.target.value)}
+                        <Label htmlFor="specialist-name">Nome Completo</Label>
+                        <Input
+                          id="specialist-name"
+                          value={newUserForm.name}
+                          onChange={(e) => setNewUserForm({...newUserForm, name: e.target.value})}
+                          placeholder="Ex: Dr. João Silva"
                         />
                       </div>
+                      <div>
+                        <Label htmlFor="specialist-email">Email</Label>
+                        <Input
+                          id="specialist-email"
+                          type="email"
+                          value={newUserForm.email}
+                          onChange={(e) => setNewUserForm({...newUserForm, email: e.target.value})}
+                          placeholder="joao@exemplo.com"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="specialist-phone">Telefone</Label>
+                        <Input
+                          id="specialist-phone"
+                          value={newUserForm.phone}
+                          onChange={(e) => setNewUserForm({...newUserForm, phone: e.target.value})}
+                          placeholder="+55 11 99999-9999"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="specialist-speciality">Especialidade</Label>
+                        <Input
+                          id="specialist-speciality"
+                          value={newUserForm.speciality}
+                          onChange={(e) => setNewUserForm({...newUserForm, speciality: e.target.value})}
+                          placeholder="Ex: Podologia, Fisioterapia"
+                        />
+                      </div>
+                      <div className="flex justify-end space-x-2">
+                        <Button variant="outline" onClick={() => setIsAddSpecialistOpen(false)}>
+                          Cancelar
+                        </Button>
+                        <Button onClick={handleAddUser}>
+                          Adicionar Especialista
+                        </Button>
+                      </div>
                     </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <Label className="text-sm font-medium">Horário de Término</Label>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setShowEndTime(!showEndTime)}
-                        className="h-8 px-2 text-xs"
-                      >
-                        {showEndTime ? (
+                  </DialogContent>
+                </Dialog>
+
+                <Dialog open={isAddUserOpen} onOpenChange={setIsAddUserOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" onClick={() => setNewUserForm({...newUserForm, role: "user"})}>
+                      <UserPlus className="w-4 h-4 mr-2" />
+                      Usuário
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Adicionar Usuário</DialogTitle>
+                      <DialogDescription>
+                        Adicione um novo usuário à sua comunidade
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="user-name">Nome Completo</Label>
+                        <Input
+                          id="user-name"
+                          value={newUserForm.name}
+                          onChange={(e) => setNewUserForm({...newUserForm, name: e.target.value})}
+                          placeholder="Ex: Maria Silva"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="user-email">Email</Label>
+                        <Input
+                          id="user-email"
+                          type="email"
+                          value={newUserForm.email}
+                          onChange={(e) => setNewUserForm({...newUserForm, email: e.target.value})}
+                          placeholder="maria@exemplo.com"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="user-phone">Telefone</Label>
+                        <Input
+                          id="user-phone"
+                          value={newUserForm.phone}
+                          onChange={(e) => setNewUserForm({...newUserForm, phone: e.target.value})}
+                          placeholder="+55 11 99999-9999"
+                        />
+                      </div>
+                      <div className="flex justify-end space-x-2">
+                        <Button variant="outline" onClick={() => setIsAddUserOpen(false)}>
+                          Cancelar
+                        </Button>
+                        <Button onClick={handleAddUser}>
+                          Adicionar Usuário
+                        </Button>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            {/* Search and Filter */}
+            <div className="flex gap-4 mb-6">
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Input
+                  placeholder="Buscar por nome ou email..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              <Select value={filterRole} onValueChange={(value: "all" | "specialist" | "user") => setFilterRole(value)}>
+                <SelectTrigger className="w-48">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos os Tipos</SelectItem>
+                  <SelectItem value="specialist">Especialistas</SelectItem>
+                  <SelectItem value="user">Usuários</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Members Table */}
+            <div className="space-y-4">
+              {filteredMembers.map((member) => (
+                <div key={member.id} className="flex items-center justify-between p-4 border rounded-lg bg-white">
+                  <div className="flex items-center space-x-4">
+                    <Avatar className="w-12 h-12">
+                      <AvatarFallback>
+                        {member.name.split(' ').map(n => n[0]).join('')}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-medium text-gray-900">{member.name}</h3>
+                        <Badge variant={member.role === "specialist" ? "default" : "secondary"}>
+                          {member.role === "specialist" ? "Especialista" : "Usuário"}
+                        </Badge>
+                        <Badge variant={member.status === "active" ? "default" : "secondary"}>
+                          {member.status === "active" ? "Ativo" : "Inativo"}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center gap-4 text-sm text-gray-500">
+                        <span className="flex items-center gap-1">
+                          <Mail className="w-3 h-3" />
+                          {member.email}
+                        </span>
+                        {member.phone && (
+                          <span className="flex items-center gap-1">
+                            <Phone className="w-3 h-3" />
+                            {member.phone}
+                          </span>
+                        )}
+                        {member.speciality && (
+                          <span className="flex items-center gap-1">
+                            <Shield className="w-3 h-3" />
+                            {member.speciality}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-gray-400">
+                        Último acesso: {member.lastActivity} • Membro desde: {new Date(member.joinDate).toLocaleDateString('pt-BR')}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm">
+                        <MoreVertical className="w-4 h-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => setEditingMember(member)}>
+                        <Edit className="w-4 h-4 mr-2" />
+                        Editar
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleToggleStatus(member.id)}>
+                        {member.status === "active" ? (
                           <>
-                            <EyeOff className="w-3 h-3 mr-1" />
-                            Ocultar
+                            <XCircle className="w-4 h-4 mr-2" />
+                            Desativar
                           </>
                         ) : (
                           <>
-                            <Eye className="w-3 h-3 mr-1" />
-                            Mostrar
+                            <CheckCircle className="w-4 h-4 mr-2" />
+                            Ativar
                           </>
                         )}
-                      </Button>
-                    </div>
-                    
-                    {showEndTime && (
-                      <div>
-                        <Input 
-                          id="event-end-time" 
-                          type="time" 
-                          value={eventEndTime}
-                          onChange={(e) => setEventEndTime(e.target.value)}
-                          placeholder="Horário de término"
-                        />
-                        <p className="text-xs text-gray-500 mt-1">
-                          {eventStartTime && eventEndTime && 
-                            `Duração: ${Math.abs(
-                              (parseInt(eventEndTime.split(':')[0]) * 60 + parseInt(eventEndTime.split(':')[1])) - 
-                              (parseInt(eventStartTime.split(':')[0]) * 60 + parseInt(eventStartTime.split(':')[1]))
-                            ) / 60}h`
-                          }
-                        </p>
-                      </div>
-                    )}
-                    <div>
-                      <Label htmlFor="event-location">Local/Link</Label>
-                      <Input id="event-location" placeholder="Presencial ou link online..." />
-                    </div>
-                    <div className="flex justify-end space-x-2">
-                      <Button variant="outline">
-                        Cancelar
-                      </Button>
-                      <Button className="bg-blue-600 hover:bg-blue-700">
-                        <Calendar className="w-4 h-4 mr-2" />
-                        Criar Evento
-                      </Button>
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
-              <Button className="bg-purple-600 hover:bg-purple-700">
-                <UserPlus className="w-4 h-4 mr-2" />
-                Especialistas (0)
-              </Button>
-              <Button variant="outline" className="text-blue-600 border-blue-600 hover:bg-blue-50">
-                <Users className="w-4 h-4 mr-2" />
-                Importar Usuários
-              </Button>
-              <Button className="bg-orange-500 hover:bg-orange-600">
-                <UserPlus className="w-4 h-4 mr-2" />
-                Novo Usuário
-              </Button>
-              <Button variant="outline" className="text-gray-600 border-gray-300">
-                <Settings className="w-4 h-4 mr-2" />
-                Configurações do Sistema
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total de Especialistas</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{specialists.length}</div>
-              <p className="text-xs text-muted-foreground">
-                {specialists.filter(s => s.status === 'active').length} ativos
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total de Usuários</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{users.length}</div>
-              <p className="text-xs text-muted-foreground">
-                {users.filter(u => u.status === 'active').length} ativos
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Geral</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{teamMembers.length}</div>
-              <p className="text-xs text-muted-foreground">
-                membros cadastrados
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Users Section */}
-        <div className="space-y-6">
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Usuários do Sistema</h3>
-            <p className="text-gray-600 text-sm">Gerencie especialistas, administradores e membros</p>
-          </div>
-          
-          <Card>
-            <CardHeader className="pb-4">
-              <div className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-gray-600" />
-                <CardTitle className="text-base font-medium">Usuários Cadastrados (0)</CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                  <User className="w-8 h-8 text-gray-400" />
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => handleDeleteMember(member.id)}
+                        className="text-red-600"
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Remover
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
-                <p className="text-gray-500 font-medium mb-2">Nenhum usuário cadastrado ainda.</p>
-                <p className="text-gray-400 text-sm">Use os botões acima para adicionar usuários ao sistema.</p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+              ))}
 
-        {!company.hasWhiteLabel && (
-          <div className="mt-8 text-center">
-            <p className="text-sm text-gray-500">
-              Powered by <span className="font-semibold text-primary">MetaSync</span> - 
-              Sua plataforma de comunidades digitais
-            </p>
-          </div>
-        )}
+              {filteredMembers.length === 0 && (
+                <div className="text-center py-8">
+                  <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Nenhum membro encontrado</h3>
+                  <p className="text-gray-500">
+                    {searchTerm || filterRole !== "all" 
+                      ? "Tente ajustar os filtros de busca" 
+                      : "Adicione especialistas e usuários à sua equipe"
+                    }
+                  </p>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
