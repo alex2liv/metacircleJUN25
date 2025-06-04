@@ -125,7 +125,8 @@ export default function SpecialistMessages() {
   };
 
   const handleVideoRecording = async () => {
-    if (!isRecordingVideo) {
+    if (!showVideoPreview) {
+      // Abrir modal de preview
       try {
         // Verificar se estamos em HTTPS ou localhost (requisito do Chrome)
         if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
@@ -160,7 +161,7 @@ export default function SpecialistMessages() {
           throw new Error('Não foi possível obter acesso à câmera');
         }
 
-        // Mostrar preview da câmera
+        // Mostrar preview da câmera (sem iniciar gravação ainda)
         setShowVideoPreview(true);
         setRecordingTime(0);
 
@@ -172,75 +173,10 @@ export default function SpecialistMessages() {
           }
         }, 100);
         
-        // Usar codec padrão do Chrome
-        const mimeType = 'video/webm';
-        
-        const mediaRecorder = new MediaRecorder(stream);
-        mediaRecorderRef.current = mediaRecorder;
-        
-        const chunks: BlobPart[] = [];
-        mediaRecorder.ondataavailable = (event) => {
-          console.log('Dados recebidos:', event.data.size);
-          if (event.data.size > 0) {
-            chunks.push(event.data);
-          }
-        };
-        
-        mediaRecorder.onstop = () => {
-          console.log('Gravação parada, chunks:', chunks.length);
-          const blob = new Blob(chunks, { type: mimeType });
-          const videoUrl = URL.createObjectURL(blob);
-          setRecordedVideo(videoUrl);
-          setShowVideoPreview(false);
-          setRecordingTime(0);
-          
-          // Parar contador
-          if (recordingIntervalRef.current) {
-            clearInterval(recordingIntervalRef.current);
-            recordingIntervalRef.current = null;
-          }
-          
-          toast({
-            title: "Vídeo gravado com sucesso",
-            description: `Arquivo criado: ${(blob.size / 1024 / 1024).toFixed(1)}MB`,
-          });
-          
-          // Limpar stream
-          if (streamRef.current) {
-            streamRef.current.getTracks().forEach(track => {
-              console.log('Parando track:', track.kind);
-              track.stop();
-            });
-            streamRef.current = null;
-          }
-        };
-        
-        mediaRecorder.start(1000);
-        setIsRecordingVideo(true);
-        
-        // Iniciar contador de tempo
-        recordingIntervalRef.current = setInterval(() => {
-          setRecordingTime(prev => prev + 1);
-        }, 1000);
-        
         toast({
           title: "Câmera ativada!",
-          description: "Gravando vídeo - clique para parar (máx. 1min)",
+          description: "Clique em 'Iniciar Gravação' quando estiver pronto",
         });
-        
-        // Parar automaticamente após 1 minuto
-        const timeoutId = setTimeout(() => {
-          if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
-            mediaRecorderRef.current.stop();
-            setIsRecordingVideo(false);
-            toast({
-              title: "Gravação finalizada",
-              description: "Tempo limite de 1 minuto atingido",
-            });
-          }
-        }, 60000);
-        
-        (mediaRecorder as any).timeoutId = timeoutId;
         
       } catch (error: any) {
         console.error('Erro detalhado ao acessar câmera:', error);
@@ -263,15 +199,90 @@ export default function SpecialistMessages() {
         });
         setShowVideoPreview(false);
       }
-    } else {
-      // Parar gravação
-      if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
-        if ((mediaRecorderRef.current as any).timeoutId) {
-          clearTimeout((mediaRecorderRef.current as any).timeoutId);
+    }
+  };
+
+  const handleStartRecording = async () => {
+    if (streamRef.current && !isRecordingVideo) {
+      // Usar codec padrão do Chrome
+      const mimeType = 'video/webm';
+      
+      const mediaRecorder = new MediaRecorder(streamRef.current);
+      mediaRecorderRef.current = mediaRecorder;
+      
+      const chunks: BlobPart[] = [];
+      mediaRecorder.ondataavailable = (event) => {
+        console.log('Dados recebidos:', event.data.size);
+        if (event.data.size > 0) {
+          chunks.push(event.data);
         }
-        mediaRecorderRef.current.stop();
-        setIsRecordingVideo(false);
+      };
+      
+      mediaRecorder.onstop = () => {
+        console.log('Gravação parada, chunks:', chunks.length);
+        const blob = new Blob(chunks, { type: mimeType });
+        const videoUrl = URL.createObjectURL(blob);
+        setRecordedVideo(videoUrl);
+        setShowVideoPreview(false);
+        setRecordingTime(0);
+        
+        // Parar contador
+        if (recordingIntervalRef.current) {
+          clearInterval(recordingIntervalRef.current);
+          recordingIntervalRef.current = null;
+        }
+        
+        toast({
+          title: "Vídeo gravado com sucesso",
+          description: `Arquivo criado: ${(blob.size / 1024 / 1024).toFixed(1)}MB`,
+        });
+        
+        // Limpar stream
+        if (streamRef.current) {
+          streamRef.current.getTracks().forEach(track => {
+            console.log('Parando track:', track.kind);
+            track.stop();
+          });
+          streamRef.current = null;
+        }
+      };
+      
+      mediaRecorder.start(1000);
+      setIsRecordingVideo(true);
+      
+      // Iniciar contador de tempo
+      recordingIntervalRef.current = setInterval(() => {
+        setRecordingTime(prev => prev + 1);
+      }, 1000);
+      
+      toast({
+        title: "Gravação iniciada!",
+        description: "Gravando vídeo - clique em 'Parar' quando terminar",
+      });
+      
+      // Parar automaticamente após 1 minuto
+      const timeoutId = setTimeout(() => {
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+          mediaRecorderRef.current.stop();
+          setIsRecordingVideo(false);
+          toast({
+            title: "Gravação finalizada",
+            description: "Tempo limite de 1 minuto atingido",
+          });
+        }
+      }, 60000);
+      
+      (mediaRecorder as any).timeoutId = timeoutId;
+    }
+  };
+
+  const handleStopRecording = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+      if ((mediaRecorderRef.current as any).timeoutId) {
+        clearTimeout((mediaRecorderRef.current as any).timeoutId);
       }
+      mediaRecorderRef.current.stop();
+      setIsRecordingVideo(false);
     }
   };
 
@@ -696,9 +707,13 @@ export default function SpecialistMessages() {
                 size="sm"
                 onClick={() => {
                   if (isRecordingVideo) {
-                    handleVideoRecording();
-                  } else {
-                    setShowVideoPreview(false);
+                    handleStopRecording();
+                  }
+                  // Fechar modal e limpar stream
+                  setShowVideoPreview(false);
+                  if (streamRef.current) {
+                    streamRef.current.getTracks().forEach(track => track.stop());
+                    streamRef.current = null;
                   }
                 }}
               >
@@ -741,7 +756,7 @@ export default function SpecialistMessages() {
             <div className="flex justify-center gap-4 mt-4">
               <Button
                 variant={isRecordingVideo ? "destructive" : "default"}
-                onClick={handleVideoRecording}
+                onClick={isRecordingVideo ? handleStopRecording : handleStartRecording}
                 className="flex items-center gap-2"
               >
                 {isRecordingVideo ? (
