@@ -119,56 +119,76 @@ export default function SpecialistMessages() {
   const handleVideoRecording = async () => {
     if (!isRecordingVideo) {
       try {
-        // Verificar se getUserMedia está disponível
-        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-          throw new Error('getUserMedia não suportado');
+        // Verificar se estamos em HTTPS ou localhost (requisito do Chrome)
+        if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+          throw new Error('Gravação de vídeo requer HTTPS');
         }
 
-        const stream = await navigator.mediaDevices.getUserMedia({ 
-          video: true, 
-          audio: true 
-        });
+        // Verificar se getUserMedia está disponível
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          throw new Error('getUserMedia não suportado neste navegador');
+        }
+
+        console.log('Solicitando acesso à câmera...');
+        
+        // Solicitar permissões específicas do Chrome
+        const constraints = {
+          video: {
+            width: { ideal: 640 },
+            height: { ideal: 480 },
+            facingMode: 'user'
+          },
+          audio: true
+        };
+
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
         streamRef.current = stream;
         
-        // Verificar tipos MIME suportados para Mac/Safari
-        let mimeType = 'video/webm';
-        if (!MediaRecorder.isTypeSupported('video/webm')) {
-          if (MediaRecorder.isTypeSupported('video/mp4')) {
-            mimeType = 'video/mp4';
-          } else if (MediaRecorder.isTypeSupported('video/quicktime')) {
-            mimeType = 'video/quicktime';
-          }
+        console.log('Stream obtido:', stream);
+        console.log('Tracks de vídeo:', stream.getVideoTracks());
+        
+        // Verificar se realmente temos vídeo
+        if (stream.getVideoTracks().length === 0) {
+          throw new Error('Não foi possível obter acesso à câmera');
         }
         
-        const mediaRecorder = new MediaRecorder(stream, { mimeType });
+        // Usar codec padrão do Chrome
+        const mimeType = 'video/webm';
+        
+        const mediaRecorder = new MediaRecorder(stream);
         mediaRecorderRef.current = mediaRecorder;
         
         const chunks: BlobPart[] = [];
         mediaRecorder.ondataavailable = (event) => {
+          console.log('Dados recebidos:', event.data.size);
           if (event.data.size > 0) {
             chunks.push(event.data);
           }
         };
         
         mediaRecorder.onstop = () => {
+          console.log('Gravação parada, chunks:', chunks.length);
           const blob = new Blob(chunks, { type: mimeType });
           toast({
             title: "Vídeo gravado com sucesso",
-            description: `Arquivo criado: ${(blob.size / 1024 / 1024).toFixed(1)}MB (${mimeType})`,
+            description: `Arquivo criado: ${(blob.size / 1024 / 1024).toFixed(1)}MB`,
           });
           // Limpar stream
           if (streamRef.current) {
-            streamRef.current.getTracks().forEach(track => track.stop());
+            streamRef.current.getTracks().forEach(track => {
+              console.log('Parando track:', track.kind);
+              track.stop();
+            });
             streamRef.current = null;
           }
         };
         
-        mediaRecorder.start();
+        mediaRecorder.start(1000);
         setIsRecordingVideo(true);
         
         toast({
-          title: "Gravação iniciada",
-          description: "Câmera ativa - máximo 1 minuto",
+          title: "Câmera ativada!",
+          description: "Gravando vídeo - clique para parar (máx. 1min)",
         });
         
         // Parar automaticamente após 1 minuto
@@ -183,21 +203,31 @@ export default function SpecialistMessages() {
           }
         }, 60000);
         
-        // Guardar o timeout ID para poder cancelar se necessário
         (mediaRecorder as any).timeoutId = timeoutId;
         
-      } catch (error) {
-        console.error('Erro detalhado:', error);
+      } catch (error: any) {
+        console.error('Erro detalhado ao acessar câmera:', error);
+        let errorMessage = "Erro desconhecido";
+        
+        if (error.name === 'NotAllowedError') {
+          errorMessage = "Permissão negada. Clique no ícone da câmera na barra de endereço para permitir.";
+        } else if (error.name === 'NotFoundError') {
+          errorMessage = "Câmera não encontrada. Verifique se está conectada.";
+        } else if (error.name === 'NotReadableError') {
+          errorMessage = "Câmera está sendo usada por outro aplicativo.";
+        } else {
+          errorMessage = error.message || "Não foi possível acessar a câmera";
+        }
+        
         toast({
-          title: "Erro de permissão",
-          description: "Permita acesso à câmera nas configurações do navegador",
+          title: "Erro de câmera",
+          description: errorMessage,
           variant: "destructive"
         });
       }
     } else {
       // Parar gravação
       if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
-        // Cancelar timeout se existir
         if ((mediaRecorderRef.current as any).timeoutId) {
           clearTimeout((mediaRecorderRef.current as any).timeoutId);
         }
