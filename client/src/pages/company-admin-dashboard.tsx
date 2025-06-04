@@ -171,20 +171,48 @@ export default function CompanyAdminDashboard() {
   const handleAddUser = () => {
     if (!newUserForm.name || !newUserForm.email) return;
     
-    const newMember: TeamMember = {
-      id: Date.now(),
-      name: newUserForm.name,
-      email: newUserForm.email,
-      role: newUserForm.role,
-      status: "active",
-      joinDate: new Date().toISOString().split('T')[0],
-      lastActivity: "Agora",
-      phone: newUserForm.phone,
-      speciality: newUserForm.role === "specialist" ? newUserForm.speciality : undefined,
-      permissions: newUserForm.role === "specialist" ? ["create_posts"] : undefined
-    };
+    if (editingMember) {
+      // Update existing member
+      setTeamMembers(teamMembers.map(member => 
+        member.id === editingMember.id 
+          ? {
+              ...member,
+              name: newUserForm.name,
+              email: newUserForm.email,
+              phone: newUserForm.phone,
+              speciality: newUserForm.role === "specialist" ? newUserForm.speciality : undefined,
+            }
+          : member
+      ));
+      
+      toast({
+        title: "Membro atualizado",
+        description: `${newUserForm.name} foi atualizado com sucesso`,
+      });
+    } else {
+      // Add new member
+      const newMember: TeamMember = {
+        id: Date.now(),
+        name: newUserForm.name,
+        email: newUserForm.email,
+        role: newUserForm.role,
+        status: "active",
+        joinDate: new Date().toISOString().split('T')[0],
+        lastActivity: "Agora",
+        phone: newUserForm.phone,
+        speciality: newUserForm.role === "specialist" ? newUserForm.speciality : undefined,
+        permissions: newUserForm.role === "specialist" ? ["create_posts"] : undefined
+      };
+      
+      setTeamMembers([...teamMembers, newMember]);
+      
+      toast({
+        title: newUserForm.role === "specialist" ? "Especialista adicionado" : "Usuário adicionado",
+        description: `${newUserForm.name} foi adicionado à equipe com sucesso`,
+      });
+    }
     
-    setTeamMembers([...teamMembers, newMember]);
+    // Reset form
     setNewUserForm({
       name: "",
       email: "",
@@ -194,11 +222,7 @@ export default function CompanyAdminDashboard() {
     });
     setIsAddUserOpen(false);
     setIsAddSpecialistOpen(false);
-
-    toast({
-      title: newUserForm.role === "specialist" ? "Especialista adicionado" : "Usuário adicionado",
-      description: `${newUserForm.name} foi adicionado à equipe com sucesso`,
-    });
+    setEditingMember(null);
   };
 
   const handleToggleStatus = (memberId: number) => {
@@ -552,7 +576,16 @@ export default function CompanyAdminDashboard() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => setEditingMember(member)}>
+                      <DropdownMenuItem onClick={() => {
+                        setEditingMember(member);
+                        setNewUserForm({
+                          name: member.name,
+                          email: member.email,
+                          role: member.role,
+                          phone: member.phone || "",
+                          speciality: member.speciality || ""
+                        });
+                      }}>
                         <Edit className="w-4 h-4 mr-2" />
                         Editar
                       </DropdownMenuItem>
@@ -596,6 +629,87 @@ export default function CompanyAdminDashboard() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Edit Member Modal */}
+        <Dialog open={!!editingMember} onOpenChange={(open) => {
+          if (!open) {
+            setEditingMember(null);
+            setNewUserForm({
+              name: "",
+              email: "",
+              role: "user",
+              phone: "",
+              speciality: ""
+            });
+          }
+        }}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Editar {editingMember?.role === "specialist" ? "Especialista" : "Usuário"}</DialogTitle>
+              <DialogDescription>
+                Atualize as informações do membro da equipe
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="edit-name">Nome Completo</Label>
+                <Input
+                  id="edit-name"
+                  value={newUserForm.name}
+                  onChange={(e) => setNewUserForm({...newUserForm, name: e.target.value})}
+                  placeholder="Nome completo"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-email">Email</Label>
+                <Input
+                  id="edit-email"
+                  type="email"
+                  value={newUserForm.email}
+                  onChange={(e) => setNewUserForm({...newUserForm, email: e.target.value})}
+                  placeholder="email@exemplo.com"
+                />
+              </div>
+              <div>
+                <Label htmlFor="edit-phone">Telefone</Label>
+                <Input
+                  id="edit-phone"
+                  value={newUserForm.phone}
+                  onChange={(e) => setNewUserForm({...newUserForm, phone: e.target.value})}
+                  placeholder="+55 11 99999-9999"
+                />
+              </div>
+              {editingMember?.role === "specialist" && (
+                <div>
+                  <Label htmlFor="edit-speciality">Especialidade</Label>
+                  <Input
+                    id="edit-speciality"
+                    value={newUserForm.speciality}
+                    onChange={(e) => setNewUserForm({...newUserForm, speciality: e.target.value})}
+                    placeholder="Ex: Podologia, Fisioterapia"
+                  />
+                </div>
+              )}
+              <div className="flex justify-end space-x-2">
+                <Button variant="outline" onClick={() => {
+                  setEditingMember(null);
+                  setNewUserForm({
+                    name: "",
+                    email: "",
+                    role: "user",
+                    phone: "",
+                    speciality: ""
+                  });
+                }}>
+                  Cancelar
+                </Button>
+                <Button onClick={handleAddUser}>
+                  Salvar Alterações
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
