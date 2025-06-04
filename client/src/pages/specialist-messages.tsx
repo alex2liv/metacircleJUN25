@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Send, Users, User, MessageSquare, Mic, Video, FileText, Paperclip } from "lucide-react";
+import { ArrowLeft, Send, Users, User, MessageSquare, Mic, Video, FileText, Paperclip, Square } from "lucide-react";
 import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 
@@ -31,6 +31,10 @@ export default function SpecialistMessages() {
   const [selectedUser, setSelectedUser] = useState<string>("");
   const [message, setMessage] = useState("");
   const [isAllUsers, setIsAllUsers] = useState(false);
+  const [isRecordingAudio, setIsRecordingAudio] = useState(false);
+  const [isRecordingVideo, setIsRecordingVideo] = useState(false);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
   const rooms: Room[] = [
     { id: 1, name: "Sala Geral", memberCount: 234, type: "general" },
@@ -44,6 +48,110 @@ export default function SpecialistMessages() {
     { id: 3, name: "Ana Costa", email: "ana.costa@email.com", status: "premium" },
     { id: 4, name: "Carlos Oliveira", email: "carlos.oliveira@email.com", status: "active" }
   ];
+
+  const handleAudioRecording = async () => {
+    if (!isRecordingAudio) {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        streamRef.current = stream;
+        
+        const mediaRecorder = new MediaRecorder(stream);
+        mediaRecorderRef.current = mediaRecorder;
+        
+        const chunks: BlobPart[] = [];
+        mediaRecorder.ondataavailable = (event) => {
+          chunks.push(event.data);
+        };
+        
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(chunks, { type: 'audio/webm' });
+          toast({
+            title: "Áudio gravado",
+            description: `Arquivo de áudio criado (${(blob.size / 1024).toFixed(1)}KB)`,
+          });
+        };
+        
+        mediaRecorder.start();
+        setIsRecordingAudio(true);
+        
+        toast({
+          title: "Gravando áudio",
+          description: "Clique novamente para parar",
+        });
+      } catch (error) {
+        toast({
+          title: "Erro",
+          description: "Não foi possível acessar o microfone",
+          variant: "destructive"
+        });
+      }
+    } else {
+      if (mediaRecorderRef.current && streamRef.current) {
+        mediaRecorderRef.current.stop();
+        streamRef.current.getTracks().forEach(track => track.stop());
+        setIsRecordingAudio(false);
+      }
+    }
+  };
+
+  const handleVideoRecording = async () => {
+    if (!isRecordingVideo) {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        streamRef.current = stream;
+        
+        const mediaRecorder = new MediaRecorder(stream);
+        mediaRecorderRef.current = mediaRecorder;
+        
+        const chunks: BlobPart[] = [];
+        mediaRecorder.ondataavailable = (event) => {
+          chunks.push(event.data);
+        };
+        
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(chunks, { type: 'video/webm' });
+          toast({
+            title: "Vídeo gravado",
+            description: `Arquivo de vídeo criado (${(blob.size / 1024 / 1024).toFixed(1)}MB)`,
+          });
+        };
+        
+        mediaRecorder.start();
+        setIsRecordingVideo(true);
+        
+        toast({
+          title: "Gravando vídeo",
+          description: "Máximo 1 minuto - clique para parar",
+        });
+        
+        // Parar automaticamente após 1 minuto
+        setTimeout(() => {
+          if (isRecordingVideo && mediaRecorderRef.current && streamRef.current) {
+            mediaRecorderRef.current.stop();
+            streamRef.current.getTracks().forEach(track => track.stop());
+            setIsRecordingVideo(false);
+            toast({
+              title: "Gravação finalizada",
+              description: "Tempo limite de 1 minuto atingido",
+            });
+          }
+        }, 60000);
+        
+      } catch (error) {
+        toast({
+          title: "Erro",
+          description: "Não foi possível acessar a câmera",
+          variant: "destructive"
+        });
+      }
+    } else {
+      if (mediaRecorderRef.current && streamRef.current) {
+        mediaRecorderRef.current.stop();
+        streamRef.current.getTracks().forEach(track => track.stop());
+        setIsRecordingVideo(false);
+      }
+    }
+  };
 
   const handleSendMessage = async () => {
     if (!message.trim()) {
@@ -244,33 +352,23 @@ export default function SpecialistMessages() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Button 
-                  variant="outline" 
+                  variant={isRecordingAudio ? "destructive" : "outline"}
                   size="sm"
                   className="flex items-center gap-2"
-                  onClick={() => {
-                    toast({
-                      title: "Funcionalidade em desenvolvimento",
-                      description: "Gravação de áudio será implementada em breve",
-                    });
-                  }}
+                  onClick={handleAudioRecording}
                 >
-                  <Mic className="w-4 h-4" />
-                  Áudio
+                  {isRecordingAudio ? <Square className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                  {isRecordingAudio ? "Parar" : "Áudio"}
                 </Button>
                 
                 <Button 
-                  variant="outline" 
+                  variant={isRecordingVideo ? "destructive" : "outline"}
                   size="sm"
                   className="flex items-center gap-2"
-                  onClick={() => {
-                    toast({
-                      title: "Funcionalidade em desenvolvimento", 
-                      description: "Gravação de vídeo será implementada em breve",
-                    });
-                  }}
+                  onClick={handleVideoRecording}
                 >
-                  <Video className="w-4 h-4" />
-                  Vídeo
+                  {isRecordingVideo ? <Square className="w-4 h-4" /> : <Video className="w-4 h-4" />}
+                  {isRecordingVideo ? "Parar" : "Vídeo"}
                 </Button>
                 
                 <Button 
