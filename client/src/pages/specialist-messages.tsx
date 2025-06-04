@@ -52,15 +52,25 @@ export default function SpecialistMessages() {
   const handleAudioRecording = async () => {
     if (!isRecordingAudio) {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            sampleRate: 44100
+          } 
+        });
         streamRef.current = stream;
         
-        const mediaRecorder = new MediaRecorder(stream);
+        const mediaRecorder = new MediaRecorder(stream, {
+          mimeType: 'audio/webm;codecs=opus'
+        });
         mediaRecorderRef.current = mediaRecorder;
         
         const chunks: BlobPart[] = [];
         mediaRecorder.ondataavailable = (event) => {
-          chunks.push(event.data);
+          if (event.data.size > 0) {
+            chunks.push(event.data);
+          }
         };
         
         mediaRecorder.onstop = () => {
@@ -69,26 +79,31 @@ export default function SpecialistMessages() {
             title: "Áudio gravado",
             description: `Arquivo de áudio criado (${(blob.size / 1024).toFixed(1)}KB)`,
           });
+          // Limpar stream
+          if (streamRef.current) {
+            streamRef.current.getTracks().forEach(track => track.stop());
+            streamRef.current = null;
+          }
         };
         
-        mediaRecorder.start();
+        mediaRecorder.start(1000);
         setIsRecordingAudio(true);
         
         toast({
-          title: "Gravando áudio",
-          description: "Clique novamente para parar",
+          title: "Microfone ativado",
+          description: "Gravando áudio - clique para parar",
         });
       } catch (error) {
+        console.error('Erro ao acessar microfone:', error);
         toast({
           title: "Erro",
-          description: "Não foi possível acessar o microfone",
+          description: "Não foi possível acessar o microfone. Verifique as permissões.",
           variant: "destructive"
         });
       }
     } else {
-      if (mediaRecorderRef.current && streamRef.current) {
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
         mediaRecorderRef.current.stop();
-        streamRef.current.getTracks().forEach(track => track.stop());
         setIsRecordingAudio(false);
       }
     }
@@ -97,15 +112,22 @@ export default function SpecialistMessages() {
   const handleVideoRecording = async () => {
     if (!isRecordingVideo) {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        const stream = await navigator.mediaDevices.getUserMedia({ 
+          video: { width: 640, height: 480 }, 
+          audio: true 
+        });
         streamRef.current = stream;
         
-        const mediaRecorder = new MediaRecorder(stream);
+        const mediaRecorder = new MediaRecorder(stream, {
+          mimeType: 'video/webm;codecs=vp8,opus'
+        });
         mediaRecorderRef.current = mediaRecorder;
         
         const chunks: BlobPart[] = [];
         mediaRecorder.ondataavailable = (event) => {
-          chunks.push(event.data);
+          if (event.data.size > 0) {
+            chunks.push(event.data);
+          }
         };
         
         mediaRecorder.onstop = () => {
@@ -114,21 +136,25 @@ export default function SpecialistMessages() {
             title: "Vídeo gravado",
             description: `Arquivo de vídeo criado (${(blob.size / 1024 / 1024).toFixed(1)}MB)`,
           });
+          // Limpar stream
+          if (streamRef.current) {
+            streamRef.current.getTracks().forEach(track => track.stop());
+            streamRef.current = null;
+          }
         };
         
-        mediaRecorder.start();
+        mediaRecorder.start(1000); // Capturar dados a cada 1 segundo
         setIsRecordingVideo(true);
         
         toast({
-          title: "Gravando vídeo",
-          description: "Máximo 1 minuto - clique para parar",
+          title: "Câmera ativada",
+          description: "Gravando vídeo - máximo 1 minuto",
         });
         
         // Parar automaticamente após 1 minuto
-        setTimeout(() => {
-          if (isRecordingVideo && mediaRecorderRef.current && streamRef.current) {
+        const timeoutId = setTimeout(() => {
+          if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
             mediaRecorderRef.current.stop();
-            streamRef.current.getTracks().forEach(track => track.stop());
             setIsRecordingVideo(false);
             toast({
               title: "Gravação finalizada",
@@ -137,17 +163,25 @@ export default function SpecialistMessages() {
           }
         }, 60000);
         
+        // Guardar o timeout ID para poder cancelar se necessário
+        (mediaRecorder as any).timeoutId = timeoutId;
+        
       } catch (error) {
+        console.error('Erro ao acessar câmera:', error);
         toast({
           title: "Erro",
-          description: "Não foi possível acessar a câmera",
+          description: "Não foi possível acessar a câmera. Verifique as permissões.",
           variant: "destructive"
         });
       }
     } else {
-      if (mediaRecorderRef.current && streamRef.current) {
+      // Parar gravação
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+        // Cancelar timeout se existir
+        if ((mediaRecorderRef.current as any).timeoutId) {
+          clearTimeout((mediaRecorderRef.current as any).timeoutId);
+        }
         mediaRecorderRef.current.stop();
-        streamRef.current.getTracks().forEach(track => track.stop());
         setIsRecordingVideo(false);
       }
     }
