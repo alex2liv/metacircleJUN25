@@ -5,13 +5,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ThemeSelector } from "@/components/theme-selector";
 import { CreateMenu } from "@/components/create-menu";
-import { Search } from "lucide-react";
+import { Search, Settings } from "lucide-react";
+import { useLocation } from "wouter";
 
 interface AppLayoutProps {
   children: React.ReactNode;
 }
 
 export default function AppLayout({ children }: AppLayoutProps) {
+  const [, setLocation] = useLocation();
+
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-900">
       {/* Main Content */}
@@ -29,8 +32,19 @@ export default function AppLayout({ children }: AppLayoutProps) {
             </div>
             
             <div className="flex items-center space-x-4">
+              {/* MetaSync Admin Access */}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setLocation("/metasync-admin")}
+                className="hidden md:flex items-center gap-2"
+              >
+                <Settings className="w-4 h-4" />
+                MetaSync Admin
+              </Button>
+              
               {/* Search Bar */}
-              <div className="hidden md:block relative">
+              <div className="hidden lg:block relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Search className="h-4 w-4 text-gray-400" />
                 </div>
