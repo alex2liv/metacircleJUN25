@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, UserCheck, MessageCircle, Calendar, Video, Users } from "lucide-react";
-import metaSyncLogo from "@assets/logo metasync fundo transparente.png";
+import metaSyncLogo from "@assets/46f86c96-0b2c-4594-9780-3980acc41951.png";
 import { useLocation } from "wouter";
 
 export default function SpecialistLogin() {
@@ -70,10 +70,7 @@ export default function SpecialistLogin() {
               <img 
                 src={metaSyncLogo} 
                 alt="MetaSync Digital" 
-                className="h-48 mx-auto lg:mx-0 mb-6 brightness-200 contrast-150"
-                style={{
-                  filter: 'brightness(1.5) contrast(1.2) saturate(0.8)'
-                }}
+                className="h-48 mx-auto lg:mx-0 mb-6"
               />
               <h1 className="text-3xl font-bold text-white mb-3">
                 Área do Especialista
