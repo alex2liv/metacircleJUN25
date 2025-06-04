@@ -330,6 +330,32 @@ export default function MetaSyncAdmin() {
     return diffDays;
   };
 
+  const getPlanBadgeColor = (planType: string) => {
+    switch (planType) {
+      case "basic":
+        return "bg-blue-600 text-white";
+      case "premium":
+        return "bg-purple-600 text-white";
+      case "enterprise":
+        return "bg-orange-600 text-white";
+      default:
+        return "bg-gray-600 text-white";
+    }
+  };
+
+  const getPlanName = (planType: string) => {
+    switch (planType) {
+      case "basic":
+        return "Básico";
+      case "premium":
+        return "Premium";
+      case "enterprise":
+        return "Enterprise";
+      default:
+        return "Desconhecido";
+    }
+  };
+
   const addCompany = () => {
     const company: CompanyData = {
       ...newCompany,
@@ -366,24 +392,6 @@ export default function MetaSyncAdmin() {
       title: "Empresa adicionada",
       description: `${company.name} foi criada com sucesso`,
     });
-  };
-
-  const getPlanBadgeColor = (plan: string) => {
-    switch (plan) {
-      case "basic": return "bg-gray-600 text-white";
-      case "premium": return "bg-blue-600 text-white";
-      case "enterprise": return "bg-purple-600 text-white";
-      default: return "bg-gray-600 text-white";
-    }
-  };
-
-  const getPlanName = (plan: string) => {
-    switch (plan) {
-      case "basic": return "Básico";
-      case "premium": return "Premium";
-      case "enterprise": return "Enterprise";
-      default: return plan;
-    }
   };
 
   return (
