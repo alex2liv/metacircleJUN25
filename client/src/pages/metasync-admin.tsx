@@ -43,6 +43,26 @@ interface CompanyData {
   whiteLabelExpiresAt?: Date;
   subscriptionExpiresAt?: Date;
   createdAt?: Date;
+  // Novos campos para pessoa jurídica/física
+  clientType: "juridica" | "fisica";
+  cnpj?: string;
+  cpf?: string;
+  razaoSocial?: string;
+  nomeFantasia?: string;
+  inscricaoEstadual?: string;
+  inscricaoMunicipal?: string;
+  endereco?: string;
+  cidade?: string;
+  estado?: string;
+  cep?: string;
+  responsavel?: string;
+  // Campos para controle de pagamento
+  subscriptionStatus: "active" | "warning" | "suspended" | "cancelled";
+  lastPaymentDate?: Date;
+  nextPaymentDate?: Date;
+  warningsSent: number;
+  suspensionReason?: string;
+  monthlyFee: number;
 }
 
 export default function MetaSyncAdmin() {
@@ -69,7 +89,16 @@ export default function MetaSyncAdmin() {
       hasWhiteLabel: true,
       whiteLabelExpiresAt: new Date("2025-12-31"),
       subscriptionExpiresAt: new Date("2025-12-31"),
-      createdAt: new Date("2024-01-15")
+      createdAt: new Date("2024-01-15"),
+      clientType: "juridica",
+      cnpj: "12.345.678/0001-90",
+      razaoSocial: "MetaCircle Tecnologia Ltda",
+      nomeFantasia: "MetaCircle",
+      endereco: "Rua das Flores, 123",
+      cidade: "São Paulo",
+      estado: "SP",
+      cep: "01234-567",
+      responsavel: "João Silva"
     },
     {
       id: 2,
@@ -83,7 +112,14 @@ export default function MetaSyncAdmin() {
       maxSpecialists: 5,
       hasWhiteLabel: false,
       subscriptionExpiresAt: new Date("2025-06-30"),
-      createdAt: new Date("2024-03-10")
+      createdAt: new Date("2024-03-10"),
+      clientType: "fisica",
+      cpf: "123.456.789-00",
+      endereco: "Av. Copacabana, 456",
+      cidade: "Rio de Janeiro",
+      estado: "RJ",
+      cep: "22070-001",
+      responsavel: "Maria Santos"
     },
     {
       id: 3,
@@ -96,7 +132,16 @@ export default function MetaSyncAdmin() {
       maxSpecialists: 20,
       hasWhiteLabel: false,
       subscriptionExpiresAt: new Date("2025-08-15"),
-      createdAt: new Date("2024-02-20")
+      createdAt: new Date("2024-02-20"),
+      clientType: "juridica",
+      cnpj: "98.765.432/0001-10",
+      razaoSocial: "StartupHub Inovação S.A.",
+      nomeFantasia: "StartupHub",
+      endereco: "Rua da Inovação, 789",
+      cidade: "Belo Horizonte",
+      estado: "MG",
+      cep: "30112-000",
+      responsavel: "Carlos Oliveira"
     }
   ]);
 
@@ -108,7 +153,17 @@ export default function MetaSyncAdmin() {
     isActive: true,
     maxUsers: 50,
     maxSpecialists: 5,
-    hasWhiteLabel: false
+    hasWhiteLabel: false,
+    clientType: "juridica",
+    cnpj: "",
+    cpf: "",
+    razaoSocial: "",
+    nomeFantasia: "",
+    endereco: "",
+    cidade: "",
+    estado: "",
+    cep: "",
+    responsavel: ""
   });
 
   const activateWhiteLabel = (company: CompanyData) => {
@@ -178,7 +233,17 @@ export default function MetaSyncAdmin() {
       isActive: true,
       maxUsers: 50,
       maxSpecialists: 5,
-      hasWhiteLabel: false
+      hasWhiteLabel: false,
+      clientType: "juridica",
+      cnpj: "",
+      cpf: "",
+      razaoSocial: "",
+      nomeFantasia: "",
+      endereco: "",
+      cidade: "",
+      estado: "",
+      cep: "",
+      responsavel: ""
     });
     setIsAddingCompany(false);
     toast({
@@ -355,8 +420,22 @@ export default function MetaSyncAdmin() {
                           </span>
                         )}
                       </div>
-                      <div className="text-xs text-gray-500 mt-1">
-                        {company.maxUsers} usuários • {company.maxSpecialists} especialistas
+                      <div className="text-xs text-gray-500 mt-1 space-y-1">
+                        <div>
+                          {company.clientType === "juridica" ? (
+                            <span>CNPJ: {company.cnpj} • {company.razaoSocial}</span>
+                          ) : (
+                            <span>CPF: {company.cpf}</span>
+                          )}
+                        </div>
+                        <div>
+                          Responsável: {company.responsavel} • {company.maxUsers} usuários • {company.maxSpecialists} especialistas
+                        </div>
+                        {company.endereco && (
+                          <div>
+                            {company.endereco}, {company.cidade}/{company.estado} - {company.cep}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -429,26 +508,177 @@ export default function MetaSyncAdmin() {
               Adicione uma nova empresa ao sistema MetaSync
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-4 max-h-96 overflow-y-auto">
+            {/* Tipo de Cliente */}
+            <div className="space-y-2">
+              <Label>Tipo de Cliente *</Label>
+              <Select value={newCompany.clientType} onValueChange={(value: "juridica" | "fisica") => setNewCompany({...newCompany, clientType: value})}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="juridica">Pessoa Jurídica (CNPJ)</SelectItem>
+                  <SelectItem value="fisica">Pessoa Física (CPF)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Documentos - CNPJ ou CPF */}
+            {newCompany.clientType === "juridica" ? (
+              <>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="cnpj">CNPJ *</Label>
+                    <Input
+                      id="cnpj"
+                      value={newCompany.cnpj}
+                      onChange={(e) => setNewCompany({...newCompany, cnpj: e.target.value})}
+                      placeholder="00.000.000/0000-00"
+                      maxLength={18}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="inscricaoEstadual">Inscrição Estadual</Label>
+                    <Input
+                      id="inscricaoEstadual"
+                      value={newCompany.inscricaoEstadual}
+                      onChange={(e) => setNewCompany({...newCompany, inscricaoEstadual: e.target.value})}
+                      placeholder="000.000.000.000"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="razaoSocial">Razão Social *</Label>
+                    <Input
+                      id="razaoSocial"
+                      value={newCompany.razaoSocial}
+                      onChange={(e) => setNewCompany({...newCompany, razaoSocial: e.target.value})}
+                      placeholder="Empresa Ltda"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="nomeFantasia">Nome Fantasia</Label>
+                    <Input
+                      id="nomeFantasia"
+                      value={newCompany.nomeFantasia}
+                      onChange={(e) => setNewCompany({...newCompany, nomeFantasia: e.target.value})}
+                      placeholder="Nome comercial"
+                    />
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="space-y-2">
+                <Label htmlFor="cpf">CPF *</Label>
+                <Input
+                  id="cpf"
+                  value={newCompany.cpf}
+                  onChange={(e) => setNewCompany({...newCompany, cpf: e.target.value})}
+                  placeholder="000.000.000-00"
+                  maxLength={14}
+                />
+              </div>
+            )}
+
+            {/* Dados da Empresa */}
             <div className="space-y-2">
               <Label htmlFor="name">Nome da Empresa *</Label>
               <Input
                 id="name"
                 value={newCompany.name}
-                onChange={(e) => setNewCompany({...newCompany, name: e.target.value})}
+                onChange={(e) => setNewCompany({...newCompany, name: e.target.value, slug: e.target.value.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-')})}
                 placeholder="Nome da empresa"
               />
             </div>
+
             <div className="space-y-2">
-              <Label htmlFor="email">Email Principal *</Label>
+              <Label htmlFor="slug">Slug (URL) *</Label>
               <Input
-                id="email"
-                type="email"
-                value={newCompany.email}
-                onChange={(e) => setNewCompany({...newCompany, email: e.target.value})}
-                placeholder="admin@empresa.com.br"
+                id="slug"
+                value={newCompany.slug}
+                onChange={(e) => setNewCompany({...newCompany, slug: e.target.value})}
+                placeholder="empresa-nome"
+              />
+              <p className="text-xs text-gray-500">URL será: metasync.com/company/{newCompany.slug}</p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="responsavel">Responsável *</Label>
+              <Input
+                id="responsavel"
+                value={newCompany.responsavel}
+                onChange={(e) => setNewCompany({...newCompany, responsavel: e.target.value})}
+                placeholder="Nome do responsável"
               />
             </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email Principal *</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={newCompany.email}
+                  onChange={(e) => setNewCompany({...newCompany, email: e.target.value})}
+                  placeholder="admin@empresa.com.br"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="phone">Telefone</Label>
+                <Input
+                  id="phone"
+                  value={newCompany.phone}
+                  onChange={(e) => setNewCompany({...newCompany, phone: e.target.value})}
+                  placeholder="+55 11 99999-9999"
+                />
+              </div>
+            </div>
+
+            {/* Endereço */}
+            <div className="space-y-2">
+              <Label htmlFor="endereco">Endereço</Label>
+              <Input
+                id="endereco"
+                value={newCompany.endereco}
+                onChange={(e) => setNewCompany({...newCompany, endereco: e.target.value})}
+                placeholder="Rua, Número, Complemento"
+              />
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="cidade">Cidade</Label>
+                <Input
+                  id="cidade"
+                  value={newCompany.cidade}
+                  onChange={(e) => setNewCompany({...newCompany, cidade: e.target.value})}
+                  placeholder="São Paulo"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="estado">Estado</Label>
+                <Input
+                  id="estado"
+                  value={newCompany.estado}
+                  onChange={(e) => setNewCompany({...newCompany, estado: e.target.value})}
+                  placeholder="SP"
+                  maxLength={2}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="cep">CEP</Label>
+                <Input
+                  id="cep"
+                  value={newCompany.cep}
+                  onChange={(e) => setNewCompany({...newCompany, cep: e.target.value})}
+                  placeholder="00000-000"
+                  maxLength={9}
+                />
+              </div>
+            </div>
+
+            {/* Configurações do Plano */}
             <div className="space-y-2">
               <Label htmlFor="planType">Plano</Label>
               <Select value={newCompany.planType} onValueChange={(value: "basic" | "premium" | "enterprise") => setNewCompany({...newCompany, planType: value})}>
@@ -461,6 +691,16 @@ export default function MetaSyncAdmin() {
                   <SelectItem value="enterprise">Enterprise (usuários ilimitados)</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="website">Website (opcional)</Label>
+              <Input
+                id="website"
+                value={newCompany.website}
+                onChange={(e) => setNewCompany({...newCompany, website: e.target.value})}
+                placeholder="https://empresa.com.br"
+              />
             </div>
           </div>
           <DialogFooter>
