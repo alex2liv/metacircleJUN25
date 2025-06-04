@@ -64,51 +64,51 @@ export default function SpecialistLogin() {
       <div className="w-full max-w-md">
         
         {/* Logo e Título */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6 sm:mb-8">
           <img 
             src={metaSyncLogo} 
             alt="MetaSync Digital" 
-            className="h-48 mx-auto mb-6"
+            className="h-32 sm:h-40 md:h-48 mx-auto mb-4 sm:mb-6"
           />
-          <h1 className="text-3xl font-bold text-white mb-3">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2 sm:mb-3">
             Área do Especialista
           </h1>
-          <p className="text-blue-200 text-lg">
+          <p className="text-blue-200 text-sm sm:text-base md:text-lg">
             Plataforma completa para profissionais
           </p>
         </div>
 
         {/* Cards de Funcionalidades */}
-        <div className="grid grid-cols-2 gap-4 mb-8">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
           <Card className="bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/20 transition-all duration-300">
-            <CardContent className="p-4 text-center">
-              <MessageCircle className="w-8 h-8 text-blue-400 mx-auto mb-2" />
-              <h3 className="font-semibold text-white text-sm">Chat Groups</h3>
-              <p className="text-blue-200 text-xs">Conversas organizadas</p>
+            <CardContent className="p-3 sm:p-4 text-center">
+              <MessageCircle className="w-6 h-6 sm:w-8 sm:h-8 text-blue-400 mx-auto mb-1 sm:mb-2" />
+              <h3 className="font-semibold text-white text-xs sm:text-sm">Chat Groups</h3>
+              <p className="text-blue-200 text-xs hidden sm:block">Conversas organizadas</p>
             </CardContent>
           </Card>
 
           <Card className="bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/20 transition-all duration-300">
-            <CardContent className="p-4 text-center">
-              <Calendar className="w-8 h-8 text-green-400 mx-auto mb-2" />
-              <h3 className="font-semibold text-white text-sm">Agendas</h3>
-              <p className="text-blue-200 text-xs">Gestão de horários</p>
+            <CardContent className="p-3 sm:p-4 text-center">
+              <Calendar className="w-6 h-6 sm:w-8 sm:h-8 text-green-400 mx-auto mb-1 sm:mb-2" />
+              <h3 className="font-semibold text-white text-xs sm:text-sm">Agendas</h3>
+              <p className="text-blue-200 text-xs hidden sm:block">Gestão de horários</p>
             </CardContent>
           </Card>
 
           <Card className="bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/20 transition-all duration-300">
-            <CardContent className="p-4 text-center">
-              <Video className="w-8 h-8 text-purple-400 mx-auto mb-2" />
-              <h3 className="font-semibold text-white text-sm">Lives</h3>
-              <p className="text-blue-200 text-xs">Transmissões ao vivo</p>
+            <CardContent className="p-3 sm:p-4 text-center">
+              <Video className="w-6 h-6 sm:w-8 sm:h-8 text-purple-400 mx-auto mb-1 sm:mb-2" />
+              <h3 className="font-semibold text-white text-xs sm:text-sm">Lives</h3>
+              <p className="text-blue-200 text-xs hidden sm:block">Transmissões ao vivo</p>
             </CardContent>
           </Card>
 
           <Card className="bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/20 transition-all duration-300">
-            <CardContent className="p-4 text-center">
-              <Users className="w-8 h-8 text-orange-400 mx-auto mb-2" />
-              <h3 className="font-semibold text-white text-sm">Moderation</h3>
-              <p className="text-blue-200 text-xs">Controle de comunidade</p>
+            <CardContent className="p-3 sm:p-4 text-center">
+              <Users className="w-6 h-6 sm:w-8 sm:h-8 text-orange-400 mx-auto mb-1 sm:mb-2" />
+              <h3 className="font-semibold text-white text-xs sm:text-sm">Moderation</h3>
+              <p className="text-blue-200 text-xs hidden sm:block">Controle de comunidade</p>
             </CardContent>
           </Card>
         </div>
