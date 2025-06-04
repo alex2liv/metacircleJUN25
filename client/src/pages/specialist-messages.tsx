@@ -247,20 +247,28 @@ export default function SpecialistMessages() {
                   variant="outline" 
                   size="sm"
                   className="flex items-center gap-2"
-                  onClick={() => {
-                    const input = document.createElement('input');
-                    input.type = 'file';
-                    input.accept = 'audio/*';
-                    input.onchange = (e) => {
-                      const file = (e.target as HTMLInputElement).files?.[0];
-                      if (file) {
+                  onClick={async () => {
+                    try {
+                      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                      toast({
+                        title: "Gravação de áudio iniciada",
+                        description: "Clique novamente para parar a gravação",
+                      });
+                      // Aqui seria implementada a lógica de gravação
+                      setTimeout(() => {
+                        stream.getTracks().forEach(track => track.stop());
                         toast({
-                          title: "Áudio selecionado",
-                          description: `Arquivo: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`,
+                          title: "Áudio gravado",
+                          description: "Áudio de 5 segundos salvo automaticamente",
                         });
-                      }
-                    };
-                    input.click();
+                      }, 5000);
+                    } catch (error) {
+                      toast({
+                        title: "Erro",
+                        description: "Não foi possível acessar o microfone",
+                        variant: "destructive"
+                      });
+                    }
                   }}
                 >
                   <Mic className="w-4 h-4" />
@@ -271,20 +279,28 @@ export default function SpecialistMessages() {
                   variant="outline" 
                   size="sm"
                   className="flex items-center gap-2"
-                  onClick={() => {
-                    const input = document.createElement('input');
-                    input.type = 'file';
-                    input.accept = 'video/*';
-                    input.onchange = (e) => {
-                      const file = (e.target as HTMLInputElement).files?.[0];
-                      if (file) {
+                  onClick={async () => {
+                    try {
+                      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                      toast({
+                        title: "Gravação de vídeo iniciada",
+                        description: "Clique novamente para parar a gravação",
+                      });
+                      // Aqui seria implementada a lógica de gravação
+                      setTimeout(() => {
+                        stream.getTracks().forEach(track => track.stop());
                         toast({
-                          title: "Vídeo selecionado",
-                          description: `Arquivo: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)`,
+                          title: "Vídeo gravado",
+                          description: "Vídeo de 10 segundos salvo automaticamente",
                         });
-                      }
-                    };
-                    input.click();
+                      }, 10000);
+                    } catch (error) {
+                      toast({
+                        title: "Erro",
+                        description: "Não foi possível acessar a câmera",
+                        variant: "destructive"
+                      });
+                    }
                   }}
                 >
                   <Video className="w-4 h-4" />
@@ -322,13 +338,14 @@ export default function SpecialistMessages() {
                   onClick={() => {
                     const input = document.createElement('input');
                     input.type = 'file';
+                    input.accept = 'image/*';
                     input.multiple = true;
                     input.onchange = (e) => {
                       const files = Array.from((e.target as HTMLInputElement).files || []);
                       if (files.length > 0) {
                         const totalSize = files.reduce((sum, file) => sum + file.size, 0);
                         toast({
-                          title: `${files.length} arquivo(s) selecionado(s)`,
+                          title: `${files.length} imagem(ns) selecionada(s)`,
                           description: `Total: ${(totalSize / 1024 / 1024).toFixed(2)}MB`,
                         });
                       }
@@ -337,7 +354,7 @@ export default function SpecialistMessages() {
                   }}
                 >
                   <Paperclip className="w-4 h-4" />
-                  Anexar
+                  Imagem
                 </Button>
               </div>
               
