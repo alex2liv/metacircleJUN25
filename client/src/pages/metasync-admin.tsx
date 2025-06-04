@@ -21,7 +21,13 @@ import {
   Eye,
   EyeOff,
   Crown,
-  Shield
+  Shield,
+  AlertTriangle,
+  Ban,
+  CheckCircle,
+  Clock,
+  Mail,
+  DollarSign
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
@@ -98,7 +104,12 @@ export default function MetaSyncAdmin() {
       cidade: "São Paulo",
       estado: "SP",
       cep: "01234-567",
-      responsavel: "João Silva"
+      responsavel: "João Silva",
+      subscriptionStatus: "active",
+      lastPaymentDate: new Date("2024-05-01"),
+      nextPaymentDate: new Date("2024-06-01"),
+      warningsSent: 0,
+      monthlyFee: 299.90
     },
     {
       id: 2,
@@ -119,7 +130,13 @@ export default function MetaSyncAdmin() {
       cidade: "Rio de Janeiro",
       estado: "RJ",
       cep: "22070-001",
-      responsavel: "Maria Santos"
+      responsavel: "Maria Santos",
+      subscriptionStatus: "warning",
+      lastPaymentDate: new Date("2024-04-15"),
+      nextPaymentDate: new Date("2024-05-15"),
+      warningsSent: 2,
+      monthlyFee: 299.90,
+      suspensionReason: "Pagamento em atraso há 3 dias"
     },
     {
       id: 3,
@@ -141,7 +158,13 @@ export default function MetaSyncAdmin() {
       cidade: "Belo Horizonte",
       estado: "MG",
       cep: "30112-000",
-      responsavel: "Carlos Oliveira"
+      responsavel: "Carlos Oliveira",
+      subscriptionStatus: "suspended",
+      lastPaymentDate: new Date("2024-03-01"),
+      nextPaymentDate: new Date("2024-04-01"),
+      warningsSent: 5,
+      monthlyFee: 299.90,
+      suspensionReason: "Inadimplência superior a 15 dias"
     }
   ]);
 
@@ -163,7 +186,12 @@ export default function MetaSyncAdmin() {
     cidade: "",
     estado: "",
     cep: "",
-    responsavel: ""
+    responsavel: "",
+    subscriptionStatus: "active",
+    warningsSent: 0,
+    monthlyFee: 299.90,
+    lastPaymentDate: new Date(),
+    nextPaymentDate: new Date(new Date().setMonth(new Date().getMonth() + 1))
   });
 
   const activateWhiteLabel = (company: CompanyData) => {
@@ -219,6 +247,89 @@ export default function MetaSyncAdmin() {
     ));
   };
 
+  const suspendCompany = (companyId: number, reason: string) => {
+    setCompanies(companies.map(company => 
+      company.id === companyId 
+        ? { 
+            ...company, 
+            subscriptionStatus: "suspended" as const,
+            isActive: false,
+            suspensionReason: reason
+          }
+        : company
+    ));
+    
+    const company = companies.find(c => c.id === companyId);
+    toast({
+      title: "Empresa Suspensa",
+      description: `${company?.name} foi suspensa por: ${reason}`,
+      variant: "destructive"
+    });
+  };
+
+  const reactivateCompany = (companyId: number) => {
+    setCompanies(companies.map(company => 
+      company.id === companyId 
+        ? { 
+            ...company, 
+            subscriptionStatus: "active" as const,
+            isActive: true,
+            suspensionReason: undefined,
+            warningsSent: 0,
+            lastPaymentDate: new Date(),
+            nextPaymentDate: new Date(new Date().setMonth(new Date().getMonth() + 1))
+          }
+        : company
+    ));
+    
+    const company = companies.find(c => c.id === companyId);
+    toast({
+      title: "Empresa Reativada",
+      description: `${company?.name} foi reativada com sucesso`,
+    });
+  };
+
+  const sendPaymentWarning = (companyId: number) => {
+    setCompanies(companies.map(company => 
+      company.id === companyId 
+        ? { 
+            ...company, 
+            subscriptionStatus: "warning" as const,
+            warningsSent: company.warningsSent + 1
+          }
+        : company
+    ));
+    
+    const company = companies.find(c => c.id === companyId);
+    toast({
+      title: "Aviso Enviado",
+      description: `Notificação de pagamento enviada para ${company?.name}`,
+    });
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "active":
+        return <Badge className="bg-green-600 text-white"><CheckCircle className="w-3 h-3 mr-1" />Ativo</Badge>;
+      case "warning":
+        return <Badge className="bg-yellow-600 text-white"><AlertTriangle className="w-3 h-3 mr-1" />Aviso</Badge>;
+      case "suspended":
+        return <Badge className="bg-red-600 text-white"><Ban className="w-3 h-3 mr-1" />Suspenso</Badge>;
+      case "cancelled":
+        return <Badge className="bg-gray-600 text-white"><Ban className="w-3 h-3 mr-1" />Cancelado</Badge>;
+      default:
+        return <Badge variant="secondary">Desconhecido</Badge>;
+    }
+  };
+
+  const getDaysUntilPayment = (nextPaymentDate?: Date) => {
+    if (!nextPaymentDate) return null;
+    const today = new Date();
+    const diffTime = nextPaymentDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  };
+
   const addCompany = () => {
     const company: CompanyData = {
       ...newCompany,
@@ -243,7 +354,12 @@ export default function MetaSyncAdmin() {
       cidade: "",
       estado: "",
       cep: "",
-      responsavel: ""
+      responsavel: "",
+      subscriptionStatus: "active",
+      warningsSent: 0,
+      monthlyFee: 299.90,
+      lastPaymentDate: new Date(),
+      nextPaymentDate: new Date(new Date().setMonth(new Date().getMonth() + 1))
     });
     setIsAddingCompany(false);
     toast({
@@ -399,6 +515,7 @@ export default function MetaSyncAdmin() {
                         {!company.isActive && (
                           <Badge variant="secondary">Inativa</Badge>
                         )}
+                        {getStatusBadge(company.subscriptionStatus)}
                         {company.hasWhiteLabel ? (
                           <Badge className="bg-green-600 text-white">White Label</Badge>
                         ) : (
@@ -431,9 +548,35 @@ export default function MetaSyncAdmin() {
                         <div>
                           Responsável: {company.responsavel} • {company.maxUsers} usuários • {company.maxSpecialists} especialistas
                         </div>
+                        <div className="flex items-center gap-4">
+                          <span>R$ {company.monthlyFee.toFixed(2)}/mês</span>
+                          {company.nextPaymentDate && (
+                            <span className="flex items-center gap-1">
+                              <Clock className="w-3 h-3" />
+                              {(() => {
+                                const days = getDaysUntilPayment(company.nextPaymentDate);
+                                if (days === null) return "Data indefinida";
+                                if (days < 0) return `${Math.abs(days)} dias em atraso`;
+                                if (days === 0) return "Vence hoje";
+                                return `${days} dias para vencimento`;
+                              })()}
+                            </span>
+                          )}
+                          {company.warningsSent > 0 && (
+                            <span className="text-orange-600 flex items-center gap-1">
+                              <Mail className="w-3 h-3" />
+                              {company.warningsSent} avisos enviados
+                            </span>
+                          )}
+                        </div>
                         {company.endereco && (
                           <div>
                             {company.endereco}, {company.cidade}/{company.estado} - {company.cep}
+                          </div>
+                        )}
+                        {company.suspensionReason && (
+                          <div className="text-red-600 font-medium">
+                            Motivo da suspensão: {company.suspensionReason}
                           </div>
                         )}
                       </div>
@@ -463,8 +606,35 @@ export default function MetaSyncAdmin() {
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => setEditingCompany(company)}>
                           <Edit className="h-4 w-4 mr-2" />
-                          Editar
+                          Editar Dados
                         </DropdownMenuItem>
+                        
+                        {/* Controles de Pagamento */}
+                        {company.subscriptionStatus === "active" && (
+                          <DropdownMenuItem onClick={() => sendPaymentWarning(company.id!)}>
+                            <Mail className="h-4 w-4 mr-2" />
+                            Enviar Aviso de Pagamento
+                          </DropdownMenuItem>
+                        )}
+                        
+                        {company.subscriptionStatus === "warning" && (
+                          <DropdownMenuItem 
+                            onClick={() => suspendCompany(company.id!, "Inadimplência - Pagamento em atraso")}
+                            className="text-red-600"
+                          >
+                            <Ban className="h-4 w-4 mr-2" />
+                            Suspender por Inadimplência
+                          </DropdownMenuItem>
+                        )}
+                        
+                        {company.subscriptionStatus === "suspended" && (
+                          <DropdownMenuItem onClick={() => reactivateCompany(company.id!)}>
+                            <CheckCircle className="h-4 w-4 mr-2" />
+                            Reativar Serviços
+                          </DropdownMenuItem>
+                        )}
+                        
+                        {/* White Label */}
                         {company.hasWhiteLabel ? (
                           <DropdownMenuItem onClick={() => deactivateWhiteLabel(company.id!)}>
                             <Shield className="h-4 w-4 mr-2" />
@@ -473,14 +643,26 @@ export default function MetaSyncAdmin() {
                         ) : (
                           <DropdownMenuItem onClick={() => activateWhiteLabel(company)}>
                             <Crown className="h-4 w-4 mr-2" />
-                            Ativar White Label
+                            Ativar White Label (R$ 299,90/mês)
                           </DropdownMenuItem>
                         )}
+                        
+                        {/* Suspensão Manual */}
+                        {company.subscriptionStatus !== "suspended" && (
+                          <DropdownMenuItem 
+                            onClick={() => suspendCompany(company.id!, "Suspensão administrativa")}
+                            className="text-red-600"
+                          >
+                            <Ban className="h-4 w-4 mr-2" />
+                            Suspender Manualmente
+                          </DropdownMenuItem>
+                        )}
+                        
                         <DropdownMenuItem onClick={() => toggleCompanyStatus(company.id!)}>
                           {company.isActive ? (
                             <>
                               <EyeOff className="h-4 w-4 mr-2" />
-                              Desativar
+                              Desativar Temporariamente
                             </>
                           ) : (
                             <>
