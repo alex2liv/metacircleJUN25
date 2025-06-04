@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Send, Users, User, MessageSquare, Mic, Video, FileText, Paperclip, Square } from "lucide-react";
+import { ArrowLeft, Send, Users, User, MessageSquare, Mic, Video, FileText, Paperclip, Square, Play } from "lucide-react";
 import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 
@@ -33,6 +33,8 @@ export default function SpecialistMessages() {
   const [isAllUsers, setIsAllUsers] = useState(false);
   const [isRecordingAudio, setIsRecordingAudio] = useState(false);
   const [isRecordingVideo, setIsRecordingVideo] = useState(false);
+  const [recordedAudio, setRecordedAudio] = useState<string | null>(null);
+  const [recordedVideo, setRecordedVideo] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
@@ -82,9 +84,11 @@ export default function SpecialistMessages() {
         
         mediaRecorder.onstop = () => {
           const blob = new Blob(chunks, { type: mimeType });
+          const audioUrl = URL.createObjectURL(blob);
+          setRecordedAudio(audioUrl);
           toast({
             title: "Áudio gravado com sucesso",
-            description: `Arquivo criado: ${(blob.size / 1024).toFixed(1)}KB (${mimeType})`,
+            description: `Arquivo criado: ${(blob.size / 1024).toFixed(1)}KB - Clique em "Ouvir" para reproduzir`,
           });
           // Limpar stream
           if (streamRef.current) {
@@ -169,9 +173,11 @@ export default function SpecialistMessages() {
         mediaRecorder.onstop = () => {
           console.log('Gravação parada, chunks:', chunks.length);
           const blob = new Blob(chunks, { type: mimeType });
+          const videoUrl = URL.createObjectURL(blob);
+          setRecordedVideo(videoUrl);
           toast({
             title: "Vídeo gravado com sucesso",
-            description: `Arquivo criado: ${(blob.size / 1024 / 1024).toFixed(1)}MB`,
+            description: `Arquivo criado: ${(blob.size / 1024 / 1024).toFixed(1)}MB - Clique em "Assistir" para reproduzir`,
           });
           // Limpar stream
           if (streamRef.current) {
@@ -445,6 +451,25 @@ export default function SpecialistMessages() {
                   {isRecordingAudio ? "Parar" : "Áudio"}
                 </Button>
                 
+                {recordedAudio && (
+                  <Button 
+                    variant="secondary"
+                    size="sm"
+                    className="flex items-center gap-2"
+                    onClick={() => {
+                      const audio = new Audio(recordedAudio);
+                      audio.play();
+                      toast({
+                        title: "Reproduzindo áudio",
+                        description: "Áudio gravado está sendo reproduzido",
+                      });
+                    }}
+                  >
+                    <Play className="w-4 h-4" />
+                    Ouvir
+                  </Button>
+                )}
+                
                 <Button 
                   variant={isRecordingVideo ? "destructive" : "outline"}
                   size="sm"
@@ -454,6 +479,71 @@ export default function SpecialistMessages() {
                   {isRecordingVideo ? <Square className="w-4 h-4" /> : <Video className="w-4 h-4" />}
                   {isRecordingVideo ? "Parar" : "Vídeo"}
                 </Button>
+                
+                {recordedVideo && (
+                  <Button 
+                    variant="secondary"
+                    size="sm"
+                    className="flex items-center gap-2"
+                    onClick={() => {
+                      const video = document.createElement('video');
+                      video.src = recordedVideo;
+                      video.controls = true;
+                      video.style.maxWidth = '100%';
+                      video.style.maxHeight = '400px';
+                      
+                      const dialog = document.createElement('div');
+                      dialog.style.position = 'fixed';
+                      dialog.style.top = '0';
+                      dialog.style.left = '0';
+                      dialog.style.width = '100%';
+                      dialog.style.height = '100%';
+                      dialog.style.backgroundColor = 'rgba(0,0,0,0.8)';
+                      dialog.style.display = 'flex';
+                      dialog.style.alignItems = 'center';
+                      dialog.style.justifyContent = 'center';
+                      dialog.style.zIndex = '9999';
+                      
+                      const container = document.createElement('div');
+                      container.style.position = 'relative';
+                      container.style.backgroundColor = 'white';
+                      container.style.padding = '20px';
+                      container.style.borderRadius = '8px';
+                      
+                      const closeBtn = document.createElement('button');
+                      closeBtn.innerHTML = '×';
+                      closeBtn.style.position = 'absolute';
+                      closeBtn.style.top = '10px';
+                      closeBtn.style.right = '10px';
+                      closeBtn.style.border = 'none';
+                      closeBtn.style.background = 'none';
+                      closeBtn.style.fontSize = '24px';
+                      closeBtn.style.cursor = 'pointer';
+                      closeBtn.onclick = () => {
+                        document.body.removeChild(dialog);
+                      };
+                      
+                      container.appendChild(closeBtn);
+                      container.appendChild(video);
+                      dialog.appendChild(container);
+                      document.body.appendChild(dialog);
+                      
+                      dialog.onclick = (e) => {
+                        if (e.target === dialog) {
+                          document.body.removeChild(dialog);
+                        }
+                      };
+                      
+                      toast({
+                        title: "Reproduzindo vídeo",
+                        description: "Vídeo gravado está sendo exibido",
+                      });
+                    }}
+                  >
+                    <Play className="w-4 h-4" />
+                    Assistir
+                  </Button>
+                )}
                 
                 <Button 
                   variant="outline" 
